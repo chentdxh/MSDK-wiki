@@ -1,3 +1,9 @@
 *.buildpath
 .project
 *.prefs
+.svn/entries
+.svn/format
+*.svn-base
+*.db
+ios/*
+router/*
