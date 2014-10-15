@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<title>MSDK Android WIKI 文档上传工具</title>
-	<link rel="stylesheet" href="../wiki/css/main.css" />
+	<link rel="stylesheet" href="../css/main.css" />
 </head>
 <body>
 <div id="page">
@@ -14,7 +14,7 @@
 	<form action="" enctype="multipart/form-data" method="post" name="uploadfile">
 	上传文件：<input class="btn btn-default btn-lg" type="file" name="upfile" /><input class="btn btn-default btn-lg" type="submit"value="上传" />
 	</form>
-	</div>
+</div>
 <?php
 // print_r($_FILES["upfile"]);
 if (is_uploaded_file ( $_FILES ['upfile'] ['tmp_name'] )) {
@@ -61,7 +61,7 @@ if (is_uploaded_file ( $_FILES ['upfile'] ['tmp_name'] )) {
 		$destination = $name;
 		if ($error == 0) {
 			if(1 == $okType){
-				echo "<p style=\"text-align:left;text-indent:2em\">上传图片预览:</p><img src=../wiki/android/" . $destination . ">";
+				echo "<p style=\"text-align:left;text-indent:2em\">上传图片预览：</p><img src=../wiki/android/" . $destination . ">";
 			}else{
 				echo "<p style=\"text-align:left;text-indent:2em\">上传文件结果：文件上传成功";
 			}
@@ -83,6 +83,15 @@ if (is_uploaded_file ( $_FILES ['upfile'] ['tmp_name'] )) {
 	echo "</div>";
 } 
 ?> 
-</div></div>
+
+<div id="dropZone" style="text-align:left;text-indent:1em">
+	<p >注意事项：</p>
+	<ul style="text-indent:3em">
+		<li>请使用模块对应的链接来上传文件，使用错误链接会覆盖对应平台文档！</li>
+		<li>使用过程中如有任何疑问请直接联系hardyshi</li>
+	</ul>
+</div>
+</div>
+</div>
 </body>
 </html>

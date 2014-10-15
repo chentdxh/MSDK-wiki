@@ -56,7 +56,7 @@ em { font-style: italic; }
 .floatR { float: right; }
 
 /*** App specific styles **/
-#page { max-width: 960px; margin: 50px auto 20px; }
+#page { max-width: 1000px; margin: 50px auto 20px; }
 h1 { font-family: Microsoft Yahei,'Amaranth', sans-serif; font-weight: 400; margin: 10px 0 20px; font-size: 2em; color: #3498db; text-align: center; }
 #content { padding: 20px; background: #f4f4f4; }
 
