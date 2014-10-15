@@ -8,3 +8,5 @@
 ios/*
 router/*
 android/Android排期.xlsx
+upload/ios.php
+upload/router.php

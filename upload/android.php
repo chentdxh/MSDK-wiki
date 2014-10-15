@@ -3,8 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<title>File Upload Widget</title>
-	<link rel="stylesheet" href="../css/main.css" />
+	<title>MSDK Android WIKI 文档上传工具</title>
+	<link rel="stylesheet" href="../wiki/css/main.css" />
 </head>
 <body>
 <div id="page">
@@ -54,14 +54,16 @@ if (is_uploaded_file ( $_FILES ['upfile'] ['tmp_name'] )) {
 		 * 5：上传文件大小为0
 		 */
 		$error = $upfile ["error"]; // 上传后系统返回的值
-		echo "<p style=\"text-align:left;text-indent:2em\">上传文件名称是：" . $name . "</p>";
-		echo "<p style=\"text-align:left;text-indent:2em\">上传文件大小是：" . $size . "</p>";
+		echo "<p style=\"text-align:left;text-indent:2em\">上传文件名称：" . $name . "</p>";
+		echo "<p style=\"text-align:left;text-indent:2em\">上传文件大小：" . $size . "</p>";
 		// 把上传的临时文件移动到up目录下面
-		move_uploaded_file ( $tmp_name, $name );
+		move_uploaded_file ( $tmp_name, dirname(__FILE__).'/../wiki/android/'.$name );
 		$destination = $name;
 		if ($error == 0) {
 			if(1 == $okType){
-				echo "<p style=\"text-align:left;text-indent:2em\">图片预览:</p><img src=" . $destination . ">";
+				echo "<p style=\"text-align:left;text-indent:2em\">上传图片预览:</p><img src=../wiki/android/" . $destination . ">";
+			}else{
+				echo "<p style=\"text-align:left;text-indent:2em\">上传文件结果：文件上传成功";
 			}
 		} elseif ($error == 1) {
 			echo "<p style=\"text-align:left;text-indent:2em\">文件过大，请联系hardyshi</p>";
