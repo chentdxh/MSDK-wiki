@@ -4,18 +4,9 @@
 
 [Android Wiki]()
 
-  
-  * # Android 接入
-  * [MSDK包结构说明](android.md)
-  * [MSDK包内容说明](android.md)
-  * [MSDK包引入](android.md)
-  * [MSDK初始化](android.md)
-  * [MSDK全局回调设置](android.md)
-  - - - -
-  * # MSDK介绍
+  * # SDK介绍
+  * [模块介绍](index.md)
   * [名词解释](index.md)
-  * [MSDK功能](index.md)
-  * [MSDK版本](index.md)
   * [关于我们](index.md)
   - - - -
   * # 
@@ -25,16 +16,28 @@
   * [Router Wiki]()
  
   
-[工具接口]()
+[SDK接入]()
 
-  * # 手Q/微信相关
+  * # Android 接入
+  * [包结构说明](android.md)
+  * [包内容说明](android.md)
+  * [包引入](android.md)
+  * [初始化](android.md)
+  * [全局回调设置](android.md)
+  * [版本历史](version.md)
+  
+  - - - -
+  * # 工具接口
   * [检查手Q/微信是否安装](tool.md#检查手Q/微信是否安装)
   * [获取手Q/微信版本](tool.md#获取手Q/微信版本)
   * [检查接口在用户安装手Q/微信上是否支持](tool.md#检查接口在用户安装手Q/微信上是否支持)
-  - - - - 
   * [获取MSDK版本](tool.md#获取MSDK版本)
   * [本地日志](tool.md#本地日志)
-  
+  - - - - 
+  * # 游戏接入常见问题
+  * [异账号]()
+  * [无法拉起微信授权]()
+  * [公告无法展示]()
   
 [接入QQ]()
 
