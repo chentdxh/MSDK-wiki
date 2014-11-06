@@ -2,20 +2,13 @@
 
 [gimmick:theme (inverse: true)](cerulean)
 
-[Android Wiki]()
+[SDK介绍]()
 
-  * # SDK介绍
+  * # 
   * [模块介绍](index.md)
   * [名词解释](index.md)
-  * [关于我们](index.md)
-  - - - -
-  * # 
-  * [IOS Wiki]()
-  - - - -
-  * # 
-  * [Router Wiki]()
- 
-  
+  * [版本历史](version.md)
+
 [SDK接入]()
 
   * # Android 接入
@@ -24,8 +17,7 @@
   * [包引入](android.md)
   * [初始化](android.md)
   * [全局回调设置](android.md)
-  * [版本历史](version.md)
-  
+    
   - - - -
   * # 工具接口
   * [检查手Q/微信是否安装](tool.md#检查手Q/微信是否安装)
@@ -143,28 +135,23 @@
   
 [应用宝]()
 
-  * # 应用宝抢号
-  * [接入配置](myApp.md)
-  * [开关配置]()
-  * [抢号调试]()
+  * # 抢号
+  * [应用宝抢号](myApp.md#应用宝抢号)
   - - - -
-  * # 省流量更新
-  * [接入配置]()
-  * [开关配置]()
-  * [省流量更新调试]()
+  * # 更新
+  * [省流量更新](myApp.md#省流量更新)
   
 [其他模块]()
 
- * [手游宝]()
+ * [手游宝](qmi.md)
  - - - -
  * [信鸽]()
  - - - -
- * [米大师]()
+ * [米大师](midas.md)
  - - - -
- * #接入游戏大厅
+ * # 游戏大厅
  * [不带登陆态拉起游戏](qqgame.md)
- * [带登陆态拉起游戏]()
- * [判断是否大厅拉起]()
+ * [带登陆态拉起游戏](qqgame.md#带登陆态拉起游戏)
  
 [常量查询]()
 
@@ -173,7 +160,13 @@
  * [回调标识eFlag]()
  - - - - 
  * # 数据结构
- * [OnLoginNotify]() * [OnShareNotify]()
-  - - - - 
+ * [OnLoginNotify]()
+ * [OnShareNotify]()
+
+  - - - - 
  * # Notify
- * [OnLoginNotify]() * [OnShareNotify]() * [OnWakeupNotify]() * [OnShareNotify]() * [OnRelationCallBack]()
+ * [OnLoginNotify]()
+ * [OnShareNotify]()
+ * [OnWakeupNotify]()
+ * [OnShareNotify]()
+ * [OnRelationCallBack]()
