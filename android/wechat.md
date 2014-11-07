@@ -532,8 +532,38 @@ MSDK 微信 相关模块
 		}
 	}
 
-分享到游戏中心
+Android微信登录不了检查步骤
 ------
 
-微信功能对应支持版本
-------
+### 第一步： 检查Log中是否有
+
+	lauchWXPlatForm wx SendReqRet: true
+
+有这一句表示已经成功发送请求到微信
+
+如果微信客户端被不能被拉起来，请查看 第二步， 
+如果微信客户端被拉起了，但是没有回调，请查看 第三步
+
+### 第二步： 检查签名和包名
+
+下载[https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk](https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk)， 将此apk安装到手机上， 在输入框中输入游戏的签名，点击按钮读取游戏包的签名。
+
+检查上述工具获取到的签名是否和微信后台配置的签名一致（微信后台配置的签名信息查询请RTX联系MSDK）
+
+
+### 第三步： 检查WXEntryActivity.java放置的位置（此文件在MSDKSample中）
+
+此文件一定要放在 游戏+.wxapi 下面，例如游戏的包名为：com.tencent.msdkgame， 则WXEntryActivity.java 应该放在com.tencent.msdkgame.wxapi下。
+
+此步骤没问题请查看 第四步
+
+
+### 第四步：检查handleCallback
+
+游戏的Launch Activity的onCreate和onNewIntent里面是否调用了WGPlatform.handleCallback。
+
+
+### 第五步：检查游戏的全局Observer是否设置
+
+检查游戏有没有正确调用WGSetObserver（C++层和Java层）。
+

@@ -1,21 +1,21 @@
-Android ½ÓÈë
+Android æŽ¥å…¥
 =======
 
-#### °ü½á¹¹ËµÃ÷
-MSDKµÄ·¢²¼°ü(zip)Ö÷Òª°üº¬Á½¸öÖØÒª²¿·Ö, MSDKLibraryºÍMSDKSample, Ç°ÕßÎªMSDK¿â, ºóÕßÓ¦ÓÃÇ°Õß, ÊÇMSDKµÄÊ¹ÓÃÊµÀý. ÓÃant¹¹½¨MSDKSample¼´¿É»ñµÃ¿ÉÖ´ÐÐµÄapk°ü´æÓÚMSDKSample/binÏÂ.
-MSDKÖ÷ÌåÒÔAndroid Library ProjectµÄÐÎÊ½Ìá¹©, ÓÎÏ·ÒýÈëMSDKLibrary¼´¿ÉÊ¹ÓÃ, MSDKLibraryÖÐ°üº¬ÁË: ËùÐèÒªµÄjar°ü, soÎÄ¼þ, ×ÊÔ´ÎÄ¼þ. °üµÄÄ¿Â¼½á¹¹ÈçÏÂÍ¼:
+#### åŒ…ç»“æž„è¯´æ˜Ž
+MSDKçš„å‘å¸ƒåŒ…(zip)ä¸»è¦åŒ…å«ä¸¤ä¸ªé‡è¦éƒ¨åˆ†, MSDKLibraryå’ŒMSDKSample, å‰è€…ä¸ºMSDKåº“, åŽè€…åº”ç”¨å‰è€…, æ˜¯MSDKçš„ä½¿ç”¨å®žä¾‹. ç”¨antæž„å»ºMSDKSampleå³å¯èŽ·å¾—å¯æ‰§è¡Œçš„apkåŒ…å­˜äºŽMSDKSample/binä¸‹.
+MSDKä¸»ä½“ä»¥Android Library Projectçš„å½¢å¼æä¾›, æ¸¸æˆå¼•å…¥MSDKLibraryå³å¯ä½¿ç”¨, MSDKLibraryä¸­åŒ…å«äº†: æ‰€éœ€è¦çš„jaråŒ…, soæ–‡ä»¶, èµ„æºæ–‡ä»¶. åŒ…çš„ç›®å½•ç»“æž„å¦‚ä¸‹å›¾:
 ![library_progect](/library_progect.png "library_progect")
 
-#### ÒýÈëMSDK¿â
-ÔÚEclipseÖÐÒýÈëMSDKLibraryÏîÄ¿, ÓÒ»÷ÓÎÏ·ÏîÄ¿->ÊôÐÔ->Android->Ìí¼Ó(¿â)->Ñ¡ÔñMSDKLibrary, Íê³É¶ÔMSDKLibraryµÄÒýÓÃ. ²»ÄÜÊ¹ÓÃAndroid Library ProjectµÄÓÎÏ·, ÐèÒª¸´ÖÆlibs, resÁ½¸öÄ¿Â¼µ½ÓÎÏ·¹¤³ÌÏàÓ¦Ä¿Â¼.
-	¸´ÖÆMSDKLibrary/jniÄ¿Â¼ÏÂµÄjniµÄ.cppºÍ.hÎÄ¼þ¼Óµ½ÓÎÏ·¹¤³Ì, ²¢Ìí¼Óµ½makefile.
-	×¢ÒâÊÂÏî:
-	ÒýÈëMSDKLibraryÒÔºó±àÒë·¢Éú°ü³åÍ»(ÖØ¸´), ÒòÎªMSDKÀïÃæÒÑ¾­°üº¬ÁË Î¢ÐÅSDK(libammsdk.jar), QQ»¥Áªsdk(open_sdk.jar), MTA(mta-xxx.jar), µÆËþSDK(beacon-xxx.jar), ÇÐÉÏÊösdk¾ùÊÇÆä×îÐÂÎÈ¶¨°æ, ÓÎÏ·Èç¹ûÒÔÇ°ÓÐµ¥¶À¼¯³ÉÕâÐ©SDK, ÇëÉ¾³ýÖ®Ç°¼¯³ÉµÄjar°ü.
+#### å¼•å…¥MSDKåº“
+åœ¨Eclipseä¸­å¼•å…¥MSDKLibraryé¡¹ç›®, å³å‡»æ¸¸æˆé¡¹ç›®->å±žæ€§->Android->æ·»åŠ (åº“)->é€‰æ‹©MSDKLibrary, å®Œæˆå¯¹MSDKLibraryçš„å¼•ç”¨. ä¸èƒ½ä½¿ç”¨Android Library Projectçš„æ¸¸æˆ, éœ€è¦å¤åˆ¶libs, resä¸¤ä¸ªç›®å½•åˆ°æ¸¸æˆå·¥ç¨‹ç›¸åº”ç›®å½•.
+	å¤åˆ¶MSDKLibrary/jniç›®å½•ä¸‹çš„jniçš„.cppå’Œ.hæ–‡ä»¶åŠ åˆ°æ¸¸æˆå·¥ç¨‹, å¹¶æ·»åŠ åˆ°makefile.
+	æ³¨æ„äº‹é¡¹:
+	å¼•å…¥MSDKLibraryä»¥åŽç¼–è¯‘å‘ç”ŸåŒ…å†²çª(é‡å¤), å› ä¸ºMSDKé‡Œé¢å·²ç»åŒ…å«äº† å¾®ä¿¡SDK(libammsdk.jar), QQäº’è”sdk(open_sdk.jar), MTA(mta-xxx.jar), ç¯å¡”SDK(beacon-xxx.jar), åˆ‡ä¸Šè¿°sdkå‡æ˜¯å…¶æœ€æ–°ç¨³å®šç‰ˆ, æ¸¸æˆå¦‚æžœä»¥å‰æœ‰å•ç‹¬é›†æˆè¿™äº›SDK, è¯·åˆ é™¤ä¹‹å‰é›†æˆçš„jaråŒ….
 
-#### ÅäÖÃËµÃ÷
-a)È¨ÏÞÅäÖÃ
+#### é…ç½®è¯´æ˜Ž
+a)æƒé™é…ç½®
 
-	<!-- TODO SDK½ÓÈë±ØÐëÈ¨ÏÞÄ£¿é START -->
+	<!-- TODO SDKæŽ¥å…¥å¿…é¡»æƒé™æ¨¡å— START -->
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -28,14 +28,14 @@ a)È¨ÏÞÅäÖÃ
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-	<!-- µÇÂ¼ÉÏ±¨Ê±ÐèÒª´øÉè±¸Ãû³Æ, Í¨¹ýÀ¶ÑÀÄ£¿éÀ´»ñÈ¡Éè±¸Ãû³Æ -->
+	<!-- ç™»å½•ä¸ŠæŠ¥æ—¶éœ€è¦å¸¦è®¾å¤‡åç§°, é€šè¿‡è“ç‰™æ¨¡å—æ¥èŽ·å–è®¾å¤‡åç§° -->
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-	<!-- ¿ÉÑ¡µÄÈ¨ÏÞ£ºÒì³£ÉÏ±¨ÏµÍ³log,XGÒ²ÐèÒª -->
+	<!-- å¯é€‰çš„æƒé™ï¼šå¼‚å¸¸ä¸ŠæŠ¥ç³»ç»Ÿlog,XGä¹Ÿéœ€è¦ -->
 	<uses-permission android:name="android.permission.READ_LOGS" />
 
-	<!-- ÊÖÓÎ±¦ permission start -->
+	<!-- æ‰‹æ¸¸å® permission start -->
 	<uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 	<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -43,53 +43,53 @@ a)È¨ÏÞÅäÖÃ
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-	<!-- ÊÖÓÎ±¦ permission end -->
+	<!-- æ‰‹æ¸¸å® permission end -->
 
-	<!-- ½ÓÈëÐÅ¸ëÐèÒªµÄÆäËûÈ¨ÏÞ -->
+	<!-- æŽ¥å…¥ä¿¡é¸½éœ€è¦çš„å…¶ä»–æƒé™ -->
 	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
 	<uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 
-	<!-- TODO SDK½ÓÈë ±ØÐëÈ¨ÏÞÄ£¿é END -->
+	<!-- TODO SDKæŽ¥å…¥ å¿…é¡»æƒé™æ¨¡å— END -->
 
-ÔÚassets/msdkconfig.iniÖÐÅäÖÃ·ÃÎÊµÄÐèÒª·ÃÎÊµÄMSDKºóÌ¨»·¾³(²âÊÔ»·¾³/ÕýÊ½»·¾³), Áªµ÷½×¶ÎÓÎÏ·ÐèÒªÊ¹ÓÃ²âÊÔ»·¾³, ·¢²¼Ê±ÐèÒªÇÐ»»µ½ÕýÊ½»·¾³(¹«Ë¾ÄÚ²â, ¹«²â, ÕýÊ½ÉÏÏß), ÇÐ»»»·¾³Ê±ºòÐèÒª×¢Òâ, ºóÌ¨Ò²ÒªÍ¬Ê±ÇÐ»»³É¶ÔÓ¦µÄ»·¾³. ÏÂÃæÊÇÅäÖÃÇ°¶Ë·ÃÎÊMSDKºóÌ¨²âÊÔ»·¾³. 
+åœ¨assets/msdkconfig.iniä¸­é…ç½®è®¿é—®çš„éœ€è¦è®¿é—®çš„MSDKåŽå°çŽ¯å¢ƒ(æµ‹è¯•çŽ¯å¢ƒ/æ­£å¼çŽ¯å¢ƒ), è”è°ƒé˜¶æ®µæ¸¸æˆéœ€è¦ä½¿ç”¨æµ‹è¯•çŽ¯å¢ƒ, å‘å¸ƒæ—¶éœ€è¦åˆ‡æ¢åˆ°æ­£å¼çŽ¯å¢ƒ(å…¬å¸å†…æµ‹, å…¬æµ‹, æ­£å¼ä¸Šçº¿), åˆ‡æ¢çŽ¯å¢ƒæ—¶å€™éœ€è¦æ³¨æ„, åŽå°ä¹Ÿè¦åŒæ—¶åˆ‡æ¢æˆå¯¹åº”çš„çŽ¯å¢ƒ. ä¸‹é¢æ˜¯é…ç½®å‰ç«¯è®¿é—®MSDKåŽå°æµ‹è¯•çŽ¯å¢ƒ. 
 
-	;×ÔÑÐÓÎÏ·»ò¾«Æ·´úÀíÓÎÏ·ÇëÊ¹ÓÃ´Ë×éÓòÃû, Ê¹ÓÃÆäÖÐÒ»¸öÓòÃû
-	;´ømsdktestÎª²âÊÔ»·¾³ÓòÃû, msdkÎªÕýÊ½»·¾³ÓòÃû
+	;è‡ªç ”æ¸¸æˆæˆ–ç²¾å“ä»£ç†æ¸¸æˆè¯·ä½¿ç”¨æ­¤ç»„åŸŸå, ä½¿ç”¨å…¶ä¸­ä¸€ä¸ªåŸŸå
+	;å¸¦msdktestä¸ºæµ‹è¯•çŽ¯å¢ƒåŸŸå, msdkä¸ºæ­£å¼çŽ¯å¢ƒåŸŸå
 	;MSDK_URL=http://msdk.qq.com
 	;MSDK_URL=http://msdkdev.qq.com
 	MSDK_URL=http://msdktest.qq.com
 	
-PS: ÎªÁË·ÀÖ¹ÓÎÏ·ÓÃ²âÊÔ»·¾³ÉÏÏß, SDKÄÚ¼ì²âµ½ÓÎÏ·Ê¹ÓÃ²âÊÔ»·¾³»òÕß¿ª·¢»·¾³Ê±, »áToast³öÀàËÆ: ¡°You are using http://msdktest.qq.com¡± ÕâÑùµÄÌáÊ¾, ÓÎÏ·ÇÐ»»³ÉÕýÊ½»·¾³ÓòÃûÒÔºó´ËÌáÊ¾×Ô¶¯ÏûÊ§.
+PS: ä¸ºäº†é˜²æ­¢æ¸¸æˆç”¨æµ‹è¯•çŽ¯å¢ƒä¸Šçº¿, SDKå†…æ£€æµ‹åˆ°æ¸¸æˆä½¿ç”¨æµ‹è¯•çŽ¯å¢ƒæˆ–è€…å¼€å‘çŽ¯å¢ƒæ—¶, ä¼šToastå‡ºç±»ä¼¼: â€œYou are using http://msdktest.qq.comâ€ è¿™æ ·çš„æç¤º, æ¸¸æˆåˆ‡æ¢æˆæ­£å¼çŽ¯å¢ƒåŸŸåä»¥åŽæ­¤æç¤ºè‡ªåŠ¨æ¶ˆå¤±.
 
-#### Java²ã³õÊ¼»¯
+#### Javaå±‚åˆå§‹åŒ–
 	public void onCreate(Bundle savedInstanceState) {
 	...
-	//ÓÎÏ·±ØÐëÊ¹ÓÃ×Ô¼ºµÄQQ AppIdÁªµ÷
+	//æ¸¸æˆå¿…é¡»ä½¿ç”¨è‡ªå·±çš„QQ AppIdè”è°ƒ
 		baseInfo.qqAppId = "1007033***";
 		baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
 
-	//ÓÎÏ·±ØÐëÊ¹ÓÃ×Ô¼ºµÄÎ¢ÐÅAppIdÁªµ÷
+	//æ¸¸æˆå¿…é¡»ä½¿ç”¨è‡ªå·±çš„å¾®ä¿¡AppIdè”è°ƒ
 		baseInfo.wxAppId = "wxcde873f99466f***"; 
 		baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
 
-	//ÓÎÏ·±ØÐëÊ¹ÓÃ×Ô¼ºµÄÖ§¸¶offerIdÁªµ÷
+	//æ¸¸æˆå¿…é¡»ä½¿ç”¨è‡ªå·±çš„æ”¯ä»˜offerIdè”è°ƒ
 		baseInfo.offerId = "100703***";
 	WGPlatform.Initialized(this, baseInfo);
-	// ±ØÐë±£Ö¤handleCallbackÔÚInitializedÖ®ºó
+	// å¿…é¡»ä¿è¯handleCallbackåœ¨Initializedä¹‹åŽ
 	WGPlatform.handleCallback(getIntent());
 	...
 	}
 	@Override
 	protected void onNewIntent(Intent intent) {
 	super.onNewIntent(intent);
-	// ´¦ÀíÍâ²¿»½ÆðÓÎÏ·, ºÍÊÚÈ¨·µ»ØµÄÊý¾Ý
+	// å¤„ç†å¤–éƒ¨å”¤èµ·æ¸¸æˆ, å’ŒæŽˆæƒè¿”å›žçš„æ•°æ®
 	WGPlatform.handleCallback(intent); 
 	}
 
-	// ÎªÁË±£Ö¤µÇÂ¼Êý¾ÝÉÏ±¨×¼È·, ÓÎÏ·±ØÐëÔÚÍê³ÉÈçÏÂÅäÖÃ
+	// ä¸ºäº†ä¿è¯ç™»å½•æ•°æ®ä¸ŠæŠ¥å‡†ç¡®, æ¸¸æˆå¿…é¡»åœ¨å®Œæˆå¦‚ä¸‹é…ç½®
 	@Override
 	protected void onPause() {
 	    super.onPause();
@@ -106,29 +106,29 @@ PS: ÎªÁË·ÀÖ¹ÓÎÏ·ÓÃ²âÊÔ»·¾³ÉÏÏß, SDKÄÚ¼ì²âµ½ÓÎÏ·Ê¹ÓÃ²âÊÔ»·¾³»òÕß¿ª·¢»·¾³Ê±, »áToa
 	WGPlatform.onDestory(this);
 	}
 
-´ËÍâ£¬ÐèÒªÔÚMainActivtyÖÐ¼ÓÔØ±ØÒªµÄ¶¯Ì¬¿â£¬Ê¾Àý´úÂëÈçÏÂ£º
+æ­¤å¤–ï¼Œéœ€è¦åœ¨MainActivtyä¸­åŠ è½½å¿…è¦çš„åŠ¨æ€åº“ï¼Œç¤ºä¾‹ä»£ç å¦‚ä¸‹ï¼š
 
-	// TODO GAME Òª¼ÓÔØ±ØÒªµÄ¶¯Ì¬¿â
+	// TODO GAME è¦åŠ è½½å¿…è¦çš„åŠ¨æ€åº“
 	static {
-	// ÓÎÏ·ÐèÒª¼ÓÔØ´Ë¶¯Ì¬¿â, Êý¾ÝÉÏ±¨ÓÃ
+	// æ¸¸æˆéœ€è¦åŠ è½½æ­¤åŠ¨æ€åº“, æ•°æ®ä¸ŠæŠ¥ç”¨
 	System.loadLibrary("NativeRQD"); 
-	// ÓÎÏ·²»ÐèÒªÕâ¸ö, ÕâÊÇMSDKSample×ÔÓÃµÄ
+	// æ¸¸æˆä¸éœ€è¦è¿™ä¸ª, è¿™æ˜¯MSDKSampleè‡ªç”¨çš„
 	System.loadLibrary("WeGameSample");
 	}
 
-#### C++ ²ã³õÊ¼»¯(Ö»Ê¹ÓÃJava APIµÄÓÎÏ·ÎÞÐè¿ÉÌø¹ý´Ë¶Î)
-ËùÓÐWG¿ªÍ·µÄ½Ó¿Ú¾ùÌá¹©ÁËC++²ãºÍJava²ã½Ó¿Ú. Java²ãÍ¨¹ýWGPlatformµ÷ÓÃ, C++²ãÍ¨¹ýWGPlatform::GetInstance()µ÷ÓÃ. ÕâÀïµ÷ÓÃ·½Ê½¿ÉÒÔ²Î¿¼jni/PlatformTest.cpp. SDKÐèÒªÉèÖÃÒ»¸öÈ«¾ÖµÄ»Øµ÷, ÔÚÊÚÈ¨·µ»Ø, ·ÖÏí·µ»ØÊ±¾ù»á½øÐÐÏàÓ¦µÄ»Øµ÷. ÉèÖÃµÄ»Øµ÷¶ÔÏóÊµÏÖ×ÔWGPlatformObserver, ÔÚ³õÊ¼»¯Ê±´«Èë´Ë¶ÔÏó. Ê¾Àý´úÂëÈçÏÂ:
+#### C++ å±‚åˆå§‹åŒ–(åªä½¿ç”¨Java APIçš„æ¸¸æˆæ— éœ€å¯è·³è¿‡æ­¤æ®µ)
+æ‰€æœ‰WGå¼€å¤´çš„æŽ¥å£å‡æä¾›äº†C++å±‚å’ŒJavaå±‚æŽ¥å£. Javaå±‚é€šè¿‡WGPlatformè°ƒç”¨, C++å±‚é€šè¿‡WGPlatform::GetInstance()è°ƒç”¨. è¿™é‡Œè°ƒç”¨æ–¹å¼å¯ä»¥å‚è€ƒjni/PlatformTest.cpp. SDKéœ€è¦è®¾ç½®ä¸€ä¸ªå…¨å±€çš„å›žè°ƒ, åœ¨æŽˆæƒè¿”å›ž, åˆ†äº«è¿”å›žæ—¶å‡ä¼šè¿›è¡Œç›¸åº”çš„å›žè°ƒ. è®¾ç½®çš„å›žè°ƒå¯¹è±¡å®žçŽ°è‡ªWGPlatformObserver, åœ¨åˆå§‹åŒ–æ—¶ä¼ å…¥æ­¤å¯¹è±¡. ç¤ºä¾‹ä»£ç å¦‚ä¸‹:
 
 	GlobalCallback g_Test;
 	JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-	    WGPlatform::GetInstance()->init(vm);// C++²ã³õÊ¼»¯SDK
+	    WGPlatform::GetInstance()->init(vm);// C++å±‚åˆå§‹åŒ–SDK
 	    WGPlatform::GetInstance()->WGSetObserver(&g_Test);
 	    return JNI_VERSION_1_4;
 	}
    
-#### ÉèÖÃÈ«¾Ö»Øµ÷
-MSDKÍ¨¹ýWGPlatformObserver³éÏóÀàÖÐµÄ·½·¨½«ÊÚÈ¨¡¢·ÖÏí»ò²éÑ¯½á¹û»Øµ÷¸øÓÎÏ·¡£ÓÎÏ·¸ù¾Ý»Øµ÷½á¹ûµ÷ÕýUIµÈ¡£Ö»ÓÐÉèÖÃ»Øµ÷£¬ÓÎÏ·²ÅÄÜÊÕµ½MSDKµÄÏìÓ¦¡£
-ÉèÖÃJava »Øµ÷£º
+#### è®¾ç½®å…¨å±€å›žè°ƒ
+MSDKé€šè¿‡WGPlatformObserveræŠ½è±¡ç±»ä¸­çš„æ–¹æ³•å°†æŽˆæƒã€åˆ†äº«æˆ–æŸ¥è¯¢ç»“æžœå›žè°ƒç»™æ¸¸æˆã€‚æ¸¸æˆæ ¹æ®å›žè°ƒç»“æžœè°ƒæ­£UIç­‰ã€‚åªæœ‰è®¾ç½®å›žè°ƒï¼Œæ¸¸æˆæ‰èƒ½æ”¶åˆ°MSDKçš„å“åº”ã€‚
+è®¾ç½®Java å›žè°ƒï¼š
 
 	WGPlatform.WGSetObserver(new WGPlatformObserver() {
 		@Override
@@ -141,7 +141,7 @@ MSDKÍ¨¹ýWGPlatformObserver³éÏóÀàÖÐµÄ·½·¨½«ÊÚÈ¨¡¢·ÖÏí»ò²éÑ¯½á¹û»Øµ÷¸øÓÎÏ·¡£ÓÎÏ·¸ù
 		public void OnLoginNotify(LoginRet ret) { }
 	});
 
-ÉèÖÃC++ »Øµ÷(ÉèÖÃÁËJava²ã»Øµ÷»áÓÅÏÈµ÷ÓÃJava²ã»Øµ÷, Èç¹ûÒªÊ¹ÓÃC++²ã»Øµ÷Ôò²»ÄÜÉèÖÃJava²ã»Øµ÷)£º
+è®¾ç½®C++ å›žè°ƒ(è®¾ç½®äº†Javaå±‚å›žè°ƒä¼šä¼˜å…ˆè°ƒç”¨Javaå±‚å›žè°ƒ, å¦‚æžœè¦ä½¿ç”¨C++å±‚å›žè°ƒåˆ™ä¸èƒ½è®¾ç½®Javaå±‚å›žè°ƒ)ï¼š
 
 	class GlobalCallback: public WGPlatformObserver {
 	public:
@@ -154,12 +154,12 @@ MSDKÍ¨¹ýWGPlatformObserver³éÏóÀàÖÐµÄ·½·¨½«ÊÚÈ¨¡¢·ÖÏí»ò²éÑ¯½á¹û»Øµ÷¸øÓÎÏ·¡£ÓÎÏ·¸ù
 	GlobalCallback g_Test;
 
 	JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-		// C++²ã³õÊ¼»¯, ±ØÐëÔÚÓÎÏ·Ö÷ActivityµÄonCreateÖ®Ç°±»µ÷ÓÃ
+		// C++å±‚åˆå§‹åŒ–, å¿…é¡»åœ¨æ¸¸æˆä¸»Activityçš„onCreateä¹‹å‰è¢«è°ƒç”¨
 		WGPlatform::GetInstance()->init(vm);
 		WGPlatform::GetInstance()->WGSetObserver(&g_Test);
 		return JNI_VERSION_1_4;
 	}
 
-×¢: Èç¹ûÓÎÏ·Ê¹ÓÃC++ API, Ôò²»ÒªÔÙÉèÖÃJava²ãµÄÈ«¾Ö»Øµ÷, SDK»áÓÅÏÈµ÷ÓÃJava²ãµÄ»Øµ÷, ÓÐJava²ã»Øµ÷Ôò»áºöÂÔC++²ã»Øµ÷.
+æ³¨: å¦‚æžœæ¸¸æˆä½¿ç”¨C++ API, åˆ™ä¸è¦å†è®¾ç½®Javaå±‚çš„å…¨å±€å›žè°ƒ, SDKä¼šä¼˜å…ˆè°ƒç”¨Javaå±‚çš„å›žè°ƒ, æœ‰Javaå±‚å›žè°ƒåˆ™ä¼šå¿½ç•¥C++å±‚å›žè°ƒ.
 	
-ÖÁ´Ë, ÓÎÏ·¿ÉÒÔ¿ªÊ¼µ÷ÓÃMSDK APIÎÄµµÖÐÌáµ½µÄËùÓÐAPI.
+è‡³æ­¤, æ¸¸æˆå¯ä»¥å¼€å§‹è°ƒç”¨MSDK APIæ–‡æ¡£ä¸­æåˆ°çš„æ‰€æœ‰API.

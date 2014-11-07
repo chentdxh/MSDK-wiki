@@ -73,6 +73,40 @@ MSDK 基础工具类
 
 	WGPlatform::GetInstance()->WGGetVersion();
 
+获取安装渠道
+----------
+
+调用WGGetChannelId会返回游戏的安装渠道。接口详细说明如下：
+#### 接口声明：
+
+	/**
+	 * @return 安装渠道
+	 */
+	const std::string WGGetChannelId();
+
+#### 接口调用：
+
+接口调用示例：
+
+	WGPlatform::GetInstance()->WGGetChannelId();
+
+获取注册渠道
+----------
+
+调用WGGetRegisterChannelId会返回用户的注册渠道。接口详细说明如下：
+#### 接口声明：
+
+	/**
+	 * @return 注册渠道
+	 */
+	const std::string WGGetRegisterChannelId();
+
+####接口调用：
+
+接口调用示例：
+
+	WGPlatform::GetInstance()->WGGetRegisterChannelId();
+
 本地日志
 ------
 

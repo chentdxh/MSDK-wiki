@@ -24,12 +24,14 @@
   * [获取手Q/微信版本](tool.md#获取手Q/微信版本)
   * [检查接口在用户安装手Q/微信上是否支持](tool.md#检查接口在用户安装手Q/微信上是否支持)
   * [获取MSDK版本](tool.md#获取MSDK版本)
+  * [获取安装渠道](tool.md#获取安装渠道)
+  * [获取注册渠道](tool.md#获取注册渠道)
   * [本地日志](tool.md#本地日志)
   - - - - 
   * # 游戏接入常见问题
   * [异账号]()
-  * [无法拉起微信授权]()
-  * [公告无法展示]()
+  * [无法拉起微信授权](wechat.md#Android微信登录不了检查步骤)
+  * [公告无法展示](notice.md#游戏公告不能正常展示检查步骤)
   
 [接入QQ]()
 
@@ -83,10 +85,9 @@
   * [大图消息分享](wechat.md#大图消息分享)
   * [音乐消息分享](wechat.md#音乐消息分享)
   * [后端分享](wechat.md#后端分享)
-  * [分享到游戏中心](wechat.md#分享到游戏中心)
   - - - -
   * # 其他说明
-  * [微信功能对应支持版本](wechat.md#微信功能对应支持版本)
+  * [无法拉起微信授权](wechat.md#Android微信登录不了检查步骤)
 
 [内置浏览器]()
 
@@ -101,12 +102,12 @@
 [数据上报]()
 
   * # 灯塔
-  * [灯塔接入配置](beacon.md)
-  * [自定义数据上报]()
+  * [灯塔接入配置](beacon.md#灯塔接入配置)
+  * [自定义数据上报](beacon.md#自定义数据上报)
   - - - -
   * # RQD(RDM)
-  * [RQD接入配置](rqd.md)
-  * [Crash数据上报]()
+  * [RQD接入配置](rqd.md#RQD接入配置)
+  * [Crash数据上报](rqd.md#Crash数据上报)
    - - - -
   * # 用户反馈
   * [用户反馈](feedback.md)
@@ -126,12 +127,15 @@
   * [游戏公告不能正常展示检查步骤](notice.md#游戏公告不能正常展示检查步骤)
  
   
-[广告](ad.md)
+[广告]()
 
+  * [概述](ad.md#一、概述)
+  * [游戏接入](ad.md#二、游戏接入)
+  
 [LBS]()
 
-  * [获取附近的人](lbs.md)
-  * [清空位置信息]()
+  * [获取附近的人](lbs.md#获取附近的人)
+  * [清空位置信息](lbs.md#清空位置信息)
   
 [应用宝]()
 
@@ -145,8 +149,6 @@
 
  * [手游宝](qmi.md)
  - - - -
- * [信鸽]()
- - - - -
  * [米大师](midas.md)
  - - - -
  * # 游戏大厅
@@ -156,17 +158,14 @@
 [常量查询]()
 
  * # 常量定义
- * [平台类型ePlatform]()
- * [回调标识eFlag]()
+ * [平台类型ePlatform](const.md#平台类型ePlatform)
+ * [回调标识eFlag](const.md#回调标识eFlag)
  - - - - 
  * # 数据结构
- * [OnLoginNotify]()
- * [OnShareNotify]()
-
-  - - - - 
- * # Notify
- * [OnLoginNotify]()
- * [OnShareNotify]()
- * [OnWakeupNotify]()
- * [OnShareNotify]()
- * [OnRelationCallBack]()
+ * [eTokenType](const.md#eTokenType)
+ * [TokenRet](const.md#TokenRet)
+ * [LoginRet](const.md#LoginRet)
+ * [ShareRet](const.md#ShareRet)
+ * [WakeupRet](const.md#WakeupRet)
+ * [PersonInfo](const.md#PersonInfo)
+ * [RelationRet](const.md#RelationRet)
