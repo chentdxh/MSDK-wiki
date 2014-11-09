@@ -1,5 +1,18 @@
+## 写在前面
 
-# 目录结构
+MSDK做了这么久，被开发商嗤之以鼻最多的问题之一就是文档。问题的原因比较多，主要是三个方面：
+
+1. MSDK没有完整的线上文档，所有的文档都是跟随版本包。
+2. MSDK同时外发版本太多
+3. MSDK的版本文档使用word编写，不同版本文档不易比对。
+
+由于以上的问题，经常出现游戏更新版本以后没有同步使用新版本的文档，无法同步更新我们已经修正的文档错误，或者由于文档比对太过麻烦和版本太多，开发修改文档错误以后比较难同步修改到其余版本。
+
+为了解决这个问题，MSDK团队早期尝试过使用wiki，然而由于wiki的语法太过复杂，编辑的时间成本很高，所以最终还是没能坚持。但是文档online化总要解决，不然上面的问题会一直存在。为了让伟大的开发哥哥们不受困于wiki，最后在github终于找到了神器。mdwiki一个基于bootstrap的，使用markdown编辑内容的js wiki框架。
+
+## 源码地址：
+[https://github.com/bihe0832/MSDK-wiki/](https://github.com/bihe0832/MSDK-wiki/)
+## 目录结构
 
 - **android：Android Wiki相关文档**
 
@@ -33,7 +46,7 @@
 
 - **MSDK文档指引.html：MSDK文档相关链接**
 
-# WIKI链接
+## WIKI链接
 
 - **Wiki 地址：**
 
@@ -45,7 +58,11 @@
 
 	- Android 版本历史：http://wiki.dev.4g.qq.com/v2/android/index.html#!version.md
 	- IOS 版本历史：http://wiki.dev.4g.qq.com/v2/ios/index.html#!version.md
+	
+## MDWiki相关介绍：
 
-- **MSDK下载：**
+####github地址：[https://github.com/Dynalon/mdwiki](https://github.com/Dynalon/mdwiki)
 
-	- 外网：http://wiki.dev.4g.qq.com/index.php/%E9%A6%96%E9%A1%B5
+#####官网：[http://www.mdwiki.info](http://www.mdwiki.info)
+
+####使用指引：参见github地址
