@@ -27,6 +27,6 @@ MSDK的C++接口由JNI实现，使用MSDK的C++接口的游戏在集成时，需
 
 游戏需要复制`MSDKLibrary/jni`目录下的.cpp和.h文件加到游戏工程
 
-## makefile 配置：
+#### makefile 配置：
 
 游戏在引入代码以后需要同时将相关代码添加到makefile。游戏可以根据实际情况将`MSDKLibrary/jni`下面的Android.mk中的配置信息引入到游戏的makefile文件或者Android.mk。

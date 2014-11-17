@@ -57,11 +57,11 @@ if (is_uploaded_file ( $_FILES ['upfile'] ['tmp_name'] )) {
 		echo "<p style=\"text-align:left;text-indent:2em\">上传文件名称：" . $name . "</p>";
 		echo "<p style=\"text-align:left;text-indent:2em\">上传文件大小：" . $size . "</p>";
 		// 把上传的临时文件移动到up目录下面
-		move_uploaded_file ( $tmp_name, dirname(__FILE__).'/../wiki/android/'.$name );
+		move_uploaded_file ( $tmp_name, dirname(__FILE__).'/../wiki/'.$name );
 		$destination = $name;
 		if ($error == 0) {
 			if(1 == $okType){
-				echo "<p style=\"text-align:left;text-indent:2em\">上传图片预览：</p><img src=../wiki/android/" . $destination . ">";
+				echo "<p style=\"text-align:left;text-indent:2em\">上传图片预览：</p><img src=../wiki/" . $destination . ">";
 			}else{
 				echo "<p style=\"text-align:left;text-indent:2em\">上传文件结果：文件上传成功";
 			}
