@@ -544,7 +544,7 @@ MSDK 手Q 相关模块
 绑定QQ群
 ------
 
-游戏公会/联盟内，公会会长可在游戏内拉取会长自己创建的群，绑定某个群作为该公会的公会群。调用接口：WGBindQQGroup
+游戏公会/联盟内，公会会长可在游戏内拉取会长自己创建的群，绑定某个群作为该公会的公会群。调用接口：WGBindQQGroup。**目前该接口游戏需要在主线程调用。**
 
 #### 接口声明：
 	
@@ -554,7 +554,7 @@ MSDK 手Q 相关模块
 	 * @param cUnion_name 公会名称
 	 * @param cZoneid 大区ID，opensdk限制只能填数字，字符可能会导致绑定失败	 
 	 * @param cSignature 游戏盟主身份验证签名，生成算法为
-					openid_appid_appkey_公会id_区id 做md5如果按照该方法仍然不能绑定成功，可RTX 咨询 OpenAPIHelper
+					玩家openid_游戏appid_游戏appkey_公会id_区id 做md5如果按照该方法仍然不能绑定成功，可RTX 咨询 OpenAPIHelper
 	 *
 	 */
 	void WGBindQQGroup(unsigned char* cUnionid, unsigned char* cUnion_name,
@@ -575,19 +575,26 @@ MSDK 手Q 相关模块
 		(unsigned char *)cSignature.c_str()
 	);
 
-	
+### 绑群流程：
+![绑群流程图](bindqqgroup.jpg)
+### 解绑流程：
+![绑群流程图](unbindqqgroup.jpg)
 #### 注意事项：
 
 1.	**游戏内绑定群的时候公会id和大区id必须是数字**，如果使用字符可能会导致绑定失败，一般提示为“参数校验失败”。
 
-- 游戏内绑定群的时候签名目生成的规则为openid_appid_appkey_公会id_区id的md5值，如果按照次规则生成的签名不可用，直接RTX 咨询 OpenAPIHelper
+- 游戏内绑定群的时候签名目生成的规则为：玩家openid\_游戏appid\_游戏appkey\_公会id\_区id的md5值，如果按照次规则生成的签名不可用，直接RTX 咨询 OpenAPIHelper
 
 - 游戏一个公会ID只能和一个QQ群进行绑定。如果用户解散了公会QQ群，公会ID和公会QQ群不会自动解绑，这样公会ID就无法绑定新的QQ群。此时，应用需要调用本接口将公会ID与QQ群解绑，以便创建新的公会QQ群，或与其他已有的QQ群进行绑定。接口调用方法可以RTX 咨询 OpenAPIHelper，或者参照opensdk wiki：[http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup](http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup)
 
+- **调用api的变量最好不要是临时变量**
+
+- 更多内容参考[游戏内加群加好友常见问题](qq.md#加群加好友常见问题)
 
 加入QQ群
 ------
-玩家在游戏中直接加入QQ群调用接口：WGJoinQQGroup
+玩家在游戏中直接加入QQ群调用接口：WGJoinQQGroup。**目前该接口游戏需要在主线程调用。**
+
 #### 接口声明：
 
 	/**
@@ -602,9 +609,20 @@ MSDK 手Q 相关模块
 	std::string cQqGroupKey = "xkdNFJyLwQ9jJnozTorGkwN30Gfue5QN";
 	WGPlatform::GetInstance()->WGJoinQQGroup((unsigned char *)cQqGroupKey.c_str());
 
+### 加群流程：
+![加群流程图](joinqqgroup.jpg)
+
+#### 注意事项：
+
+1. 游戏内加群时使用的参数不是对应的QQ群的群号码，而是openAPI后台生成的一个特殊Key值，在游戏中使用的时候需要调用openAPI的接口获取，调用方法可RTX 咨询 OpenAPIHelper，联调阶段可以在[http://qun.qq.com](http://qun.qq.com)**(加群组件/Android代码处查看)**，如下图：![加群示意图](qqgrouup.png)
+
+- **调用api的变量最好不要是临时变量**
+
+- 更多内容参考[游戏内加群加好友常见问题](qq.md#加群加好友常见问题)
+
 添加QQ好友
 ------
-玩家在游戏中直接其他游戏玩家为QQ好友。调用接口：WGAddGameFriendToQQ
+玩家在游戏中直接其他游戏玩家为QQ好友。调用接口：WGAddGameFriendToQQ。**目前该接口游戏需要在主线程调用。**
 #### 接口声明：
 
 	/**
@@ -628,18 +646,35 @@ MSDK 手Q 相关模块
 		(unsigned char *)cMessage.c_str()
 	);
 
-#### 注意事项：
-
-1. 游戏内绑定群的时候公会id和大区id必须是数字，如果使用字符可能会导致绑定失败，一般提示为“参数校验失败”。
-
-2. 游戏内绑定群的时候签名目生成的规则为openid_appid_appkey_公会id_区id的md5值，如果按照次规则生成的签名不可用，直接RTX 咨询 OpenAPIHelper
-
-3. 游戏一个公会ID只能和一个QQ群进行绑定。如果用户解散了公会QQ群，公会ID和公会QQ群不会自动解绑，这样公会ID就无法绑定新的QQ群。此时，应用需要调用本接口将公会ID与QQ群解绑，以便创建新的公会QQ群，或与其他已有的QQ群进行绑定。接口调用方法可以RTX 咨询 OpenAPIHelper，或者参照opensdk wiki：http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup
-
-4. 游戏内加群时使用的参数不是对应的QQ群的群号码，而是openAPI后台生成的一个特殊Key值，在游戏中使用的时候需要调用openAPI的接口获取，调用方法可RTX 咨询 OpenAPIHelper，联调阶段可以在http://qun.qq.com(加群组件/Android代码处查看)，如下图：
-
 加群加好友常见问题
 ---
+
+### 1. 为什么提示身份验证失败？
+
+- 游戏内绑定群的时候公会id和大区id必须是数字，如果使用字符可能会导致绑定失败，一般提示为“参数校验失败”。
+- 游戏内绑定群的时候签名生成的规则为：玩家openid\_游戏appid\_游戏appkey\_公会id\_区id的md5值，如果按照此规则生成的签名不可用，直接RTX 咨询 OpenAPIHelper。
+- 如果区id没有，则用0表示。（demo里面绑定不成功的原因是里面的签名是写死的，不对，需要自己重新算一下签名，appid、appkey、openid都可以在logcat里面找到）
+
+### 2. 查询某个公会ID绑定了哪个群？
+
+请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)。返回码错误码为2004，该群与appid没有绑定关系
+
+### 3. 如何查询公会成员是否在群中？
+ 
+请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)。返回码错误码为2003，该群与appid没有绑定关系
+
+### 4. 怎么判断绑定QQ群是否成功？
+请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)。返回码为0，group_openid则表示QQ群的group_openid。再通过group_openid查询群名称（参考第六条） 
+
+**特别说明，msdk和手q不会返回绑定结果，需要游戏主动去查询是否绑定成功**
+
+### 5. 怎么解绑群？
+请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup](http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup)
+### 6. 查询某个公会ID绑定了哪个群？
+请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info)
+### 7. 更多问题
+请参考：[http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8](http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8)
+应用推广类API----QQ能力推广----公会QQ群
 
 手Q功能对应支持版本
 ------

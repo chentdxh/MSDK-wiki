@@ -73,58 +73,12 @@ MSDK2.0.0a及以后按如下方式配置。
 
 ###2、被加密的数据
 要加密的登录态参数如下表：
-<table>
-<tr>
-     <td>参数名</td><td>说明</td><td>值</td>
-</tr>
-<tr>
-     <td>acctype</td><td>帐号类型</td><td>qq | wx</td>
-</tr>
-<tr>
-     <td>appid</td><td>游戏ID</td><td></td>
-</tr>
-<tr>
-     <td>openid</td><td>用户授权后平台返回的唯一标识</td><td></td>
-</tr>
-<tr>
-     <td>access_token</td><td>用户授权票据</td><td></td>
-</tr>
-<tr>
-     <td>platid</td><td>终端类型</td><td>0.iOS；1.Android</td>
-</tr>
-</table>
+
+![webview](./webview_extend_1.png)
 
 MSDK会在URL后附加的参数如下，__请勿传入重复的参数，会导致解密失败：
 
-<table>
-<tr>
-     <td>参数名</td><td>说明</td><td>值</td>
-</tr>
-<tr>
-     <td>timestamp</td><td>请求的时间戳</td><td></td>
-</tr>
-<tr>
-     <td>appid</td><td>游戏ID</td><td></td>
-</tr>
-<tr>
-     <td>algorithm</td><td>加密算法标识</td><td>v1 | v2</td>
-</tr>
-<tr>
-     <td>msdkEncodeParam</td><td>密文</td><td></td>
-</tr>
-<tr>
-     <td>version</td><td>MSDK版本号</td><td>1.6.2a</td>
-</tr>
-<tr>
-     <td>sig</td><td>请求本身的签名</td><td></td>
-</tr>
-<tr>
-     <td>encode</td><td>编码参数</td><td>1</td>
-</tr>
-<tr>
-     <td>openid</td><td>用户授权后平台返回的唯一标识</td><td></td>
-</tr>
-</table>
+![webview](./webview_extend_2.png)
 
 ###3、举例说明
 假设浏览器拉起URL：http://apps.game.qq.com/ams/gac/index.html， 实际截包会看到访问的URL如下：
@@ -154,6 +108,7 @@ vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-r
 `http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&version=1.6.2i&encode=1`
  
 将msdkEncodeParam 里的密文URL Decode，放在body以Post方式传输，注意不需要加key“msdkEncodeParam=”。截包如下：
+
 ![webview](./webview_res/webview_4.png)
 ![webview](./webview_res/webview_8.png)
 

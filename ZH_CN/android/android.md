@@ -1,58 +1,35 @@
 Android 接入
 =======
 
-#### 包结构说明
+## Step1: 包结构说明
 MSDK的发布包(zip)主要包含两个重要部分, MSDKLibrary和MSDKSample, 前者为MSDK库, 后者应用前者, 是MSDK的使用实例. 用ant构建MSDKSample即可获得可执行的apk包存于MSDKSample/bin下.
 MSDK主体以Android Library Project的形式提供, 游戏引入MSDKLibrary即可使用, MSDKLibrary中包含了: 所需要的jar包, so文件, 资源文件. 包的目录结构如下图:
-![library_progect](/library_progect.png "library_progect")
+![library_progect](./library_progect.png "library_progect")
 
-#### 引入MSDK库
+## Step2: 引入MSDK库
 在Eclipse中引入MSDKLibrary项目, 右击游戏项目->属性->Android->添加(库)->选择MSDKLibrary, 完成对MSDKLibrary的引用. 不能使用Android Library Project的游戏, 需要复制libs, res两个目录到游戏工程相应目录.
 	复制MSDKLibrary/jni目录下的jni的.cpp和.h文件加到游戏工程, 并添加到makefile.
 	注意事项:
 	引入MSDKLibrary以后编译发生包冲突(重复), 因为MSDK里面已经包含了 微信SDK(libammsdk.jar), QQ互联sdk(open_sdk.jar), MTA(mta-xxx.jar), 灯塔SDK(beacon-xxx.jar), 切上述sdk均是其最新稳定版, 游戏如果以前有单独集成这些SDK, 请删除之前集成的jar包.
 
-#### 配置说明
+## Step3: 配置说明
 a)权限配置
 
-	<!-- TODO SDK接入必须权限模块 START -->
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<uses-permission android:name="android.permission.GET_TASKS" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.RESTART_PACKAGES" />
-	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-	<!-- 登录上报时需要带设备名称, 通过蓝牙模块来获取设备名称 -->
-	<uses-permission android:name="android.permission.BLUETOOTH" />
-	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-	<!-- 可选的权限：异常上报系统log,XG也需要 -->
-	<uses-permission android:name="android.permission.READ_LOGS" />
-
-	<!-- 手游宝 permission start -->
-	<uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-	<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-	<!-- 手游宝 permission end -->
-
-	<!-- 接入信鸽需要的其他权限 -->
-	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
-	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
-	<uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="android.permission.VIBRATE" />
-
-	<!-- TODO SDK接入 必须权限模块 END -->
+```
+<!-- TODO SDK接入必须权限模块 START -->
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+<uses-permission android:name="android.permission.GET_TASKS" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.RESTART_PACKAGES" />
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!-- TODO SDK接入 必须权限模块 END -->
+```
 
 在assets/msdkconfig.ini中配置访问的需要访问的MSDK后台环境(测试环境/正式环境), 联调阶段游戏需要使用测试环境, 发布时需要切换到正式环境(公司内测, 公测, 正式上线), 切换环境时候需要注意, 后台也要同时切换成对应的环境. 下面是配置前端访问MSDK后台测试环境. 
 
@@ -64,7 +41,7 @@ a)权限配置
 	
 PS: 为了防止游戏用测试环境上线, SDK内检测到游戏使用测试环境或者开发环境时, 会Toast出类似: “You are using http://msdktest.qq.com” 这样的提示, 游戏切换成正式环境域名以后此提示自动消失.
 
-#### Java层初始化
+## Step4: Java层初始化
 	public void onCreate(Bundle savedInstanceState) {
 	...
 	//游戏必须使用自己的QQ AppId联调
@@ -116,7 +93,7 @@ PS: 为了防止游戏用测试环境上线, SDK内检测到游戏使用测试�
 	System.loadLibrary("WeGameSample");
 	}
 
-#### C++ 层初始化(只使用Java API的游戏无需可跳过此段)
+## Step5: C++ 层初始化(只使用Java API的游戏无需可跳过此段)
 所有WG开头的接口均提供了C++层和Java层接口. Java层通过WGPlatform调用, C++层通过WGPlatform::GetInstance()调用. 这里调用方式可以参考jni/PlatformTest.cpp. SDK需要设置一个全局的回调, 在授权返回, 分享返回时均会进行相应的回调. 设置的回调对象实现自WGPlatformObserver, 在初始化时传入此对象. 示例代码如下:
 
 	GlobalCallback g_Test;
@@ -126,7 +103,7 @@ PS: 为了防止游戏用测试环境上线, SDK内检测到游戏使用测试�
 	    return JNI_VERSION_1_4;
 	}
    
-#### 设置全局回调
+## Step6: 设置全局回调
 MSDK通过WGPlatformObserver抽象类中的方法将授权、分享或查询结果回调给游戏。游戏根据回调结果调正UI等。只有设置回调，游戏才能收到MSDK的响应。
 设置Java 回调：
 
@@ -160,6 +137,6 @@ MSDK通过WGPlatformObserver抽象类中的方法将授权、分享或查询结�
 		return JNI_VERSION_1_4;
 	}
 
-注: 如果游戏使用C++ API, 则不要再设置Java层的全局回调, SDK会优先调用Java层的回调, 有Java层回调则会忽略C++层回调.
+**注: 如果游戏使用C++ API, 则不要再设置Java层的全局回调, SDK会优先调用Java层的回调, 有Java层回调则会忽略C++层回调.另外MSDK的回调在UI线程, 开发者需自己确保线程安全。**
 	
 至此, 游戏可以开始调用MSDK API文档中提到的所有API.

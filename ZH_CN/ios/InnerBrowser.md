@@ -41,7 +41,9 @@ plat->WGOpenAmsCenter(NULL);
 |version|	MSDK版本号|	例如1.6.2i|
 |sig|	请求本身的签名|	|
 |encode|	编码参数|	1|
-  
+|openid|	用户授权后平台返回的唯一标识 | | 
+
+ 
   - ### 被加密的数据
   - 要加密的登录态参数如下表：
 
@@ -49,6 +51,7 @@ plat->WGOpenAmsCenter(NULL);
 |--|--|--|
 |acctype |	帐号类型|	qq/wx|
 |appid 	|游戏ID	　||
+|openid |	用户授权后平台返回的唯一标识||
 |access_token|	用户授权票据|	　|
 |platid 	|终端类型|	0.iOS；1.Android|
  
