@@ -14,50 +14,55 @@ MSDK做了这么久，被开发商嗤之以鼻最多的问题之一就是文档�
 [https://github.com/bihe0832/MSDK-wiki/](https://github.com/bihe0832/MSDK-wiki/)
 ## 目录结构
 
-- **android：Android Wiki相关文档**
-
-	- navigation.md：Android Wiki 菜单配置文件
-	- config.json：Android Wiki 风格配置
-	- *.md：Android 各模块文档
-	- *.jpg：Android 文档中用到的图片
 
 - **CSS：wiki页面相关的css**
 
 - **font：wiki页面使用到的特殊字体**
 
-- **ios：IOS Wiki相关文档**
-
-	- navigation.md：IOS Wiki 菜单配置文件
-	- config.json：IOS Wiki 风格配置
-	- *.md：IOS 各模块文档
-	- *.jpg：IOS 文档中用到的图片	
-
-
 - **js：wiki页面相关的js**
-
-- **router：Router Wiki相关文档**
-
-	- navigation.md：Router Wiki 菜单配置文件
-	- config.json：Router Wiki 风格配置
-	- *.md：Router 各模块文档
-	- *.jpg：Router 文档中用到的图片
 
 - **upload：wiki文档上传工具**
 
-- **MSDK文档指引.html：MSDK文档相关链接**
+- **ZH_CN：MSDK中文文档**
+
+	- **android：Android Wiki相关文档**
+
+		- navigation.md：Android Wiki 菜单配置文件
+		- config.json：Android Wiki 风格配置
+		- *.md：Android 各模块文档
+		- *.jpg：Android 文档中用到的图片
+
+	- **ios：IOS Wiki相关文档**
+
+		- navigation.md：IOS Wiki 菜单配置文件
+		- config.json：IOS Wiki 风格配置
+		- *.md：IOS 各模块文档
+		- *.jpg：IOS 文档中用到的图片	
+
+	- **router：Router Wiki相关文档**
+
+		- navigation.md：Router Wiki 菜单配置文件
+		- config.json：Router Wiki 风格配置
+		- *.md：Router 各模块文档
+		- *.jpg：Router 文档中用到的图片
+	- **README.html：MSDK Wiki相关链接**
+
+- **KO_KR：MSDK韩文文档**	
+
+	- 目录结构同上
 
 ## WIKI链接
 
 - **Wiki 地址：**
 
-	- Android Wiki：http://wiki.dev.4g.qq.com/v2/android/index.html
-	- IOS Wiki：http://wiki.dev.4g.qq.com/v2/ios/index.html
-	- 后台 Wiki：http://wiki.dev.4g.qq.com/v2/router/index.html
+	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html)
+	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html)
+	- 后台 Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/router/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/router/index.html)
 
 - **MSDK版本历史：**
 
-	- Android 版本历史：http://wiki.dev.4g.qq.com/v2/android/index.html#!version.md
-	- IOS 版本历史：http://wiki.dev.4g.qq.com/v2/ios/index.html#!version.md
+	- Android 版本历史：[http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html#!version.md](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html#!version.md)
+	- IOS 版本历史：[http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html#!version.md](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html#!version.md)
 	
 ## MDWiki相关介绍：
 
