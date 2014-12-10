@@ -9,7 +9,7 @@ QQ接入
   
 | Key      |    Type | Value  |备注|相关模块|
 | :-------- | --------:| :-- |:--|:---:|
-| QQAppId  | String |  各游戏不同 |手Q的Appid|所有|
+| QQAppID  | String |  各游戏不同 |手Q的AppID|所有|
 | QQAppKey  | String |  各游戏不同 |手Q的AppKey|所有|
   
   *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
@@ -226,7 +226,7 @@ bool WGSwitchUser(bool flag);
 
 ### 注意事项
 - 手Q版本4.6以上才支持快速登录。
-- URL Types中的scheme 需配置tencentlaunch+appid拉起时才会携带登录信息。
+- URL Types中的scheme 需配置tencentlaunch+AppID拉起时才会携带登录信息。
 - ---
 
 ##手Q关系链查询
@@ -240,7 +240,7 @@ bool WGQueryQQMyInfo();
 ```
 >描述: 获取用户QQ帐号基本信息
 返回值：
-  - false:手Q未授权或appid等配置不对
+  - false:手Q未授权或AppID等配置不对
   -  true:参数无异常
 通过OnRelationNotify(RelationRet& relationRet) 回调游戏
 RelationRet（附录A）结构体中PersonInfo的province和city字段手Q为空，小、中、大三幅图片尺寸为：40 40 100（像素）
@@ -275,7 +275,7 @@ bool WGQueryQQGameFriendsInfo();
 ```
 >描述: 获取用户QQ同玩好友基本信息
 返回值：
-   - false:手Q未授权或appid等配置不对
+   - false:手Q未授权或AppID等配置不对
    - true:参数无异常
 通过OnRelationNotify(RelationRet& relationRet) 回调游戏
 RelationRet（附录A）结构体中PersonInfo的province和city字段手Q为空，小、中、大三幅图片尺寸为：40、40、100（像素）。
@@ -539,7 +539,7 @@ void  WGBindQQGroup (unsigned char* cUnionid, unsigned char* cUnion_name,
   - cUnionid 公会ID，opensdk限制只能填数字，字符可能会导致绑定失败，一个公会只能绑定一个群。如果需要解绑，请查看QQ API 文档（如下）。如有其它问题可rtx联系OpenAPIHelper(OpenAPI技术支持) http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup
   - cUnion_name 公会名称
   - cZoneid 大区ID，opensdk限制只能填数字，字符可能会导致绑定失败
-  - cSignature 游戏盟主身份验证签名，生成算法为openid_appid_appkey_公会id_区id 做md5
+  - cSignature 游戏盟主身份验证签名，生成算法为openid_AppID_appkey_公会id_区id 做md5
   添加成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(附录A)
   
  - ###示例代码 
@@ -554,9 +554,9 @@ plat->WGAddGameFriendToQQ((unsigned char*)"D2DEFFFBE310779E88CD067C9D3329E5", (u
     NSString *uinionId = @"1";
     NSString *zoneId = @"1";
     NSString *openId = [NSString stringWithCString:ret.open_id.c_str() encoding:NSUTF8StringEncoding];
-    NSString *appId = @"100703379";
+    NSString *AppID = @"100703379";
     NSString *appKey = @"4578e54fb3a1bd18e0681bc1c734514e";
-    NSString *orgSigStr = [NSString stringWithFormat:@"%ld",(unsigned long)[[NSString stringWithFormat:@"%@_%@_%@_%@_%@",openId,appId,appKey,uinionId,zoneId]hash]];
+    NSString *orgSigStr = [NSString stringWithFormat:@"%ld",(unsigned long)[[NSString stringWithFormat:@"%@_%@_%@_%@_%@",openId,AppID,appKey,uinionId,zoneId]hash]];
     
     plat->WGBindQQGroup((unsigned char*)"1", (unsigned char*)"1", (unsigned char*)"test", (unsigned char*)[orgSigStr UTF8String]);
 ```

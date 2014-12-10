@@ -1,6 +1,19 @@
 变更历史
 ===
 
+## 2.3.2
+ - 【代码变更】
+1.【修改】更新OpenSDK2.5.1，修正在iOS8.1.1上，没有安装手Q时使用webView无法正常登录的问题。
+ - 【编译变更】
+1. Tencent_MSDK_IOS_V2.3.2i(支持arm32, iOS SDK7编译)：由于部分游戏使用的游戏引擎对iOS SDK8支持较差，MSDK使用iOS SDK7编译了32位包供这部分游戏使用。
+2. Tencent_MSDK_IOS_V2.3.2i(支持arm64, iOS SDK8编译)：使用iOS SDK8编译的支持arm64的包。
+---
+
+## 2.3.1
+ - 【代码变更】
+1.【修改】更新RQD和灯塔，修正Crash上报本身导致的Crash隐患。
+---
+
 ## 2.3.0
 
  - 【代码变更】
@@ -43,7 +56,7 @@ void WGSetIapEnalbeLog(bool enabled);
 6、【修改】修复内置浏览器分享页面在iOS7,8的显示问题
 7、【修改】修复内置浏览器广告按钮在没有广告时的显示问题
 8、【修改】修复游客模式发送注册消息有概率失败的问题
-9、【修改】修正RDM Crash上报时，AppId没有上报的问题。
+9、【修改】修正RDM Crash上报时，AppID没有上报的问题。
 
 ---
 
@@ -73,6 +86,17 @@ void WGSetIapEnalbeLog(bool enabled);
     }
 ```
 
+---
+
+## 2.0.7
+ - 【代码变更】
+1.【修改】更新OpenSDK2.5.1，修正在iOS8.1.1上，没有安装手Q时使用webView无法正常登录的问题。
+---
+
+## 2.0.6
+ - 【代码变更】
+1.【修改】增加Crash上报时的AppID和OpenId上报。
+2.【修改】更新RQD和灯塔，修正Crash上报本身导致的Crash隐患
 ---
 
 ##2.0.5
@@ -131,7 +155,7 @@ void WGSetIapEnalbeLog(bool enabled);
 
 ---
 
-##2.1.0
+##2.0.2
 - 【代码变更】
 1、增加游戏内好友的三个接口，更新OpenSDK2.5，相应的需要使用手Q新版本：
 ```
@@ -162,7 +186,7 @@ void WGSetIapEnalbeLog(bool enabled);
 ```
 ---
 
-##2.1.0
+##2.0.1
 - 【代码变更】
 1、公告增加图片公告类型，公告结构体增加图片数据，详见MSDK接入文档2.0
 2、增加LoginWithLocalInfo接口来校验票据，游戏启动或从后台切到前台调用此方法。

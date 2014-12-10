@@ -11,31 +11,24 @@
 
 [SDK接入]()
 
-  * # Android 接入
+  * # 快速接入
   * [包结构说明](android.md)
-  * [包内容说明](android.md)
-  * [包引入](android.md)
-  * [初始化](android.md)
-  * [全局回调设置](android.md)
+  * [引入MSDK包](android.md)
+  * [配置说明](android.md)
+  * [MSDK初始化](android.md)
+  * [设置全局回调](android.md)
+  - - - - 
+  * # 版本更新
+  * [Android Library Project类游戏更新](update.md#Android Library Project类游戏更新)
+  * [非Android Library Project类游戏更新](update.md#非Android Library Project类游戏更新)
+  * [代码混淆配置](update.md#代码混淆配置)
   - - - -
   * # 环境配置
   * [C++编译配置](env.md#C++编译配置)
   - - - -
-  * # 工具接口
-  * [检查手Q/微信是否安装](tool.md#检查手Q/微信是否安装)
-  * [获取手Q/微信版本](tool.md#获取手Q/微信版本)
-  * [检查接口在用户安装手Q/微信上是否支持](tool.md#检查接口在用户安装手Q/微信上是否支持)
-  * [获取MSDK版本](tool.md#获取MSDK版本)
-  * [获取安装渠道](tool.md#获取安装渠道)
-  * [获取注册渠道](tool.md#获取注册渠道)
-  * [本地日志](tool.md#本地日志)
-  - - - - 
-  * # 游戏接入常见问题
-  * [异账号]()
-  * [无法拉起微信授权](wechat.md#Android微信登录不了检查步骤)
-  * [公告无法展示](notice.md#游戏公告不能正常展示检查步骤)
-  * [手Q加群加好友常见问题](qq.md#加群加好友常见问题)
-  
+  * # 接入检查
+  * [接入配置自检](env.md#接入配置自检)
+
 [接入QQ]()
 
   * # 接入配置
@@ -43,9 +36,7 @@
   - - - -
   * # 登陆模块
   * [授权登录](qq.md#授权登录)
-  * [权限设置](qq.md#权限设置)
   * [快速登陆](qq.md#快速登陆)
-  * [常见登陆问题](qq.md#常见登陆问题)
   * [异账号](diff-account.md)
   - - - -
   * # 关系链
@@ -117,6 +108,10 @@
   
 [公告]()
 
+  * # 接入指引
+  * [模块介绍](notice.md#模块介绍)
+  * [推荐用法](notice.md#推荐用法)
+  - - - -
   * # 接入配置
   * [接入配置](notice.md#接入配置)
   * [开关配置](notice.md#开关配置)
@@ -177,3 +172,24 @@
  * [WakeupRet](const.md#WakeupRet)
  * [PersonInfo](const.md#PersonInfo)
  * [RelationRet](const.md#RelationRet)
+
+
+[工具接口]()
+
+  * #平台相关
+  * [检查手Q/微信是否安装](tool.md#检查手Q/微信是否安装)
+  * [获取手Q/微信版本](tool.md#获取手Q/微信版本)
+  * [检查接口在用户安装手Q/微信上是否支持](tool.md#检查接口在用户安装手Q/微信上是否支持)
+  - - - - 
+  * #MSDK相关
+  * [获取MSDK版本](tool.md#获取MSDK版本)
+  * [获取安装渠道](tool.md#获取安装渠道)
+  * [获取注册渠道](tool.md#获取注册渠道)
+  * [本地日志](tool.md#本地日志)
+ 
+[游戏接入常见问题]()
+
+  * [无法拉起微信授权](wechat.md#Android微信登录不了检查步骤)
+  * [公告无法展示](notice.md#游戏公告不能正常展示检查步骤)
+  * [手Q加群加好友常见问题](qq.md#加群加好友常见问题)
+  * [异帐号常见问题](diff-account.md)

@@ -49,9 +49,9 @@ CoreLocation.framework
 | :-------- | --------:| :-- |:--|:---:|
 | MSDK_URL  | String |  msdktest.qq.com |MSDK测试环境，正式上线前需改为msdk.qq.com|所有|
 | MSDK_PUSH_URL  | String |  pushtest.msdk.qq.com |为MSDK上报信息测试环境，正式上线前需改为push.msdk.qq.com|所有|
-| QQAppId  | String |  各游戏不同 |手Q的Appid|所有|
+| QQAppID  | String |  各游戏不同 |手Q的AppID|所有|
 | QQAppKey  | String |  各游戏不同 |手Q的AppKey|所有|
-| WXAppId  | String |  各游戏不同 |微信的Appid|所有|
+| WXAppID  | String |  各游戏不同 |微信的AppID|所有|
 | WXAppKey  | String |  各游戏不同 |微信的AppKey|所有|
 | CHANNEL_DENGTA  | String |  1001 |iOS系统渠道号|统计|
 | MSDK_PUSH_SWITCH  | String |  ON |此为推送功能的开关，若不使用MSDK推送则不需要配置|推送|

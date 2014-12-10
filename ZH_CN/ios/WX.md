@@ -8,7 +8,7 @@
 
 | Key      |    Type | Value  |备注|相关模块|
 | :-------- | --------:| :-- |:--|:---:|
-| WXAppId  | String |  各游戏不同 |微信的Appid|所有|
+| WXAppID  | String |  各游戏不同 |微信的AppID|所有|
 | WXAppKey  | String |  各游戏不同 |微信的AppKey|所有|
   
   *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
@@ -94,7 +94,7 @@ bool WGQueryWXMyInfo();
 ```
 >描述: 获取用户微信帐号基本信息
 返回值：
-   false:微信未授权或appid等配置不对
+   false:微信未授权或AppID等配置不对
    true:参数无异常
 通过OnRelationNotify(RelationRet& relationRet) 回调游戏
 RelationRet（附录B）结构体中PersonInfo的小、中、大三幅图片尺寸为：46、96、132（像素），个人信息中的国家和语言信息通过country和lang返回给游戏。[1.7.0新增国家语言信息 ]
@@ -124,7 +124,7 @@ bool WGQueryWXGameFriendsInfo();
 ```
 >描述: 获取用户微信同玩好友基本信息
 返回值：
-   false:微信未授权或appid等配置不对
+   false:微信未授权或AppID等配置不对
    true:参数无异常
 通过OnRelationNotify(RelationRet& relationRet) 回调游戏
 RelationRet（附录A）结构体中PersonInfo的小、中、大三幅图片尺寸为：46、96、132（像素），好友信息里面没有国家和语言

@@ -33,7 +33,6 @@ assets/msdkconfig.ini中配置打开消息推送开关：
     
     <!-- 信鸽配置START -->
     <!-- 【必须】 信鸽通知栏 -->
-    <!-- 【必须】 如果被打开的activity是启动模式为SingleTop，SingleTask或SingleInstance，请根据通知的异常自查列表第8点处理 -->
     <activity
         android:name="com.tencent.android.tpush.XGPushActivity"
         android:exported="false" >
@@ -66,9 +65,20 @@ assets/msdkconfig.ini中配置打开消息推送开关：
         android:process=":xg_service_v2" />
     <!-- 信鸽配置END -->
 
-第三步，登陆http://dev.ied.com/在消息管理模块中进行推送消息设置
+第三步，登陆http://dev.ied.com/在消息管理模块中进行推送消息设置，请使用 **消息（正式环境）发送消息**
 
 ![msdkpush_1](./push_1.png)
+
+联调测试
+------
+
+1、按上面步骤配置好，启动游戏过滤log，如果出现以下log则说明注册设备成功，可以在飞鹰系统进行全量推送了
+
+![msdkpush_1](./push_ce1.png)
+
+2、登陆成功后如果看到以下log则说明绑定用户成功，可以在飞鹰系统进行号码包推送了
+
+![msdkpush_1](./push_ce2.png)
 
 已接入信鸽的应用解决方案
 ------
@@ -90,3 +100,11 @@ ii)	也可以选择删除MSDK使用的信鸽sdk，完全使用旧的接入信鸽
 
 iii)	删除自己从信鸽官网下载的sdk，但不删除MSDK使用的信鸽sdk(MSDK2.2使用的是Xg_sdk_v2.341.jar)，验证旧的接入信鸽功能是否正常即可，如果使用旧的接入信鸽功能，建议关闭msdk推送开关
 
+信鸽及MTA混淆代码注意事项
+------
+Android APP开发者通常会利用proguard工具做代码混淆，由于MTA的对外接口和NDK接口是需要公开的，因此需要在混淆时注意保留以下代码，否则可能导致功能不可用或异常。
+
+    -keep public class * extends android.app.Service
+    -keep public class * extends android.content.BroadcastReceiver
+    -keep class com.tencent.android.tpush.**  {* ;}
+    -keep class com.tencent.mid.**  {* ;}

@@ -41,13 +41,20 @@ MSDK 手Q 相关模块
 
 		public void onCreate(Bundle savedInstanceState) {
 			...
-			//游戏必须使用自己的QQ AppId联调
-			baseInfo.qqAppId = "1007033***";
-			baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
-			...
-			WGPlatform.Initialized(this, baseInfo);
-			WGPlatform.handleCallback(getIntent());
-			...
+    		//游戏必须使用自己的QQ AppId联调
+            baseInfo.qqAppId = "1007033***";
+            baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
+
+            //游戏必须使用自己的微信AppId联调
+            baseInfo.wxAppId = "wxcde873f99466f***"; 
+            baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
+
+            //游戏必须使用自己的支付offerId联调
+            baseInfo.offerId = "100703***";
+    		...
+    		WGPlatform.Initialized(this, baseInfo);
+    		WGPlatform.handleCallback(getIntent());
+    		...
 		}
 - **注意事项：**
 
@@ -132,44 +139,9 @@ MSDK 手Q 相关模块
 
 - 如果游戏的Activity为Launch Activity, 则需要在游戏Activity声明中添加android:configChanges="orientation|screenSize|keyboardHidden", 否则可能造成没有登录没有回调。
 
-
-权限设置
-------
-
-	<!-- TODO SDK接入必须权限模块 START -->
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<uses-permission android:name="android.permission.GET_TASKS" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.RESTART_PACKAGES" />
-	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<!-- TODO SDK接入 必须权限模块 END -->
-
-在assets/msdkconfig.ini中配置访问的需要访问的MSDK后台环境(测试环境/正式环境), 联调阶段游戏需要使用测试环境, 发布时需要切换到正式环境(公司内测, 公测, 正式上线), 切换环境时候需要注意, 后台也要同时切换成对应的环境. 下面是配置前端访问MSDK后台测试环境.
-
-	;dev.4g游戏请使用此组域名, 使用其中一个域名
-	;带opensdktest为测试环境域名, opensdk为正式环境域名
-	;MSDK_URL=http://opensdk.tencent.com
-	;MSDK_URL=http://opensdktest.tencent.com
-
-	;自研游戏或精品代理游戏请使用此组域名, 使用其中一个域名
-	;带msdktest为测试环境域名, msdk为正式环境域名
-	;MSDK_URL=http://msdk.qq.com
-	;MSDK_URL=http://msdkdev.qq.com
-	MSDK_URL=http://msdktest.qq.com
-
-**PS: 为了防止游戏用测试环境上线, SDK内检测到游戏使用测试环境或者开发环境时, 会Toast出类似: “You are using http://msdktest.qq.com” 这样的提示, 游戏切换成正式环境域名以后此提示自动消失.**
-
 快速登录
 -------
 
-常见登录问题
-------
 
 查询个人信息
 ------
@@ -183,7 +155,7 @@ MSDK 手Q 相关模块
 	 *   此接口的调用结果通过OnRelationCallBack(RelationRet& relationRet) 回调返回数据给游戏,
 	 *   RelationRet对象的persons属性是一个Vector<PersonInfo>, 取第0个即是用户的个人信息.
 	 *   手Q授权的用户可以获取到的个人信息包含:
-	 *   nickname, openId, gender, pictureSmall, pictureMiddle, pictureLarge, 其他字段为空.
+	 *   nickname, openId, gender, pictureSmall（40*40）, pictureMiddle（40*40）, pictureLarge（100*100）, 其他字段为空.
 	 */
 	bool WGQueryQQMyInfo();
 
@@ -403,7 +375,6 @@ MSDK 手Q 相关模块
 
 后端分享
 ------
-
 
 在上面步骤中获取到好友信息以后, 游戏需要分享消息给指定好友(指定好友的openId). 此种分享不需要拉起手Q客户端, 分享过程无需用户参与, 调用接口即可完成分享. 但是只能分享给游戏内好友. 消息分享出去以后, 消息接收者点击消息可以拉起分享调用时候传入的URL, 通常此URL配置成游戏中心URL, 如此则可以在 手Q游戏中心 配置自动拉起, 实现点击消息唤起游戏的效果. 要完成此功能需要用到的接口有: WGSendToQQGameFriend, 接口详细说明如下:
 #### 使用场景：

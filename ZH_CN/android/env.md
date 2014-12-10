@@ -30,3 +30,34 @@ MSDK的C++接口由JNI实现，使用MSDK的C++接口的游戏在集成时，需
 #### makefile 配置：
 
 游戏在引入代码以后需要同时将相关代码添加到makefile。游戏可以根据实际情况将`MSDKLibrary/jni`下面的Android.mk中的配置信息引入到游戏的makefile文件或者Android.mk。
+
+
+接入配置自检
+---
+
+#### 概述：
+
+游戏接入中开发同学经常会直接复制、粘贴MSDK的demo的代码，导致有时候会把部分MSDK的demo相关的配置内容一起拷贝到游戏工程，触发一些异常。因此MSDK增加了一个内部检查模块，游戏开发中可以借助这部分功能来减少一些接入成本。
+
+####使用方法：
+
+当游戏连接的环境为联调或者测试环境时，MSDK在初始化的时候配置检查模块会去检查一些常见设置是否有误。游戏可以通过查看logcat的内容查看：
+
+- **当游戏存在配置错误的时候的log事例：**
+
+		11-18 17:10:47.373: E/WeGame CheckBase.queryIntentFilter(9855): Msdk: the intent-filter of com.tencent.tauth.AuthActivity has not be configured correctly
+		11-18 17:10:47.373: E/WeGame CheckBase.queryIntentFilter(9855): Msdk: the intent-filter of com.tencent.tauth.AuthActivity has not be configured correctly
+		11-18 17:10:47.393: W/WeGame WeGame.Initialized(9855): MSDK Config Error!!!!
+		11-18 17:10:47.403: W/WeGame WeGame.Initialized(9855): Check Result: 2
+		11-18 17:10:47.403: D/WeGame WeGame.Initialized(9855):  ********************check result start********************
+		11-18 17:10:47.403: W/WeGame WeGame.Initialized(9855): QQ AppID for Initialiezed must be the same as configed in AndroidMenifest.xml
+		11-18 17:10:47.403: W/WeGame WeGame.Initialized(9855): AuthActivity Category Error
+		11-18 17:10:47.403: D/WeGame WeGame.Initialized(9855):  ********************check result end**********************
+
+- **当游戏基本配置都没有问题的时候的log事例：**
+
+		11-18 17:15:16.825: W/WeGame WeGame.Initialized(13524): Check Result: 0
+
+#### 备注：
+
+- 该模块的检查结果**仅供游戏开发参考**，所有配置检查为强检查，游戏根据检查结果和游戏自身需求修改对应的配置检查项的内容。游戏无须完全解决所有的配置检查问题。

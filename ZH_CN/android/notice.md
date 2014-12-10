@@ -1,16 +1,64 @@
 MSDK公告模块
 ===
 
-概述
+模块介绍
 ---
 
-公告模块会在MSDK初始化和玩家登录以后均会去系统后台拉取该APP的有效公告。此外，公告模块还有定时拉取机制（默认10分钟拉取一次）
-	
-#### 版本支持
+### 概述
+公告系统是SDK提供的游戏内信息通知系统。通过web端可视化操作，实现活动、大区数据不通等信息的通知，有效提高信息的触达率。目前可以提供给游戏：
 
-**该功能在MSDK 1.7.0a 版本以后提供，公告分滚动公告、弹出公告两种形式。**从MSDK 2.0.0a 开始，公告内容从文字增加到图片和网页三种形式。
-  #### 注意事项调用展示公告的接口和获取公告数据的接口时，均是从本地数据库获取该应用当前有效的公告。
- 
+- 不同场景下发送不同公告（例如：登录前公告、登录后公告）
+- 多用用户范围选择：全员公告、分大区分操作系统、指定号码（微信号、微信号）
+- 多种公告样式：弹窗公告、滚动公告
+- 丰富的公告内容：文本、图片、网页等
+
+### 名次解释
+
+|  名词 | 解释 |
+| ------------- |:-------------:|
+| 公告栏 | SDK公告模块标示不同位置的公告的字段。游戏在配置公告时选择，是客户端调用展示公告的接口时的scene参数 |
+| 弹出公告 |以弹出框的形式展示公告，支持文本、图片、网页三种形式。多条公告会在用户关闭当前公告后弹出下一个，<BR>弹出公告可以增加跳转链接，点击后会用内置浏览器打开对应链接 |
+| 滚动公告 | 以在游戏界面最上方滚动形式展示公告，目前只支持文本。当多条公告时，会拼接在一起滚动展示 |
+
+## 接入须知（重要，接入必看）
+
+- 公告模块会在SDK初始化和玩家登录以后去系统后台拉取该APP的有效公告。此外，公告模块还有定时拉取机制（默认10分钟拉取一次）
+- 调用展示公告的接口和获取公告数据的接口时，均是从本地数据库获取该应用当前有效的公告，建议游戏直接使用SDK自带公告UI，可以减轻游戏的接入成本。
+- **该功能在MSDK 1.7.0a 版本以后提供，公告分滚动公告、弹出公告两种形式。**从MSDK 2.0.0a 开始，公告内容从文字增加到图片和网页三种形式。
+- **`SDK对于不同位置展示的公告，用公告栏来区分。例如常见的游戏登陆前公告和登陆后公告对应SDK的公告模块只是相当于不同的公告栏`**
+
+推荐用法
+---
+
+### 方案概述
+
+这部分内容将提供一个游戏接入SDK公告模块的推荐方案。模拟某款游戏接入SDK公告模块：
+
+- 接入登陆前、登陆后多个位置的弹出公告和一个游戏中的任意位置的滚动公告。
+- 游戏使用SDK公告模块提供的UI风格 
+
+
+### 接入流程
+
+1. 在SDK公告管理端[http://dev.ied.com/](http://dev.ied.com/)增加游戏对应的公告栏，如下图为SDK的Demo对应的公告栏信息：
+
+	![notice_solution_1.png](./notice_solution_1.png "公告栏")
+
+- 客户端接入：
+
+	1. 在`AndroidMainfest`和`assets/msdkconfig.ini`中添加MSDK公告相关的配置，添加查看本页文档[接入配置](notice.md#接入配置)和[开关配置](notice.md#开关配置)模块。
+
+	- 客户端公告调用（仅供参考）：
+		- 在游戏初始化结束，停留在登陆界面的时候展示登陆前公告。使用接口[展示公告接口](notice.md#展示公告接口)，参数为对应公告栏ID，即可展示登陆前公告
+		- 游戏收到loginNotify的成功回调并进入游戏主界面的时候展示登陆后公告。使用接口[展示公告接口](notice.md#展示公告接口)，参数为对应公告栏ID，即可展示登陆后公告
+		- 游戏在想要展示滚动公告的地方（比如登陆后游戏主界面等)调用接口展示滚动公告。使用接口[展示公告接口](notice.md#展示公告接口)，参数为对应公告栏ID。一般开始展示以后设置一个定时器，时间到了以后隐藏滚动公告
+
+### 联调测试
+	
+1. 确认客户端`assets/msdkconfig.ini`配置的域名为`http://msdktest.qq.com`
+2. 产品人员在公告管理段[http://dev.ied.com/](http://dev.ied.com/)选择公告（测试环境）添加公告
+3. 客户端根据产品配置的公告的类型（登陆前后，滚动弹出，是否号码包等测试），如果公告无法显示，请点击[游戏公告不能正常展示检查步骤](notice.md#游戏公告不能正常展示检查步骤)，按照步骤排查。
+
 接入配置
 ---
 #### 公告初始化：
@@ -49,15 +97,35 @@ MSDK 提供开关供游戏控制是否开启MSDK公告以及公告定时拉去�
 #### 设置公告定时拉取时间
 
 公告模块默认自动拉取时间为十分钟, 游戏可以根据需要在assets/msdkconfig.ini中将noticeTime一项的值设置为对应的时间。**（游戏可以设置的最短拉取时间为5分钟）**
-	
-	
-展示公告接口
----
+
+##展示公告接口
 
 调用WGShowNotice将使用MSDK配置的一套界面显示当前有效的公告。对于弹出公告，还可以设置是否带有跳转链接，对于带有跳转链接的公告，点击详情会拉起MSDK内置浏览器打开对应的详情URL。
 
 #### 接口声明：
-		/**	 * 展示对应类型指定场景下的公告	 * @param type   要显示的公告类型	 * 	  eMSG_NOTICETYPE_ALERT: 弹出公告	 * 	  eMSG_NOTICETYPE_SCROLL: 滚动公告	 * 	  eMSG_NOTICETYPE_ALL: 弹出公告&&滚动公告	 * @param scene 公告场景ID，不能为空, 这个参数和公告管理端的“公告栏”设置对应	 */
+	
+	/**
+	 * 展示对应类型指定公告栏下的公告
+	 * @param scene 公告栏ID，不能为空, 这个参数和公告管理端的“公告栏”设置对应
+	 */
+
+  	void WGShowNotice(unsigned char *scene);
+
+#### 接口调用：
+
+	String sceneString = "1";
+	WGPlatform.WGShowNotice(sceneString);
+	
+#### 注意事项：
+1. 在调用接口时使用的公告栏id(scene)公告管理端**设置的“公告栏”ID对应，请不要使用公告ID(msgid)代替公告栏ID**	
+2. 2.4.0开始该接口有调整，接入2.4.0以前版本的游戏可以参照下面的接口文档：
+	
+###原展示公告接口（该接口自2.4.0起弃用，改用[展示公告接口](notice.md#展示公告接口)）
+
+调用WGShowNotice将使用MSDK配置的一套界面显示当前有效的公告。对于弹出公告，还可以设置是否带有跳转链接，对于带有跳转链接的公告，点击详情会拉起MSDK内置浏览器打开对应的详情URL。
+
+#### 接口声明：
+		/**	 * 展示对应类型指定公告栏下的公告	 * @param type   要显示的公告类型	 * 	  eMSG_NOTICETYPE_ALERT: 弹出公告	 * 	  eMSG_NOTICETYPE_SCROLL: 滚动公告	 * 	  eMSG_NOTICETYPE_ALL: 弹出公告&&滚动公告	 * @param scene 公告栏ID，不能为空, 这个参数和公告管理端的“公告栏”设置对应	 */
   	void WGShowNotice(eMSG_NOTICETYPE type, unsigned char *scene);
 #### 接口调用：
 	eMSG_NOTICETYPE noticeTypeID = eMSG_NOTICETYPE.eMSG_NOTICETYPE_ALERT;
@@ -65,7 +133,7 @@ MSDK 提供开关供游戏控制是否开启MSDK公告以及公告定时拉去�
 	WGPlatform.WGShowNotice(noticeTypeID, sceneString);
 	
 #### 注意事项：
-在调用接口时使用的场景id(scene)公告管理端**设置的“公告栏”ID对应，请不要使用公告ID(msgid)代替公告栏ID**隐藏滚动公告接口
+在调用接口时使用的公告栏id(scene)公告管理端**设置的“公告栏”ID对应，请不要使用公告ID(msgid)代替公告栏ID**隐藏滚动公告接口
 ---
 
 调用WGHideScrollNotice会隐藏正在展示的滚动公告。
@@ -77,11 +145,53 @@ MSDK 提供开关供游戏控制是否开启MSDK公告以及公告定时拉去�
 	 void WGHideScrollNotice();#### 接口调用：
 
 	WGPlatform.WGHideScrollNotice();
-获取公告数据接口
----
+## 获取公告数据接口
+
 调用WGGetNoticeData会返回一个指定类型的当前有效的公告数据的列表。
 #### 接口声明：
-	/**	 * 从本地数据库读取指定scene下指定type的当前有效公告	 * @param type 需要展示的公告类型。类型为eMSG_NOTICETYPE，具体值如下:	 * 	  eMSG_NOTICETYPE_ALERT: 弹出公告	 * 	  eMSG_NOTICETYPE_SCROLL: 滚动公告	 * @param sence 这个参数和公告管理端的“公告栏”对应	 * @return NoticeInfo结构的数组，NoticeInfo结构如下：		typedef struct		{			std::string msg_id;			//公告id			std::string open_id;		//用户open_id			std::string msg_url;		//公告跳转链接			eMSG_NOTICETYPE msg_type;	//公告类型，eMSG_NOTICETYPE			std::string msg_scene;		//公告展示的场景，管理端后台配置			std::string start_time;		//公告有效期开始时间			std::string end_time;		//公告有效期结束时间			eMSG_CONTENTTYPE content_type;	//公告内容类型，eMSG_CONTENTTYPE
+
+	/**
+	 * 从本地数据库读取指定scene下指定type的当前有效公告
+	 * @param sence 这个参数和公告管理端的“公告栏”对应
+	 * @return NoticeInfo结构的数组，NoticeInfo结构如下：
+		typedef struct
+		{
+			std::string msg_id;			//公告id
+			std::string open_id;		//用户open_id
+			std::string msg_url;		//公告跳转链接
+			eMSG_NOTICETYPE msg_type;	//公告类型，eMSG_NOTICETYPE
+			std::string msg_scene;		//公告展示的公告栏，管理端后台配置
+			std::string start_time;		//公告有效期开始时间
+			std::string end_time;		//公告有效期结束时间
+			eMSG_CONTENTTYPE content_type;	//公告内容类型，eMSG_CONTENTTYPE
+
+			//网页公告特殊字段
+			std::string content_url;     //网页公告URL
+			//图片公告特殊字段
+			std::vector<PicInfo> picArray;    //图片数组
+			//文本公告特殊字段
+			std::string msg_title;		//公告标题
+			std::string msg_content;	//公告内容
+			}NoticeInfo;
+	 */
+		 
+	 std::vector<NoticeInfo> WGGetNoticeData(unsigned char *scene);
+
+#### 接口调用：
+	
+	String sceneString = "1";
+	Vector<NoticeInfo> noticeInfos = new Vector<NoticeInfo>();
+    noticeInfos = WGPlatform.WGGetNoticeData(sceneString);
+
+#### 注意事项：
+1. 在调用接口时使用的公告栏id(scene)公告管理端**设置的“公告栏”ID对应，请不要使用公告ID(msgid)代替公告栏ID**  
+2. **2.4.0开始该接口有调整，接入2.4.0以前版本的游戏可以参照下面的接口文档**：  
+
+###原获取公告数据接口（该接口自2.4.0起弃用，改用[获取公告数据接口](notice.md#获取公告数据接口)）
+
+调用WGGetNoticeData会返回一个指定类型的当前有效的公告数据的列表。
+#### 接口声明：
+	/**	 * 从本地数据库读取指定scene下指定type的当前有效公告	 * @param type 需要展示的公告类型。类型为eMSG_NOTICETYPE，具体值如下:	 * 	  eMSG_NOTICETYPE_ALERT: 弹出公告	 * 	  eMSG_NOTICETYPE_SCROLL: 滚动公告	 * @param sence 这个参数和公告管理端的“公告栏”对应	 * @return NoticeInfo结构的数组，NoticeInfo结构如下：		typedef struct		{			std::string msg_id;			//公告id			std::string open_id;		//用户open_id			std::string msg_url;		//公告跳转链接			eMSG_NOTICETYPE msg_type;	//公告类型，eMSG_NOTICETYPE			std::string msg_scene;		//公告展示的公告栏，管理端后台配置			std::string start_time;		//公告有效期开始时间			std::string end_time;		//公告有效期结束时间			eMSG_CONTENTTYPE content_type;	//公告内容类型，eMSG_CONTENTTYPE
 			//网页公告特殊字段
 			std::string content_url;     //网页公告URL			//图片公告特殊字段			std::vector<PicInfo> picArray;    //图片数组			//文本公告特殊字段			std::string msg_title;		//公告标题			std::string msg_content;	//公告内容			}NoticeInfo;	 */		 	 std::vector<NoticeInfo> WGGetNoticeData(eMSG_NOTICETYPE type,unsigned char *scene);
 #### 接口调用：	
@@ -90,7 +200,7 @@ MSDK 提供开关供游戏控制是否开启MSDK公告以及公告定时拉去�
     noticeInfos = WGPlatform.WGGetNoticeData(noticeTypeID, sceneString);
     
 #### 注意事项：
-在调用接口时使用的场景id(scene)公告管理端**设置的“公告栏”ID对应，请不要使用公告ID(msgid)代替公告栏ID**        游戏公告不能正常展示检查步骤
+在调用接口时使用的公告栏id(scene)公告管理端**设置的“公告栏”ID对应，请不要使用公告ID(msgid)代替公告栏ID**        游戏公告不能正常展示检查步骤
 ---
 1. 公告模块是否开启：
 	**检查游戏assets/msdkconfig.ini中needNotice一项的值是否为true。如果不是，改为true再调试；如果是继续往下检查。**检查方法：

@@ -1,4 +1,4 @@
-
+    
 MSDK 微信 相关模块
 =======
 
@@ -8,44 +8,57 @@ MSDK 微信 相关模块
 
 #### AndroidMainfest配置
 
-- 游戏按照下面的事例填写配置信息。
+游戏按照下面的事例填写配置信息。
 
-		<!-- TODO SDK接入 微信接入配置 START -->
-		<activity
-   	 		android:name="com.example.wegame.wxapi.WXEntryActivity"
-    		android:excludeFromRecents="true"
-    		android:exported="true"
-    		android:label="WXEntryActivity"
-    		android:launchMode="singleTop"
-    		android:taskAffinity="com.example.wegame.diff" >
-    		<intent-filter>
-        		<action android:name="android.intent.action.VIEW" />
-        		<category android:name="android.intent.category.DEFAULT" />
-        		<data android:scheme="wxcde873f99466f74a" />
-    		</intent-filter>
-		</activity>
-		<!-- TODO SDK接入 微信接入配置 END -->
+```
+<!-- TODO SDK接入 微信接入配置 START -->
+<activity
+	<!-- 注意：此处应改为 游戏包名.wxapi.WXEntryActivity -->
+ 	android:name="com.example.wegame.wxapi.WXEntryActivity"
+	android:excludeFromRecents="true"
+	android:exported="true"
+	android:label="WXEntryActivity"
+	android:launchMode="singleTop"
+	<!-- 注意：此处应改为 游戏包名.diff -->
+	android:taskAffinity="com.example.wegame.diff" >
+	<intent-filter>
+		<action android:name="android.intent.action.VIEW" />
+		<category android:name="android.intent.category.DEFAULT" />
+		<!-- 注意：此处应改为 游戏的微信appid -->
+		<data android:scheme="wxcde873f99466f74a" />
+	</intent-filter>
+</activity>
+<!-- TODO SDK接入 微信接入配置 END -->
+```
 
-- **注意事项：**
+##### 注意事项：
 	
- - 在应用包名+.wxapi下面放置WXEntryActivity.java.
- - 目前微信Webview中调起第三方App可以通过自定义scheme的形式，在AndroidManifest里在需要被微信拉起的Activit(通常是Launch)y定义中加入intent-filter，定义独有的scheme（建议全部用小写，不可以以http或者https开头，如图1）。自定义scheme建议游戏直接使用自己的包名， 例如comtencentpeng://:
-	
-	![comtencentpeng](/comtencentpeng.png)
- 
+* 在`应用包名+.wxapi`下面放置`WXEntryActivity.java`.
+* 微信接入的Activity中有`三处需要游戏自行修改`(在上面示例有标注)。
+
+
 #### Appid 配置：
  - 这部分内容在Java层初始化部分中已经完成, **不能用MSDKSample的appId和appKey进行联调, 游戏需要使用自己的appId和appKey.**
 
-		// 游戏替换此appId为自己的appId 
-		baseInfo.wxAppId = "wxcde873f99466f74a";
-		// 游戏替换此appId为自己的appKey
-		baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4dea";
+```
+public void onCreate(Bundle savedInstanceState) {
+	...
+	//游戏必须使用自己的QQ AppId联调
+    baseInfo.qqAppId = "1007033***";
+    baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
 
-	
+    //游戏必须使用自己的微信AppId联调
+    baseInfo.wxAppId = "wxcde873f99466f***"; 
+    baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
 
-
-			
-
+    //游戏必须使用自己的支付offerId联调
+    baseInfo.offerId = "100703***";
+	...
+	WGPlatform.Initialized(this, baseInfo);
+	WGPlatform.handleCallback(getIntent());
+	...
+}
+```
 
 授权登录
 ------
@@ -159,30 +172,54 @@ MSDK 微信 相关模块
 >第二步： 检查签名和包名
 	
 >下载[https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk](https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk "检查签名apk")， 将此apk安装到手机上， 在输入框中输入游戏的签名，点击按钮读取游戏包的签名。
+
+![检查签名](./wechat_GenSig.png "检查签名")
 	
->检查上述工具获取到的签名是否和微信后台配置的签名一致（微信后台配置的签名信息查询请RTX联系MSDK）
-	
+>检查上述工具获取到的签名是否和微信后台配置的签名一致（微信后台配置的签名信息查询请RTX联系MSDK），如果MSDK查看open的签名一致但还是无法拉起微信，这时候需要进一步拉微信同学一起确认open的签名是否成功同步到了微信。
+
 	
 >第三步： 检查WXEntryActivity.java放置的位置（此文件在MSDKSample中）
 	
->此文件一定要放在 游戏+.wxapi 下面，例如游戏的包名为：com.tencent.msdkgame， 则WXEntryActivity.java 应该放在com.tencent.msdkgame.wxapi下。
-	
+>此文件一定要放在 游戏+.wxapi 下面，例如游戏的包名为：com.tencent.msdkgame， 则WXEntryActivity.java 应该放在com.tencent.msdkgame.wxapi下。同时检查文件内容是否和下面一致：
+>
+
 >此步骤没问题请查看 第四步
 	
 	
 >第四步：检查handleCallback
 	
->游戏的Launch Activity的onCreate和onNewIntent里面是否调用了WGPlatform.handleCallback。
+>游戏的**`Launch Activity`**的onCreate和onNewIntent里面是否调用了WGPlatform.handleCallback。
 	
 	
 >第五步：检查游戏的全局Observer是否设置
 	
 >检查游戏有没有正确调用WGSetObserver（C++层和Java层）。
 
+自动授权与Token过期处理
+------
+从MSDK 2.0.0版本开始, sdk为游戏自动登录提供了全新的接口WGLoginWithLocalInfo, 使用此接口游戏在自动登录的时候无需处理微信票据刷新, 手Q/微信AccessToken验证等工作, 游戏只需要在启动时候调用此接口, 此接口通过OnLoginNotify将本地票据验证结果返回给游戏, 游戏根据返回结果继续后续流程即可. 详细的接口说明如下:
+
+
+	/**
+ 	 *  @since 2.0.0
+ 	 *  此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据
+  	 *  此接口会通过OnLoginNotify将结果回调给游戏, 本接口只会返回两种flag, eFlag_Local_Invalid和eFlag_Succ,
+ 	 *  如果本地没有票据或者本地票据验证失败返回的flag为eFlag_Local_Invalid, 游戏接到此flag则引导用户到授权页面授权即可.
+ 	 *  如果本地有票据并且验证成功, 则flag为eFlag_Succ, 游戏接到此flag则可以直接使用sdk提供的票据, 无需再次验证.
+ 	 *  @return void
+ 	 *   Callback: 验证结果通过我OnLoginNotify返回
+ 	 */
+	 void WGLoginWithLocalInfo();
+
+
+**注意: MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新sdk会自动刷新完成, 通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail. 游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程.**
+
+**为了保证登录数据上报正确, 游戏接入时候必须在onResume中调用WGPlatform.onResume, onPause中调用WGPlatform.onPause. 游戏在每次后台切换回来以后需要调用WGLoginWithLocalInfo, 通过msdk验证本地票据有效性, 可参见MSDKSample中MainActivity的实现.**
+
 查询个人信息
 ------
 
-用户通过手Q授权后只能获取到openId和accessToken, 游戏需要用户昵称, 头像等其他信息用于显示, SDK目前能获取到的信息包括nickname, openId, gender, pictureSmall, pictureMiddle, pictureLarge, provice, city. 要完成此功能需要用到的接口有: WGQueryWXMyInfo, 接口详细说明如下:
+用户通过微信授权后只能获取到openId和accessToken, 游戏需要用户昵称, 头像等其他信息用于显示, SDK目前能获取到的信息包括nickname, openId, gender, pictureSmall, pictureMiddle, pictureLarge, provice, city. 要完成此功能需要用到的接口有: WGQueryWXMyInfo, 接口详细说明如下:
 
 #### 接口声明：
 
@@ -266,8 +303,8 @@ MSDK 微信 相关模块
 #### 接口声明
 
 	/**
-	 * @param title 结构化消息的标题
-	 * @param desc 结构化消息的概要信息
+	 * @param title 结构化消息的标题（注意：限制长度不超过512Bytes）
+	 * @param desc 结构化消息的概要信息（注意：限制长度不超过1KB）
 	 * @param mediaTagName 请根据实际情况填入下列值的一个, 此值会传到微信供统计用, 在分享返回时也会带回此值, 可以用于区分分享来源
 		 "MSG_INVITE";                   // 邀请
 		 "MSG_SHARE_MOMENT_HIGH_SCORE";    //分享本周最高到朋友圈
@@ -279,7 +316,7 @@ MSDK 微信 相关模块
 		 "MSG_friend_exceed"         // 超越炫耀
 		 "MSG_heart_send"            // 送心
 	 * @param thumbImgData 结构化消息的缩略图
-	 * @param thumbImgDataLen 结构化消息的缩略图数据长度
+	 * @param thumbImgDataLen 结构化消息的缩略图数据长度（注意：限制内容大小不超过32KB）
 	 * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
 	 * @return void
 	 *   通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
@@ -429,8 +466,8 @@ MSDK 微信 相关模块
 	 * @param scene 指定分享到朋友圈, 或者微信会话, 可能值和作用如下:
 	 *   WechatScene_Session: 分享到微信会话
 	 *   WechatScene_Timeline: 分享到微信朋友圈 (此种消息已经限制不能分享到朋友圈)
-	 * @param title 音乐消息的标题
-	 * @param desc	音乐消息的概要信息
+	 * @param title 音乐消息的标题（注意：限制长度不超过512Bytes）
+	 * @param desc	音乐消息的概要信息（注意：限制长度不超过1KB）
 	 * @param musicUrl	音乐消息的目标URL
 	 * @param musicDataUrl	音乐消息的数据URL
 	 * @param imgData 原图文件数据
@@ -460,16 +497,18 @@ MSDK 微信 相关模块
 
 后端分享
 ------
-游戏需要分享消息给指定好友(指定好友的openId). 此种分享不需要拉起微信客户端, 分享过程无需用户参与, 调用接口即可完成分享. 但是只能分享给游戏内好友. 消息分享出去以后, 消息接收者点击消息可以唤起游戏. 要完成此功能需要用到的接口有: WGSendToWXGameFriend, 接口详细说明如下:
+游戏需要分享消息给指定好友(指定好友的openId). 此种分享不需要拉起微信客户端, 分享过程无需用户参与, 调用接口即可完成分享. 但是只能分享给游戏内好友. 消息分享出去以后, 消息接收者点击消息可以唤起游戏. 要完成此功能需要用到的接口有: `WGSendToWXGameFriend`. 此接口因历史原因C++接口与Java接口参数顺序不一样，详细描述分别如下：
 
 #### 接口说明
+
+##### C++接口
 
 	/**
 	 * 此接口类似WGSendToQQGameFriend, 此接口用于分享消息到微信好友, 分享必须指定好友openid
 	 * @param fOpenId 好友的openid
 	 * @param title 分享标题
 	 * @param description 分享描述
-	 * @param mediaId 图片的id 通过uploadToWX接口获取
+	 * @param mediaId 图片的id 通过后台接口/share/upload_wx获取
 	 * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
 	 * @param mediaTagName 请根据实际情况填入下列值的一个, 此值会传到微信供统计用, 在分享返回时也会带回此值, 可以用于区分分享来源
 		 "MSG_INVITE";                   // 邀请
@@ -493,6 +532,38 @@ MSDK 微信 相关模块
 		unsigned char *mediaTagName，
 	    unsigned char * msdkExtInfo
 	);
+
+##### Java接口
+
+```
+/**
+ * 此接口类似WGSendToQQGameFriend, 此接口用于分享消息到微信好友, 分享必须指定好友openid
+ * @param friendOpenId 好友的openid
+ * @param title 分享标题
+ * @param description 分享描述
+ * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
+ * @param mediaTagName 请根据实际情况填入下列值的一个, 此值会传到微信供统计用, 在分享返回时也会带回此值, 可以用于区分分享来源
+	 "MSG_INVITE";                   // 邀请
+	 "MSG_SHARE_MOMENT_HIGH_SCORE";    //分享本周最高到朋友圈
+	 "MSG_SHARE_MOMENT_BEST_SCORE";    //分享历史最高到朋友圈
+	 "MSG_SHARE_MOMENT_CROWN";         //分享金冠到朋友圈
+	 "MSG_SHARE_FRIEND_HIGH_SCORE";     //分享本周最高给好友
+	 "MSG_SHARE_FRIEND_BEST_SCORE";     //分享历史最高给好友
+	 "MSG_SHARE_FRIEND_CROWN";          //分享金冠给好友
+	 "MSG_friend_exceed"         // 超越炫耀
+	 "MSG_heart_send"            // 送心
+ * @param thumbMediaId 图片的id 通过后台接口/share/upload_wx获取
+ * @param extMsdkInfo 游戏自定义透传字段，通过分享结果shareRet.extInfo返回给游戏，游戏可以用extInfo区分request
+*/
+public static boolean WGSendToWXGameFriend(
+    String friendOpenId, 
+    String title, 
+    String description, 
+    String messageExt,
+    String mediaTagName, 
+    String thumbMediaId, 
+    String msdkExtInfo);
+```
 
 #### 接口调用
 
@@ -548,12 +619,18 @@ Android微信登录不了检查步骤
 
 下载[https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk](https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk)， 将此apk安装到手机上， 在输入框中输入游戏的签名，点击按钮读取游戏包的签名。
 
-检查上述工具获取到的签名是否和微信后台配置的签名一致（微信后台配置的签名信息查询请RTX联系MSDK）
+![检查签名](./wechat_GenSig.png "检查签名")
 
+检查上述工具获取到的签名是否和微信后台配置的签名一致（微信后台配置的签名信息查询请RTX联系MSDK）
 
 ### 第三步： 检查WXEntryActivity.java放置的位置（此文件在MSDKSample中）
 
-此文件一定要放在 游戏+.wxapi 下面，例如游戏的包名为：com.tencent.msdkgame， 则WXEntryActivity.java 应该放在com.tencent.msdkgame.wxapi下。
+此文件一定要放在 游戏+.wxapi 下面，例如游戏的包名为：com.tencent.msdkgame， 则WXEntryActivity.java 应该放在com.tencent.msdkgame.wxapi下。同时查看WXEntryActivity里面的内容是否和下面的一致
+
+	/**
+	 * !!此文件的代码逻辑部分使用者不要修改，MSDK从1.7开始，父类名称由WXEntryActivity改为BaseWXEntryActivity，如果此文件出错请优先检查此项
+	 */
+	public class WXEntryActivity extends com.tencent.msdk.weixin.BaseWXEntryActivity { }
 
 此步骤没问题请查看 第四步
 

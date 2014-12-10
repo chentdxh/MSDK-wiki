@@ -6,12 +6,6 @@
 
   * # 
   * [概述](summarize.md#1.概述)
-  - - - -
-  * # 
-  * [FAQ](faq.md#5.FAQ)
-  - - - -
-  * # 
-  * [错误码](faq.md#6.MSDK错误信息注释)
 
 [接入手Q]()
 
@@ -47,10 +41,19 @@
   * [鉴权](guest.md#4.游客模式)
  
 
-[MSDK 开始接入]()
+[FAQ]()
 
   * # 
-  * [Android 接入](http://wekf.qq.com/msdk/wiki/android/index.html)
-  * [IOS 接入](http://wekf.qq.com/msdk/wiki/ios/index.html)
-  * [后台接入](http://wekf.qq.com/msdk/wiki/router/index.html)
+  * [FAQ](faq.md#FAQ)
 
+  
+[MSDK后台错误码]()
+
+  * # 
+  * [错误码](errorCode.md#1.MSDK后台错误码)
+  
+  
+[MSDK 客户端接入]()
+
+  * # 
+  * [Android 接入](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html#!index.md)

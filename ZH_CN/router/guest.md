@@ -28,7 +28,7 @@
 #### 4.1.1.4 接口调用说明 
 |名称|描述|
 | ------------- |:-----|
-| URL|http://msdktest.qq.com/ auth/guest_check_token/ |
+| URL|http://msdktest.qq.com/auth/guest_check_token/ |
 | URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |

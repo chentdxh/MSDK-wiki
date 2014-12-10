@@ -85,8 +85,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
     |access_token|string|授权凭证|
     |src|int|消息来源 (默认值:0)|
     |summary|string|摘要，长度不超过45字节|
-    |target_url|string|游戏中心详情页的URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite
-，长度不超过1024字节|
+    |target_url|string|游戏中心详情页的URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite<br>，长度不超过1024字节|
    |title|string|分享标题,长度不能超过45字节|
     |fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
     |appid|int|应用在QQ平台的唯一id，同上oauth_consumer_key|
@@ -138,7 +137,7 @@ MSG_SHARE_FRIEND_PVP    //PVP对战</td>
 	    "target_url": "http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite
 	",
 	    "title": "test by hunter",
-	    "fopenids": [{"openid":"69FF99F3B17436F2F6621FA158B30549","type":0},{"openid":"69FF99F3B17436F2F6621FA158B30548","type":0}],
+	    "fopenids": [{"openid":"69FF99F3B17436F2F6621FA158B30549","type":0}],//json数组
 	    "previewText": "我在天天连萌游戏"
 	}
 
@@ -388,7 +387,7 @@ MSG_SHARE_FRIEND_PVP    //PVP对战</td>
 | login|login|登录类型，默认填2 |
 | uin|int|用户标识,如使用openid帐号体系则默认填0 |
 | openid|string|用户在某个应用的唯一标识|
-| vip|int|查询类型:(1会员；4蓝钻；8红钻；16超级会员;32游戏会员；以上可任意组合，如需同时查询会员和蓝钻则输入5，如需同时查询蓝钻和红钻则输入12，如果三种都要查询则输入13).|
+| vip|int|查询类型:(1会员；4蓝钻；8红钻；16超级会员;32游戏会员；64心悦；128黄钻；以上可任意组合，如需同时查询会员和蓝钻则输入5，如需同时查询蓝钻和红钻则输入12，如果三种都要查询则输入13).|
 ***（请注意输入参数的类型，参考1.5） ***
 
 #### 2.4.1.3输出参数说明 ####
@@ -399,9 +398,9 @@ MSG_SHARE_FRIEND_PVP    //PVP对战</td>
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 | list|信息列表vector<VIP> 类型
 struct VIP {
-　　　VIPFlag :flag; //什么类型VIP
-　　　int isvip; //是否VIP(判断用户VIP状态的唯一标识，0否，1是)
-    int year; //是否年费(0否，1是)
+　　VIPFlag :flag; //什么类型VIP
+　　int isvip; //是否VIP(判断用户VIP状态的唯一标识，0否，1是)
+　　int year; //是否年费(0否，1是)
 　　int level; //VIP等级(0否，1是)
 　　int luxury; //是否豪华版(0否，1是)
 　　int ispay;//是否是游戏会员,仅当查询游戏会员的时候有效
@@ -409,15 +408,13 @@ struct VIP {
 };
 enum VIPFlag
 {
-    VIP_NORMAL(会员) = 1
-    VIP_BLUE（蓝钻） = 4,
+　　VIP_NORMAL(会员) = 1
+　　VIP_BLUE（蓝钻） = 4,
 　　VIP_RED （红钻）= 8,
 　　VIP_SUPER (超级会员)= 16,
 　　VIP_GAME(游戏会员)=32,
-　　VIP_XINYUE = 64,                            
-　　              //心悦俱乐部特权会员，该标志位请求时只有isvip有效
-　　VIP_YELLOW = 128,
-                  //黄钻会员，level字段无效，其它有效
+　　VIP_XINYUE = 64,  //心悦俱乐部特权会员，该标志位请求时只有isvip及level有效
+　　VIP_YELLOW = 128, //黄钻会员，level字段无效，其它有效
 };
 获取超级会员的时候，struct VIP中，只有isvip和flag参数有效.|
 
@@ -470,7 +467,7 @@ enum VIPFlag
 	        "year": 0,
 	        "level": 0,
 	        "luxury": 0,
-		"ispay": 0,
+	        "ispay": 0,
 	        "isvip": 0,
 	        "qqLevel": 0
 	    }]

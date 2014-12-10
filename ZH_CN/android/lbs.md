@@ -27,7 +27,7 @@ MSDK LBS 相关模块
 
 #### 回调实现(Demo)代码如下:
 
-    void OnRelationNotify(RelationRet& relationRet) {lationRet) {
+    void OnLocationNotify(RelationRet& relationRet) {
     switch (relationRet.flag) {
     case eFlag_Succ:
         // relationRet.persons.at(0) 中保存的即是第一个附近玩家的信息
@@ -85,8 +85,8 @@ MSDK LBS 相关模块
 	 *     rr.latitude 玩家位置纬度，double类型
 	 *     /
 	 *     
-     bool WGGetLocation ();
+     bool WGGetLocationInfo ();
      
 #### 调用示例代码：
 
-	WGPlatform::GetInstance()->WGGetLocation();
+	WGPlatform::GetInstance()->WGGetLocationInfo();

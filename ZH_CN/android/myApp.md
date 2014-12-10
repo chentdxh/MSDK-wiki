@@ -6,15 +6,11 @@ MSDK应用宝相关模块
 
 ## 抢号开关配置
 
-在**assets/msdkconfig.ini**中配置客户端抢号开关:
-
-	BETA=true
-
-要从前端关闭抢号功能只需要删除此项设置即可.如下：
+抢号开关有两处，一可以在**assets/msdkconfig.ini**中配置客户端抢号开关，二需要在应用宝设置抢号开关。要从前端开启抢号功能只需要此项设置即可.如下：
 
 	; MSDK可选模块功能开关
 	; 应用宝抢号开关
-	BETA=false
+	BETA=true
 
 ## 抢号接入步骤
 
@@ -41,7 +37,7 @@ protected void onResume() {
 @Override
 protected void onDestroy() {
     super.onDestroy();
-    WGPlatform.onDestroy();
+    WGPlatform.onDestroy(this);
 }
 ```
 
@@ -109,77 +105,114 @@ protected void onDestroy() {
 - 第二步: 初始化时设置应用宝省流量更新的全局回调对象,涉及到的回调详细说明见: **MSDKLibrary/jni/CommonFiles/WGSaveUpdateObserver.h**
 
 ```
-class SaveUpdateCallback: public WGSaveUpdateObserver {
-virtual void OnCheckNeedUpdateInfo(long newApkSize, std::string newFeature, long patchSize,
-		int status, std::string updateDownloadUrl, int updateMethod) {
-	LOGD("SaveUpdateCallback  OnCheckNeedUpdateInfo  "
-			"newApkSize: %ld; newFeature: %s; patchSize: %ld; status: %d; updateDownloadUrl: %s; updateMethod: %d",
-			newApkSize, newFeature.c_str(), patchSize,
-			status, updateDownloadUrl.c_str(),  updateMethod);
-}
+// 应用宝更新回调类，游戏自行实现
+WGPlatform.WGSetSaveUpdateObserver(new SaveUpdateDemoObserver()); 
 
-virtual void OnDownloadAppProgressChanged(long receiveDataLen, long totalDataLen) {
-	LOGD("SaveUpdateCallback  OnDownloadAppProgressChanged  receiveDataLen: %ld; totalDataLen: %ld;",
-			receiveDataLen, totalDataLen);
-}
+class SaveUpdateDemoObserver extends WGSaveUpdateObserver{
+    @Override
+    public void OnCheckNeedUpdateInfo(long newApkSize, String newFeature, long patchSize,
+            final int status, String updateDownloadUrl, final int updateMethod) {
+        Logger.d("called");
+        String statusDesc = "";
+        switch (status) {
+            case TMSelfUpdateSDKUpdateInfo.STATUS_OK:
+                // 查询更新成功
+                statusDesc = "Check success!";
+                break;
+            case TMSelfUpdateSDKUpdateInfo.STATUS_CHECKUPDATE_RESPONSE_IS_NULL:
+                // 查询响应为空
+                statusDesc = "Response is null!";
+                break;
+            case TMSelfUpdateSDKUpdateInfo.STATUS_CHECKUPDATE_FAILURE:
+                // 查询更新失败
+                statusDesc = "CheckNeedUpdate FAILURE!";
+                break;
+        }
+        if(status == TMSelfUpdateSDKUpdateInfo.STATUS_OK) {
+            switch(updateMethod) {
+                case TMSelfUpdateSDKUpdateInfo.UpdateMethod_NoUpdate:
+                    // 无更新包
+                    statusDesc += "But no update package.";
+                    break;
+                case TMSelfUpdateSDKUpdateInfo.UpdateMethod_Normal:
+                    // 有全量更新包
+                    // WGPlatform.WGStartCommonUpdate(); //更新游戏
+                    statusDesc += "Common package is available.";
+                    break;
+                case TMSelfUpdateSDKUpdateInfo.UpdateMethod_ByPatch:
+                    // 有省流量更新包
+                    // WGPlatform.WGStartSaveUpdate(); //更新游戏
+                    statusDesc += "Save update package is available.";
+                    break;
+                default :
+                    statusDesc += "Happen error!";
+                    break;
+            }
+        }
+        Logger.d(statusDesc);
+        MsdkCallback.sendResult(statusDesc);
+    }
 
-virtual void OnDownloadAppStateChanged(int state, int errorCode, std::string errorMsg) {
-	LOGD("SaveUpdateCallback  OnDownloadAppStateChanged state: %d; errorCode: %d; errorMsg: %s",
-			state, errorCode, errorMsg.c_str());
-}
+    @Override
+    public void OnDownloadAppProgressChanged(final long receiveDataLen, final long totalDataLen) {
+        // 下载游戏进度由此回调，游戏可根据回调的参数做进度表展示
+        Logger.d("totalData:" + totalDataLen + "receiveData:" + receiveDataLen);
+    }
 
-virtual void OnDownloadYYBProgressChanged(std::string url, long receiveDataLen, long totalDataLen) {
-	LOGD("SaveUpdateCallback  OnDownloadYYBProgressChanged url: %s; receiveDataLen: %ld; totalDataLen: %ld",
-			url.c_str(), receiveDataLen, totalDataLen);
-}
-
-virtual void OnDownloadYYBStateChanged(std::string url, int state, int errorCode, std::string errorMsg) {
-	LOGD("SaveUpdateCallback  OnDownloadYYBStateChanged  url: %s, state: %d, errorCode: %d, errorMsg: %s",
-			url.c_str(), state, errorCode, errorMsg.c_str());
-}
-};
-SaveUpdateCallback callback;
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-	// C++层初始化, 必须在游戏主Activity的onCreate之前被调用
-	WGPlatform::GetInstance()->init(vm);
-	WGPlatform::GetInstance()->WGSetObserver(&g_Test);
-	
-    // 设置C++层更新回调
-	WGPlatform::GetInstance()->WGSetSaveUpdateObserver(&callback);
-	return JNI_VERSION_1_4;
+    @Override
+    public void OnDownloadAppStateChanged(int state, int errorCode, String errorMsg) {
+        // 下载状态由此回调
+    }
+    
+    /**
+     * 省流量更新(WGStartSaveUpdate)，当没有安装应用宝时，会先下载应用宝, 此为下载应用宝包的进度回调
+     * @param url 当前任务的url
+     * @param receiveDataLen 已经接收的数据长度
+     * @param totalDataLen 全部需要接收的数据长度（如果无法获取目标文件的总长度，此参数返回 －1）
+     */
+    @Override
+    public void OnDownloadYYBProgressChanged(String url, final long receiveDataLen, final long totalDataLen) {
+        // 下载应用宝进度由此回调，游戏可根据回调的参数做进度表展示
+        Logger.d("totalData:" + totalDataLen + "receiveData:" + receiveDataLen);
+    }
+    
+    /**
+     * @param url 指定任务的url
+     * @param state 下载状态: 取值 TMAssistantDownloadSDKTaskState.DownloadSDKTaskState_*
+     * @param errorCode 错误码
+     * @param errorMsg 错误描述，有可能为null
+     */
+    @Override
+    public void OnDownloadYYBStateChanged(final String url, final int state, final int errorCode, final String errorMsg) {
+         Logger.d("OnDownloadYYBStateChanged " + "\nstate:" + state + 
+                "\nerrorCode:" + errorCode + "\nerrorMsg:" + errorMsg);
+    }
 }
 ```
 
-- 第三步: 调用更新接口更新(选择其中一种使用)
+- 第三步: 调用`WGCheckNeedUpdate`，并根据回调`OnCheckNeedUpdateInfo`中的`updateMethod`选择可用的更新方式，几个接口如下
 
 ```
-	// 调用省流量更新
-	WGPlatform::GetInstance()->WGStartSaveUpdate();
+/**
+ * @param saveUpdateObserver 省流量更新全局回调, 和更新相关的所有回调都会通过此对象回调
+ */
+void WGSetSaveUpdateObserver(WGSaveUpdateObserver * saveUpdateObserver);
 
-	// 调用普通更新
-	WGPlatform::GetInstance()->WGStartCommonUpdate();
-```
+/**
+ * @return void
+ *   查询结果回调到由WGSetSaveUpdateObserver接口设置的回调对象的OnCheckNeedUpdateInfo方法
+ */
+void WGCheckNeedUpdate()
 
-其中涉及到的接口有: `WGCheckNeedUpdate`, `WGStartSaveUpdate`, `WGStartCommonUpdate`, 详细的接口说明如下:
-
-```
 /**
  * 开始普通更新, 此种更新不依赖应用宝客户端, 下载进度和状态变化会通过OnDownloadAppProgressChanged和OnDownloadAppStateChanged回调给游戏
  */
 void WGStartCommonUpdate();
+
 /**
  * 如果手机上没有安装应用宝则此接口会自动下载应用宝, 并通过OnDownloadYYBProgressChanged和OnDownloadYYBStateChanged两个接口分别回调
  * 如果手机上已经安装应用宝则此接口会拉起应用宝下载有, 下载进度和状态变化会通过OnDownloadAppProgressChanged和OnDownloadAppStateChanged回调给游戏
  */
 void WGStartSaveUpdate()
-/**
- * @param saveUpdateObserver 省流量更新全局回调, 和更新相关的所有回调都会通过此对象回调
- */
-void WGSetSaveUpdateObserver(WGSaveUpdateObserver * saveUpdateObserver);
-/**
- * @return void
- * 	 查询结果回调到由WGSetSaveUpdateObserver接口设置的回调对象的OnCheckNeedUpdateInfo方法
- */
-void WGCheckNeedUpdate()
-```
 
+```
