@@ -192,7 +192,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ------------- |:-------------:|:-----|
 | openid|string|用户在某个应用的唯一标识 |
 | fopenid|string| 分享到的好友openid |
-| accessToken|string|登录态 |
+| access_token|string|登录态 |
 | extinfo|string|第三方程序自定义简单数据，微信会回传给第三方程序处理，长度限制2k, 客户端点击的时候可以获取到这个字段。|
 | title|string|应用消息标题 |
 | description|string|应用消息描述 |
@@ -241,7 +241,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ![分享图片](./shareWX.jpg)
 
 
-### 3.2.3/share/wxgame ###
+### 3.2.3/share/wxgame（该接口暂不对外） ### ###
 
 #### 3.2.3.1 接口说明 ####
 
@@ -255,7 +255,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ------------- |:-------------:|:-----|
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
-| accessToken|string|登录态 |
+| access_token|string|登录态 |
 | touser|string|接收方openid |
 | msgtype|string|消息类型，目前支持text（文本）、image（图片）、video（视频）和link（链接） |
 | title|string|登录态 |
@@ -640,8 +640,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 | nickname|昵称 |
-| picture|用户头像URL,必须在URL后追加以下参数/0，/132，/96，/64，这样可以分别获得不同规格的图片：
-　　　原始图片(/0)、132*132(/132)、96*96(/96)、64*64(/64)、46*46(/46) |
+| picture|用户头像URL,必须在URL后追加以下参数/0，/132，/96，/64，这样可以分别获得不同规格的图片：<br>原始图片(/0)、132*132(/132)、96*96(/96)、64*64(/64)、46*46(/46) |
 | province|省份 |
 | city|城市 |
 | country|国家|

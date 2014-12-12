@@ -90,11 +90,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
     |fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
     |appid|int|应用在QQ平台的唯一id，同上oauth_consumer_key|
 	|previewText|string|非必填。分享的文字内容，可为空。如“我在天天连萌”，长度不能超过45字节|
-    |game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>
-MSG_INVITE                //邀请<br>
-MSG_FRIEND_EXCEED       //超越炫耀<br>
-MSG_HEART_SEND          //送心<br>
-MSG_SHARE_FRIEND_PVP    //PVP对战</td>
+    |game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>
     |
 ***请注意输入参数的类型，参考1.5***
 #### 2.2.1.3输出参数说明 
@@ -321,17 +317,17 @@ MSG_SHARE_FRIEND_PVP    //PVP对战</td>
 | ------------- |:-----|
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
-| list| QQ同玩陌生人（包括好友）个人信息信息列表，类型vector< QQStrangeList>
+| list| QQ同玩陌生人（包括好友）个人信息信息列表，类型vector< QQStrangeList>|
+| is_lost | is_lost为1的时候表示获取的数据做了降级处理：此时业务层有缓存数据时，可以先用缓存数据；如果没有的话，再使用当前的数据。并且该标志打上1时，不要对这个数据进行缓存。|
 	struct QQStrangeList {
-    string          openid;          //openid
-    string          gender;          //性别 "1"
-    string          nickName;        //昵称
-    string          qzonepicture50;  //用户头像大小为50×50像素的好友QQ空间头像URL
-    string          qqpicture40;     //用户头像大小为40×40像素的好友QQ头像URL
-    string          qqpicture100;    //用户头像大小为100×100像素的好友QQ头像URL
-    string          qqpicture;       //用户头像大小为自适应像素的好友QQ头像URL，必须在URL后追加以下参数/40，/100这样可以分别获得不同规格的图片：40*40(/40)、100*100(/100)
-	};|
-| is_lost|is_lost为1的时候表示获取的数据做了降级处理：此时业务层有缓存数据时，可以先用缓存数据；如果没有的话，再使用当前的数据。并且该标志打上1时，不要对这个数据进行缓存。|
+	    string          openid;          //openid
+	    string          gender;          //性别 "1"
+	    string          nickName;        //昵称
+	    string          qzonepicture50;  //用户头像大小为50×50像素的好友QQ空间头像URL
+	    string          qqpicture40;     //用户头像大小为40×40像素的好友QQ头像URL
+	    string          qqpicture100;    //用户头像大小为100×100像素的好友QQ头像URL
+	    string          qqpicture;       //用户头像大小为自适应像素的好友QQ头像URL，必须在URL后追加以下参数/40，/100这样可以分别获得不同规格的图片：40*40(/40)、100*100(/100)
+	}; 
 
 #### 2.3.3.4 接口调用说明 ####
 
@@ -381,42 +377,42 @@ MSG_SHARE_FRIEND_PVP    //PVP对战</td>
 
 #### 2.4.1.2输入参数说明 ####
 
-| 参数名称| 类型|描述|
-| ------------- |:-------------:| -----:|
+| 参数名称 | 类型|描述|
+| ------------- |:-------------:|:-----|
 | appid|int| 应用在平台的唯一id |
 | login|login|登录类型，默认填2 |
 | uin|int|用户标识,如使用openid帐号体系则默认填0 |
 | openid|string|用户在某个应用的唯一标识|
-| vip|int|查询类型:(1会员；4蓝钻；8红钻；16超级会员;32游戏会员；64心悦；128黄钻；以上可任意组合，如需同时查询会员和蓝钻则输入5，如需同时查询蓝钻和红钻则输入12，如果三种都要查询则输入13).|
+| vip|int|查询类型:(1会员；4蓝钻；8红钻；16超级会员;32游戏会员；64心悦；128黄钻；以上可任意组合，<br>如需同时查询会员和蓝钻则输入5，如需同时查询蓝钻和红钻则输入12，如果三种都要查询则输入13).|
 ***（请注意输入参数的类型，参考1.5） ***
 
 #### 2.4.1.3输出参数说明 ####
 
 | 参数名称| 描述|
-| ------------- | -----:|
+| ------------- |:-----|
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
-| list|信息列表vector<VIP> 类型
-struct VIP {
-　　VIPFlag :flag; //什么类型VIP
-　　int isvip; //是否VIP(判断用户VIP状态的唯一标识，0否，1是)
-　　int year; //是否年费(0否，1是)
-　　int level; //VIP等级(0否，1是)
-　　int luxury; //是否豪华版(0否，1是)
-　　int ispay;//是否是游戏会员,仅当查询游戏会员的时候有效
-　　int qqLevel;//QQ皇冠、太阳、月亮、星星的那个等级，只对VIP_NORMAL有效
-};
-enum VIPFlag
-{
-　　VIP_NORMAL(会员) = 1
-　　VIP_BLUE（蓝钻） = 4,
-　　VIP_RED （红钻）= 8,
-　　VIP_SUPER (超级会员)= 16,
-　　VIP_GAME(游戏会员)=32,
-　　VIP_XINYUE = 64,  //心悦俱乐部特权会员，该标志位请求时只有isvip及level有效
-　　VIP_YELLOW = 128, //黄钻会员，level字段无效，其它有效
-};
-获取超级会员的时候，struct VIP中，只有isvip和flag参数有效.|
+| list|信息列表vector<VIP> 类型（见下文），获取超级会员的时候，struct VIP中，只有isvip和flag参数有效.|
+	
+	struct VIP {
+	　　VIPFlag :flag; //什么类型VIP
+	　　int isvip; //是否VIP(判断用户VIP状态的唯一标识，0否，1是)
+	　　int year; //是否年费(0否，1是)
+	　　int level; //VIP等级(0否，1是)
+	　　int luxury; //是否豪华版(0否，1是)
+	　　int ispay;//是否是游戏会员,仅当查询游戏会员的时候有效
+	　　int qqLevel;//QQ皇冠、太阳、月亮、星星的那个等级，只对VIP_NORMAL有效
+	};
+	enum VIPFlag
+	{
+	　　VIP_NORMAL(会员) = 1
+	　　VIP_BLUE（蓝钻） = 4,
+	　　VIP_RED （红钻）= 8,
+	　　VIP_SUPER (超级会员)= 16,
+	　　VIP_GAME(游戏会员)=32,
+	　　VIP_XINYUE = 64,  //心悦俱乐部特权会员，该标志位请求时只有isvip及level有效
+	　　VIP_YELLOW = 128, //黄钻会员，level字段无效，其它有效
+	};
 
 #### 2.4.1.4 接口调用说明 ####
 | 参数名称| 描述|
@@ -495,17 +491,18 @@ enum VIPFlag
 ### 2.4.2.3输出参数说明 ###
 
 | 参数名称| 描述|
-| ------------- | -----:|
+| ------------- |: -----|
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
-| list|类型：vector<QQFriendsVipInfo>,QQ游戏好友vip信息列表
-struct QQFriendsVipInfo {
-    1   optional     string          openid;          //好友openid
-    2   optional     int             is_qq_vip;       //是否为QQ会员（0：不是； 1：是）
-    3   optional     int             qq_vip_level;    //QQ会员等级（如果是QQ会员才返回此字段）
-    4   optional     int             is_qq_year_vip;  //是否为年费QQ会员（0：不是； 1：是）
-};|
+| list|类型：vector<QQFriendsVipInfo>,QQ游戏好友vip信息列表(见下文)|
 | is_lost|is_lost为1时表示oidb获取数据超时，建议游戏业务检测到is_lost为1时做降级处理，直接读取缓存数据或默认数据|
+	
+	struct QQFriendsVipInfo {
+	    1   optional     string          openid;          //好友openid
+	    2   optional     int             is_qq_vip;       //是否为QQ会员（0：不是； 1：是）
+	    3   optional     int             qq_vip_level;    //QQ会员等级（如果是QQ会员才返回此字段）
+	    4   optional     int             is_qq_year_vip;  //是否为年费QQ会员（0：不是； 1：是）
+	};
 
 #### 2.4.2.4 接口调用说明 ####
 
@@ -568,12 +565,12 @@ struct QQFriendsVipInfo {
 | ------------- |:-----|
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
-| GiftPackList|vector<GiftPackInfo> 类型
-struct GiftPackInfo
-{
-  string     giftId;                 //礼包id
-  string     giftCount;              //对应礼包个数
-};|
+| GiftPackList|vector<GiftPackInfo> 类型|
+	struct GiftPackInfo
+	{
+	  string     giftId;                 //礼包id
+	  string     giftCount;              //对应礼包个数
+	};
 
 
 #### 2.4.3.4 接口调用说明 ####
@@ -662,17 +659,15 @@ struct GiftPackInfo
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 | accessToken|string|第三方调用凭证，通过获取凭证接口获得 |
-| param|Vector<ReportParam>|struct ReportParam
-{
-    0   optional     int             type;    
-    1   optional     string          data;    
-    2   optional     string          expires; 
-    3   optional     int             bcover;  
-};
-type:1:LEVEL（等级），2:MONEY（金钱）, 3:SCORE（得分）, 4:EXP（经验）, 5:HST_SCORE(历史最高分)，6:PRE_WEEK_FINAL_RANK(上周数据结算排名,注意结算数据应该在下次结算前过期，否则拉取到过期数据)， 7：CHALLENGE_SCORE（pk流水数据，登录时不报，每一局都报） 传对应数字,一一对应，千万不要传错 
-data:成就值
-expireds:超时时间，unix时间戳，单位s，表示哪个时间点数据过期，0时标识永不超时，不传递则默认为0
-bcover:1表示覆盖上报，本次上报会覆盖以前的数据，不传递或者传递其它值表示增量上报，只会记录比上一次更高的数据 |
+| param|Vector<ReportParam>|ReportParam结构体见下文。<br>type:1:LEVEL（等级），2:MONEY（金钱）, 3:SCORE（得分）, 4:EXP（经验）, 5:HST_SCORE(历史最高分)，<br>6:PRE_WEEK_FINAL_RANK(上周数据结算排名,注意结算数据应该在下次结算前过期，否则拉取到过期数据)， <br>7：CHALLENGE_SCORE（pk流水数据，登录时不报，每一局都报） 传对应数字,一一对应，千万不要传错<br> data:成就值<br>expireds:超时时间，unix时间戳，单位s，表示哪个时间点数据过期，0时标识永不超时，不传递则默认为0<br>bcover:1表示覆盖上报，本次上报会覆盖以前的数据，不传递或者传递其它值表示增量上报，只会记录比上一次更高的数据 |
+	
+	struct ReportParam
+	{
+	    0   optional     int             type;    
+	    1   optional     string          data;    
+	    2   optional     string          expires; 
+	    3   optional     int             bcover;  
+	};
 ***（请注意输入参数的类型，参考1.5）***
 
 #### 2.4.5.3输出参数说明 ####

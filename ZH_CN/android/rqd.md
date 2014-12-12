@@ -2,12 +2,9 @@ MSDK RQD(RDM) 相关模块
 ===
 
 
-RQD接入配置
+RQD上报开关设置
 ---
-一、接入时需要loadlibrary:![loadlibrary](./rdmloadlibrary.png)
-添加了这个才会有native crash的上报
-
-二、打开和关闭rdm数据上报的设置函数:
+打开和关闭rdm数据上报的设置函数:
 
      public static void WGEnableCrashReport(boolean bRdmEnable, boolean bMtaEnable)
 
