@@ -93,7 +93,7 @@ MSDK公告模块
 MSDK 提供开关供游戏控制是否开启MSDK公告以及公告定时拉去的时间频率。
 #### 是否开启公告
 	
-公告模块默认打开, 不需要使用公告模块的游戏需要在assets/msdkconfig.ini中将needNotice一项的值设置为false.
+公告模块默认关闭, 需要使用公告模块的游戏需要在assets/msdkconfig.ini中将needNotice一项的值设置为true.
 #### 设置公告定时拉取时间
 
 公告模块默认自动拉取时间为十分钟, 游戏可以根据需要在assets/msdkconfig.ini中将noticeTime一项的值设置为对应的时间。**（游戏可以设置的最短拉取时间为5分钟）**

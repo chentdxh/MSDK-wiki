@@ -2,6 +2,8 @@
 
 [gimmick:theme (inverse: true)](cerulean)
 
+[站点地图](http://wiki.dev.4g.qq.com/v2/site.html)
+
 [SDK介绍]()
 
   * # 
@@ -36,7 +38,7 @@
   - - - -
   * # 登陆模块
   * [授权登录](qq.md#授权登录)
-  * [快速登陆](qq.md#快速登陆)
+  * [自动登录](qq.md#自动登录)
   * [异账号](diff-account.md)
   - - - -
   * # 关系链
@@ -67,7 +69,6 @@
   * # 登陆模块
   * [授权登录](wechat.md#授权登录)
   * [权限设置](wechat.md#权限设置)
-  * [常见登陆问题](wechat.md#见登陆问题)
   * [异账号](diff-account.md)
   - - - -
   * # 关系链

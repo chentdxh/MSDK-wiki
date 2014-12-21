@@ -118,16 +118,54 @@ MSDK 手Q 相关模块
 			// 用户取消, 提示用户重新授权
 			break;
 		case eFlag_QQ_NoAcessToken:
+            // 居然没有accesstoken，没救了，弹出登录界面让用户重新授权吧
+            break;
 		case eFlag_QQ_LoginFail:
+            // 授权失败了，弹出登录界面让用户重新授权吧
+            break;
 		case eFlag_QQ_NetworkErr:
 			// 授权过程中网络失败, 或者其他错误, 引导用户重新授权即可
 			break;
+        case eFlag_Error:
+            // 授权过程中发生错误，弹出登录界面让用户重新授权吧
+            break;
+        case eFlag_Local_Invalid:
+            // 授权过程中发生错误，弹出登录界面让用户重新授权吧
+            break;
+        case eFlag_QQ_AccessTokenExpired:
+            // QQ accesstoken过期(有效期90天不容易过期的)，微信可刷新QQ不能唉，只能弹出登录界面让用户重新授权吧
+            break;
+        case eFlag_QQ_PayTokenExpired:
+            // QQ paytoken过期（有效期六天），只能弹出登录界面让用户重新授权吧
+            break;
+        case eFlag_NotInWhiteList:
+            // 抢号失败了不在白名单，弹出登录界面建议用户重试下了
+            break;
 		}
 	} else if (loginRet.platform == ePlatform_Weixin) {
         ...
 		}
 	}
 
+#### 低内存机器授权过程游戏被杀后的登陆方案
+
+由于目前大部分游戏占用内存很大，因此在授权过程中，当拉起手Q授权时，会触发android的内存回收机制将后台的游戏进程杀掉导致游戏手Q授权没有没有进入游戏。游戏需要在主Activity中增加以下代码来保证被杀以后依然可以带票据拉起进入游戏。
+
+
+	// TODO GAME 在onActivityResult中需要调用WGPlatform.onActivityResult
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		WGPlatform.onActivityResult(requestCode, resultCode, data);
+		Logger.d("onActivityResult");
+	}
+
+
+#### 使用场景：
+
+上面提到拉起登录页面如下所示，用户点击与QQ好友玩调用WGLogin
+
+![beacon_1](./loginpage.png)
 
 #### 注意事项：
 
@@ -139,9 +177,22 @@ MSDK 手Q 相关模块
 
 - 如果游戏的Activity为Launch Activity, 则需要在游戏Activity声明中添加android:configChanges="orientation|screenSize|keyboardHidden", 否则可能造成没有登录没有回调。
 
-快速登录
+自动登录
 -------
+从MSDK 2.0.0版本开始, MSDK为游戏自动登录提供了全新的接口WGLoginWithLocalInfo, 使用此接口的游戏在自动登录的时候无需处理微信票据刷新, 手Q/微信AccessToken验证等工作, 游戏只需要在启动时候（WGPlatform.Initialized已调用完成）调用此接口（如onResume中）, 此接口通过OnLoginNotify将本地票据验证结果返回给游戏, 游戏根据返回结果继续后续流程即可。 详细的接口说明如下:
+ 
+    /**
+     *  @since 2.0.0
+     *  此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据
+     *  此接口会通过OnLoginNotify将结果回调给游戏, 本接口只会返回两种flag, eFlag_Local_Invalid和eFlag_Succ,
+     *  如果本地没有票据或者本地票据验证失败返回的flag为eFlag_Local_Invalid, 游戏接到此flag则引导用户到授权页面授权即可.
+     *  如果本地有票据并且验证成功, 则flag为eFlag_Succ, 游戏接到此flag则可以直接使用sdk提供的票据, 无需再次验证.
+     *  @return void
+     *   Callback: 验证结果通过我OnLoginNotify返回
+     */
+    void WGLoginWithLocalInfo();
 
+如果游戏从未登录过，调用WGLoginWithLocalInfo返回的flag为eFlag_Local_Invalid，此时游戏需要弹出登录界面让用户登录。
 
 查询个人信息
 ------

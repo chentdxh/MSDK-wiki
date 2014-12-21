@@ -116,7 +116,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 #### 3.2.1.1 接口说明 ####
 
-上传图片到微信换取media_id，给/share/wx接口的输入参数thumb_media_id使用。（该接口不是用于用户分享图片的时，先上传图片再分享的场景，而是用户游戏管理人员上传预定图片获取thumb_media_id，再将thumb_media_id填入到/share/wx接口做分享）
+上传图片到微信获取media_id，给/share/wx接口的输入参数thumb_media_id使用，如分享时使用默认图片（app注册时上传的icon）则不需要调用该接口，thumb_media_id=""即可。（该接口不用每次分享的时候都调用，只有在分享时要更换图片时调用一次获取到media_id即可，后面调用/share/wx接口时直接填写已获取到的media_id）
 
 #### 3.2.1.2 输入参数说明 ####
 
@@ -125,11 +125,11 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | flag|int| 默认填1，使用secret登录 |
 | appid|string|应用唯一标识 |
 | secret|string|填写appkey |
-| access_token|string|默认为空,上传图片成功以后，返回值中的acess_token,下次上传图片的时候，可以使用access_token |
+| access_token|string|默认为空"" |
 | type|string|媒体文件类型，默认为缩略图（thumb） |
 | filename|string|文件名称 |
-| filelength|int|文件二进制流长度，以字节为单位|
-| content_type|string|文件类型，如：image/jpeg |
+| filelength|int|文件二进制流长度，以字节为单位，最大64KB|
+| content_type|string|文件类型，请使用如下类型如："image/jpeg"或"image/jpg" |
 | binary|string|文件的二进制流，用urlencode转码，例(php语言)：
 	$filename = 'b.jpg';
 	$image = './image/'.$filename;
@@ -197,7 +197,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | title|string|应用消息标题 |
 | description|string|应用消息描述 |
 | media_tag_name|string|区分游戏消息类型，用于数据统计 |
-| thumb_media_id|string|media_id 通过/share/upload_wx接口获取 |
+| thumb_media_id|string|默认为空:该参数为空，分享时使用的图片为在微信平台注册时使用的图片；如需要更换分享时的图片，该media_id 通过/share/upload_wx接口获取 |
 
 
 #### 3.2.2.3输出参数说明 ####
@@ -640,7 +640,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 | nickname|昵称 |
-| picture|用户头像URL,必须在URL后追加以下参数/0，/132，/96，/64，这样可以分别获得不同规格的图片：<br>原始图片(/0)、132*132(/132)、96*96(/96)、64*64(/64)、46*46(/46) |
+| picture|`用户头像URL,必须在URL后追加以下参数/0，/132，/96，/64`，这样可以分别获得不同规格的图片:原始图片(/0)、132*132(/132)、96*96(/96)、64*64(/64)、46*46(/46) |
 | province|省份 |
 | city|城市 |
 | country|国家|

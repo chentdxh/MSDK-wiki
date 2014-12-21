@@ -55,7 +55,6 @@ MSDK iOS 介绍
 |openId|用户授权后平台返回的唯一标识|
 |accessToken|用户授权票据, 获取此票据以后可以认为用户已经授权, 分享/支付等功能需要此票据. 手Q的accessToken有效时间为90天. 微信的accessToken有效时间为2小时.|
 |payToken|支付票据, 此票据用于手Q支付, 手Q授权会返回此票据。微信授权不会返回此票据. 有效时间为6天。|
-|offerId|Midas的AppID|
 |refreshToken|微信平台特有票据, 有效期为30天, 用于微信accessToken过期之后刷新accessToken.|
 |异帐号|游戏中授权的账号和手Q/微信中授权的账号不相同, 此种场景称之为异账号.|
 |结构化消息|分享消息的一种, 此种消息分享后的展示形式为: 左边缩略图, 右上是消息标题, 右下是消息概要。|
@@ -76,6 +75,7 @@ MSDK iOS 介绍
 |GuestID|	通过设备信息，向MSDK注册生成的游客身份标识，格式为"G_数字/字母/_/@"组成的34位长的字符串。|
 |Guest AppID|	为了辨识游客模式，Guest模式下的AppID使用“G_手QAppID”的格式，如果游戏没有手Q AppID，则使用"G_微信AppID"。|
 |Guest AppKey|	与Guest AppID配对,使用对应手Q/微信的AppKey。|
+|支付id|	别称OfferId，配置在info.plist的MSDK_OfferId项。<br>内部自研游戏：直接在米大师官网midas.qq.com注册ios应用生成offerid<br>外部代理游戏：先由游戏产品在RDM官网rdm.oa.com申请苹果信息，申请好了后将信息给到协同规划组jiaganzheng录入到dev后台，然后由开发商在管理中心添加IAP版本，添加完成后再生成offerid|
 
 ## 注意事项
 

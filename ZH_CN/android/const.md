@@ -1,6 +1,6 @@
-##常量查询
+# MSDK Android 常量
 
-### 平台类型ePlatform
+## 平台类型ePlatform
 
 	typedef enum _ePlatform
 	{
@@ -9,31 +9,56 @@
 	ePlatform_QQ			//手Q平台
 	}ePlatform;
 
-### 回调标识eFlag
-	
-	typedef enum _eFlag
-	{
-		eFlag_Succ              = 0,        //成功
-		eFlag_QQ_NoAcessToken   = 1000, 	//手Q授权失败，获取不到accesstoken
-		eFlag_QQ_UserCancel     = 1001, 	//用户取消手Q授权
-		eFlag_QQ_LoginFail      = 1002, 	//手授权失败
-		eFlag_QQ_NetworkErr     = 1003, 	//网络异常
-		eFlag_QQ_NotInstall     = 1004, 	//手Q未安装
-		eFlag_QQ_NotSupportApi  = 1005, 	//手Q版本不支持
-		eFlag_QQ_AccessTokenExpired = 1006, //手Q accesstoken过期
-		eFlag_QQ_PayTokenExpired = 1007,    //手Q paytoken过期
-		eFlag_WX_NotInstall     = 2000,     //微信未安装
-		eFlag_WX_NotSupportApi  = 2001,     //微信版本不支持
-		eFlag_WX_UserCancel     = 2002,     //用户取消微信授权
-		eFlag_WX_UserDeny       = 2003,     //用户拒绝微信授权
-		eFlag_WX_LoginFail      = 2004,     //微信授权失败
-		eFlag_WX_RefreshTokenSucc = 2005,  	//微信刷新accesstoken成功
-		eFlag_WX_RefreshTokenFail = 2006,  	//微信刷新accesstoken失败
-		eFlag_WX_AccessTokenExpired = 2007, //微信accessToken失效
-		eFlag_WX_RefreshTokenExpired = 2008,//微信refreshtoken过期
-		eFlag_Error				= -1      	// 网络错误
-	}eFlag;
+## 回调标识eFlag
 
+### 手Q相关：
+	
+|返回码|名称|描述|推荐处理|
+|: ------- :|: ------- :|: ------- :|: ------- :|
+|1000|eFlag_QQ_NoAcessToken|手Q登陆失败，未获取到accesstoken|返回登录界面，引导玩家重新登录授权|
+|1001|eFlag_QQ_UserCancel|玩家取消手Q授权登录|返回登录界面，并告知玩家已取消手Q授权登录|
+|1002|eFlag_QQ_LoginFail|手Q登陆失败|返回登录界面，引导玩家重新登录授权|
+|1003|eFlag_QQ_NetworkErr|网络错误|重试|
+|1004|eFlag_QQ_NotInstall|玩家设备未安装手Q客户端|引导玩家安装手Q客户端|
+|1005|eFlag_QQ_NotSupportApi|玩家手Q客户端不支持此接口|引导玩家升级手Q客户端|
+|1006|eFlag_QQ_AccessTokenExpired|accesstoken过期|返回登录界面，引导玩家重新登录授权|
+|1007|eFlag_QQ_PayTokenExpired|paytoken过期|返回登录界面，引导玩家重新登录授权|
+
+### 微信相关：
+
+|返回码|名称|描述|推荐处理|
+|: ------- :|: ------- :|: ------- :|: ------- :|
+|2000|eFlag_WX_NotInstall|玩家设备未安装微信客户端|引导玩家安装微信客户端
+|2001|eFlag_WX_NotSupportApi|玩家微信客户端不支持此接口|引导玩家升级微信客户端|
+|2002|eFlag_WX_UserCancel|玩家取消微信授权登录|返回登录界面，并告知玩家已取消微信授权登录|
+|2003|eFlag_WX_UserDeny|玩家拒绝微信授权登录|返回登录界面，并告知玩家已拒绝微信授权登录|
+|2004|eFlag_WX_LoginFail|微信登录失败|返回登录界面，引导玩家重新登录授权|
+|2005|eFlag_WX_RefreshTokenSucc|微信刷新票据成功|获取微信票据，登录进入游戏|
+|2006|eFlag_WX_RefreshTokenFail|微信刷新票据失败|返回登录界面，引导玩家重新登录授权|
+|2007|eFlag_WX_AccessTokenExpired|微信accessToken过期|尝试用refreshtoken刷新票据|
+|2008|eFlag_WX_RefreshTokenExpired|微信refreshtoken过期|返回登录界面，引导玩家重新登录授权|
+
+### 异账号相关：
+
+|返回码|名称|描述|推荐处理|
+|: ------- :|: ------- :|: ------- :|: ------- :|
+|3001|eFlag_NeedLogin|游戏本地账号和拉起账号均无法登陆|返回登录界面，引导玩家重新登录授权|
+|3002|eFlag_UrlLogin|不存在异账号，游戏通过拉起账号快速登陆成功|读取LoginRet结构体中的票据进行游戏授权流程|
+|3003|eFlag_NeedSelectAccount|游戏本地账号和拉起账号存在异账号|弹出对话框让用户选择登陆的账号|
+|3004|eFlag_AccountRefresh|不存在异账号，MSDK已通过刷新接口将本地账号票据刷新|读取LoginRet结构体中的票据进行游戏授权流程|
+
+### 其他
+
+|返回码|名称|描述|推荐处理|
+|: ------- :|: ------- :|: ------- :|: ------- :|
+|0|eFlag_Succ|成功|按照接口的成功逻辑处理|
+|-1|eFlag_Error|错误|按照接口的默认错误处理方法处理|
+|-2|eFlag_Local_Invalid|账号自动登录失败, 包含本地票据过期, 刷新失败等所有错误|返回登录界面，引导玩家重新登录授权|
+|-3|eFlag_NotInWhiteList|玩家账号不在白名单中|提示玩家未抢号，引导玩家进入应用宝抢号|
+|-4|eFlag_LbsNeedOpenLocationService|游戏所需的定位服务未开启|引导用户开启定位服务|
+|-5|eFlag_LbsLocateFail|游戏定位失败|提示玩家定位失败，需重试|
+	
+## 各种结构体
 
 ### eTokenType
 
