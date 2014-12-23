@@ -9,6 +9,9 @@
 
 接入米大师请阅读MSDK包中`Tencent AndroidPayRelease.zip`的相关文档及示例。
 
+[米大师支付接入Wiki](http://wiki.mg.open.qq.com/index.php?title=%E6%94%AF%E4%BB%98%E6%8E%A5%E5%85%A5)|
+
+
 ## 备注
 
 ### 如果游戏解压后Miads的安装包中存在微信SDK（`libammsdk.jar`）、和mid相关SDK（`mid-***.jar`）并且与MSDKLibrary里面的相关jar包冲突的话，游戏删除对应的jar包即可。
