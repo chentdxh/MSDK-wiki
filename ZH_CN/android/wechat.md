@@ -60,122 +60,6 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ```
 
-授权登录
-------
-
-拉起微信客户端授权, 授权完成返回游戏openId、accessToken、refreshToken, pf, pfKey几种票据. 要完成此功能需要调用WGLogin接口, 接口详细说明如下:
-
-#### 接口声明：
-	
-	/**
- 	 * @param platform 游戏传入的平台类型, 可能值为: ePlatform_QQ, ePlatform_Weixin
- 	 * @return void
-	 *   通过游戏设置的全局回调的OnLoginNotify(LoginRet& loginRet)方法返回数据给游戏
-	 *     loginRet.platform表示当前的授权平台, 值类型为ePlatform, 可能值为ePlatform_QQ, ePlatform_Weixin
-	 *     loginRet.flag值表示返回状态, 可能值(eFlag枚举)如下：
- 	 *       eFlag_Succ: 返回成功, 游戏接收到此flag以后直接读取LoginRet结构体中的票据进行游戏授权流程.
- 	 *       eFlag_QQ_NoAcessToken: 手Q授权失败, 游戏接收到此flag以后引导用户去重新授权(重试)即可.
-	 *       eFlag_QQ_UserCancel: 用户在授权过程中
-	 *       eFlag_QQ_LoginFail: 手Q授权失败, 游戏接收到此flag以后引导用户去重新授权(重试)即可.
-	 *       eFlag_QQ_NetworkErr: 手Q授权过程中出现网络错误, 游戏接收到此flag以后引导用户去重新授权(重试)即可.
-	 *     loginRet.token是一个Vector<TokenRet>, 其中存放的TokenRet有type和value, 通过遍历Vector判断type来读取需要的票据. type(TokenType)类型定义如下:
-	 *       eToken_QQ_Access,
-	 *       eToken_QQ_Pay,
-	 *       eToken_WX_Access,
-	 *       eToken_WX_Refresh
-	 */
-	void WGLogin(ePlatform platform);
-
-#### 接口调用：
-
-接口调用示例：
-
-	WGPlatform.WGLogin(ePlatform_Weixin);	//调用微信客户端或web授权 
-回调接受事例：
-
-	virtual void OnLoginNotify(LoginRet& loginRet) {
-	 LOGD("OnLoginNotify: flag:%d platform:%d OpenId:%s, Token Size: %d",
-            loginRet.flag, loginRet.platform, loginRet.open_id.c_str(), loginRet.token.size());
-
-    if (loginRet.platform == ePlatform_QQ) {
-        ...
-    } else if (loginRet.platform == ePlatform_Weixin) {
-        // 读取微信的登陆票据
-        switch (loginRet.flag) {
-        case eFlag_Succ: {
-            // 进行正常游戏登陆逻辑
-            std::string accessToken = "";
-            std::string refreshToken = "";
-            for (int i = 0; i < loginRet.token.size(); i++) {
-                if (loginRet.token.at(i).type == eToken_WX_Access) {
-                    accessToken.assign(loginRet.token.at(i).value);
-                } else if (loginRet.token.at(i).type == eToken_WX_Refresh) {
-                    refreshToken.assign(loginRet.token.at(i).value);
-                }
-            }
-            LOGD("accessToken : %s", accessToken.c_str());
-            LOGD("payToken : %s", refreshToken.c_str());
-            break;
-        }
-        case eFlag_WX_NotSupportApi:
-            // 没有安装或者版本太低, 引导用户下载新版微信
-            break;
-
-        case eFlag_WX_UserCancel:
-        case eFlag_WX_UserDeny:
-            // 用户取消, 提示用户重新授权
-            break;
-        case eFlag_WX_AccessTokenExpired:
-            // 调用WGRefreshWxToken, 刷新accessToken
-            break;
-        case eFlag_WX_RefreshTokenExpired:
-            // refreshToken过期, 提示用户重新授权
-            break;
-        case eFlag_WX_LoginFail:
-        case eFlag_Error:
-            // 登陆过程中网络失败, 或者其他错误, 引导用户重新授权即可
-            break;
-        case eFlag_WX_RefreshTokenSucc:
-            // WGRefreshWXToken调用成功, 成功用当前的refreshToken换到新的accessToken
-            break;
-        case eFlag_WX_RefreshTokenFail:
-            // WGRefreshWXToken调用失败, 游戏自己决定是否需要重试 WGRefreshWXToken
-            break;
-        }
-    }
-	}
-
-#### 注意事项：
-
-1.	微信授权需要保证微信版本高于4.0
-
-- 拉起微信时候, 微信会检查应用程序的签名和微信后台配置的签名是否匹配(此签名在申请微信appId时提交过), 如果不匹配则无法唤起已经授权过的微信客户端.
-
-- 微信授权过程中, 点击左上角的 返回 按钮, 可能会导致没有授权回调, 游戏需要自己倒计时, 超时则算作用户取消授权.
-- WXEntryActivity.java 位置不正确（必须在包名/wxapi 目录下）则不能收到回调.
-- **在微信未登录的情况下, 游戏拉起微信输入用户名密码以后登录, 可能会没有登录回调, 这是微信客户端已知BUG. 游戏在调用WGLogin登录之前可以开始一个倒计时, 倒计时完毕如果没有收到回调则算作超时, 让用户回到登录界面.**
-
-自动授权与Token过期处理
-------
-从MSDK 2.0.0版本开始, sdk为游戏自动登录提供了全新的接口WGLoginWithLocalInfo, 使用此接口游戏在自动登录的时候无需处理微信票据刷新, 手Q/微信AccessToken验证等工作, 游戏只需要在启动时候调用此接口, 此接口通过OnLoginNotify将本地票据验证结果返回给游戏, 游戏根据返回结果继续后续流程即可. 详细的接口说明如下:
-
-
-	/**
- 	 *  @since 2.0.0
- 	 *  此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据
-  	 *  此接口会通过OnLoginNotify将结果回调给游戏, 本接口只会返回两种flag, eFlag_Local_Invalid和eFlag_Succ,
- 	 *  如果本地没有票据或者本地票据验证失败返回的flag为eFlag_Local_Invalid, 游戏接到此flag则引导用户到授权页面授权即可.
- 	 *  如果本地有票据并且验证成功, 则flag为eFlag_Succ, 游戏接到此flag则可以直接使用sdk提供的票据, 无需再次验证.
- 	 *  @return void
- 	 *   Callback: 验证结果通过我OnLoginNotify返回
- 	 */
-	 void WGLoginWithLocalInfo();
-
-
-**注意: MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新sdk会自动刷新完成, 通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail. 游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程.**
-
-**为了保证登录数据上报正确, 游戏接入时候必须在onResume中调用WGPlatform.onResume, onPause中调用WGPlatform.onPause. 游戏在每次后台切换回来以后需要调用WGLoginWithLocalInfo, 通过msdk验证本地票据有效性, 可参见MSDKSample中MainActivity的实现.**
-
 查询个人信息
 ------
 
@@ -562,6 +446,68 @@ public static boolean WGSendToWXGameFriend(
 		}
 		}
 	}
+
+链接分享
+------
+
+链接消息其实是结构化消息的一种，由于微信结构化消息不支持点击结构体跳转，因此增加了链接消息。链接同样消息可以发送给任意好友，而且点击结构体可以打开链接。因此链接消息一般多用于邀请、炫耀、活动页面分享等。
+
+#### 接口声明
+
+```
+/**
+ * @param title 链接消息的标题
+ * @param desc 链接消息的概要信息
+ * @param url 分享的URL
+ * @param mediaTagName 请根据实际情况填入下列值的一个, 此值会传到微信供统计用, 在分享返回时也会带回此值, 可以用于区分分享来源
+ "MSG_INVITE";                   // 邀请
+ "MSG_SHARE_MOMENT_HIGH_SCORE";    //分享本周最高到朋友圈
+ "MSG_SHARE_MOMENT_BEST_SCORE";    //分享历史最高到朋友圈
+ "MSG_SHARE_MOMENT_CROWN";         //分享金冠到朋友圈
+ "MSG_SHARE_FRIEND_HIGH_SCORE";     //分享本周最高给好友
+ "MSG_SHARE_FRIEND_BEST_SCORE";     //分享历史最高给好友
+ "MSG_SHARE_FRIEND_CROWN";          //分享金冠给好友
+ "MSG_friend_exceed"         // 超越炫耀
+ "MSG_heart_send"            // 送心
+ * @param thumbImgData 结构化消息的缩略图
+ * @param thumbImgDataLen 结构化消息的缩略图数据长度
+ * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
+ * @return void
+ *   通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
+ *     eFlag_Succ: 分享成功
+ *     eFlag_Error: 分享失败
+ */
+void WGSendToWeixinWithUrl(
+        const eWechatScene& scene,
+        unsigned char* title,
+        unsigned char* desc,
+        unsigned char* url,
+        unsigned char* mediaTagName,
+        unsigned char* thumbImgData,
+        const int& thumbImgDataLen,
+        unsigned char* messageExt
+        );
+```
+
+#### 调用示例
+
+```
+String title = "title";
+String desc = "desc";
+String mediaTagName = "MSG_INVITE";
+String messageExt = "message Ext";
+Bitmap thumb = BitmapFactory.decodeResource(mMainActivity.getResources(),
+		R.drawable.ic_launcher);
+byte[] imgData = CommonUtil.bitmap2Bytes(thumb);
+String url = "www.qq.com";
+if ("cpp".equals(ModuleManager.LANG)) { // 使用C++调用MSDK, 游戏只需要用一种方式即可
+	PlatformTest.WGSendToWeixinWithUrl(scene, title, desc, url,
+			mediaTagName, imgData, imgData.length, messageExt);
+} else if ("java".equals(ModuleManager.LANG)) { // 使用Java调用MSDK
+	WGPlatform.WGSendToWeixinWithUrl(scene, title, desc, url, 
+			mediaTagName, imgData, imgData.length, messageExt);
+}
+```
 
 Android微信登录不了检查步骤
 ------

@@ -6,6 +6,10 @@ MSDK 灯塔 相关模块
 
 ![beacon_1](./beacon_res/beacon_1.png)
 
+自版本1.7之后，已无需在AndroidManifest.xml中对灯塔进行配置如下图所示，部分游戏因为存在这段代码可能导致数据不正常，建议将此段代码删除之。
+
+![beacon_3](./beacon_3.png)
+
 如果看不到数据，按以下步骤处理。
 
 1、     首先，有可能是游戏申请了多个灯塔的应用，而灯塔只将其中的一个灯塔应用与qqAppId(100703379)进行关联，如msdk为了测试，申请了三个灯塔应用，而MSDK(Android)是与qqAppId相关联的应用，与WeGameSample没有关联，因此，在MSDK(Android)这里可以看到最新数据，但在WeGameSample看不到最新数据，游戏要首先确认这一点。
@@ -15,6 +19,7 @@ MSDK 灯塔 相关模块
 2、     游戏虽然接入了MSDK1.7或之后的版本，但灯塔并没有将其之前申请的appkey与qqAppid进行关联，这样也会看不到数据，联系灯塔同事@jaffaqiu或者@chloezhang确认，并告之其qqAppId
 
 3、     首次接入请先确认是否有权限，这个可以联系灯塔同事@jaffaqiu或者@chloezhang确认，告之其qqAppId。
+
 
 自定义数据上报
 ---
@@ -32,10 +37,33 @@ MSDK 灯塔 相关模块
 另外接口是:
      
      /**
-	 * @param name 事件名称
+	 * @param eventName 事件名称
 	 * @param params key-value格式的自定义事件
 	 * @param isRealTime 是否实时上报
 	 * @return void
 	 */
-    public static void WGReportEvent(String name, HashMap<String, String> params, boolean isRealTime);
+    public static void WGReportEvent(String eventName, HashMap<String, String> params, boolean isRealTime);
 
+其中参数约束如下：**eventName不要以MSDK_开头，因为这是msdk自定义事件的命名风格。**
+
+![beacon_3](./beacon_d1.png)
+
+应用场景
+---
+
+如果我想查看某个接口的调用次数如查询QQ用户个人信息，事件名称命名为queryQQUserInfo，调用方法如下：
+
+    WGReportEvent("queryQQUserInfo", null, true);
+
+如果成功上报的话可以在http://beacon.tencent.com/ 对应灯塔app的日志查询中。实时上报的话一般调用上面方法后五分钟内可查询到。
+
+![beacon_3](./beacon_d2.png)
+
+另外在事件质量列表中可以查看数量的统计：
+
+
+![beacon_4](./beacon_d3.png)
+
+具体可咨询RTX灯塔小秘。
+
+另：灯塔自定义事件有成功率和时延的统计，目前尚未封装，游戏需要用时，可自行调用UserAction.onUserAction。使用方法可参看灯塔官网提供的参考文档。

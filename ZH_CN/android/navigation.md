@@ -20,6 +20,10 @@
   * [MSDK初始化](android.md)
   * [设置全局回调](android.md)
   - - - - 
+  * # 核心模块
+  * [**登陆模块(强烈推荐)**](login.md)
+  * [**分享模块(强烈推荐)**](share.md)
+   - - - - 
   * # 版本更新
   * [Android Library Project类游戏更新](update.md#Android Library Project类游戏更新)
   * [非Android Library Project类游戏更新](update.md#非Android Library Project类游戏更新)
@@ -37,8 +41,8 @@
   * [接入配置](qq.md#接入配置)
   - - - -
   * # 登陆模块
-  * [授权登录](qq.md#授权登录)
-  * [自动登录](qq.md#自动登录)
+  * [登录接入](login.md)
+  * [快速登录](qq.md#快速登录)
   * [异账号](diff-account.md)
   - - - -
   * # 关系链
@@ -67,8 +71,7 @@
   * [接入配置](wechat.md#接入配置)
   - - - -
   * # 登陆模块
-  * [授权登录](wechat.md#授权登录)
-  * [权限设置](wechat.md#权限设置)
+  * [登录接入](login.md)
   * [异账号](diff-account.md)
   - - - -
   * # 关系链
@@ -80,6 +83,7 @@
   * [大图消息分享](wechat.md#大图消息分享)
   * [音乐消息分享](wechat.md#音乐消息分享)
   * [后端分享](wechat.md#后端分享)
+  * [链接分享](wechat.md#链接分享)
   - - - -
   * # 其他说明
   * [无法拉起微信授权](wechat.md#Android微信登录不了检查步骤)

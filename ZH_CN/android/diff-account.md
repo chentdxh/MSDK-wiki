@@ -1,4 +1,4 @@
-MSDK 异账号问题汇总
+MSDK 异账号梳理
 =======
 
 何为异帐号
@@ -35,7 +35,7 @@ MSDK的异帐号处理逻辑包括异账号判断，用户选择账号，异账�
 
 	eFlag_AccountRefresh: 不存在异账号，MSDK已通过刷新接口将本地账号票据刷新。接收到此flag以后直接读取LoginRet结构体中的票据进行游戏授权流程。
 
-	eFlag_UrlLogin：不存在异账号，游戏通过拉起账号快速登陆成功。游戏接收到此flag以后直接读取LoginRet结构体中的票据进行游戏授权流程。
+	eFlag_UrlLogin：不存在异账号，游戏通过拉起账号快速登陆。游戏接收到此flag以后需要等待onLoginNotify的回调后处理。
 
 	eFlag_NeedLogin：游戏本地账号和拉起账号均无法登陆。游戏接收到此flag以后需要弹出登陆页让用户登陆。
 
@@ -49,8 +49,8 @@ MSDK的异帐号处理逻辑包括异账号判断，用户选择账号，异账�
 		 *  通过外部拉起的URL登陆。该接口用于异帐号场景发生时，用户选择使用外部拉起帐号时调用。
 	 	*  登陆成功后通过onLoginNotify回调
 	 	*
-	 	*  @param flag 为YES时表示用户需要切换到拉起帐号，此时该接口会使用上一次保存的拉起帐号登陆数据登陆。登陆成功后通过onLoginNotify回调；如果没有票据，或票据无效函数将会返回NO，不会发生onLoginNotify回调。
-	 	*              为NO时表示用户继续使用原帐号，此时删除保存的拉起帐号数据，避免产生混淆。
+	 	*  @param flag 为YES时表示用户需要切换到拉起帐号，此时该接口会使用上一次保存的拉起帐号登陆数据尝试登陆。登陆成功后通过onLoginNotify回调；如果没有票据，或票据无效函数将会返回NO，不会发生onLoginNotify回调。
+	 	*              为NO时表示用户继续使用原本地帐号，此时删除保存的拉起帐号数据，避免产生混淆。
 	 	*
 	 	*  @return 如果没有票据，或票据无效将会返回NO；其它情况返回YES
 		 */
@@ -58,12 +58,12 @@ MSDK的异帐号处理逻辑包括异账号判断，用户选择账号，异账�
 
 ####3. 返回登录回调：
 
-MSDK会根据用户选择的结果尝试登录，并把登录的结果通过onLoginNotify回调给游戏，游戏根据回调结果处理登录结果。
+当WGSwitchUser的参数为true的时候，MSDK会根据游戏拉起时的状态尝试登录，并把登录的结果通过onLoginNotify回调给游戏，游戏根据回调结果处理登录结果。
 
 平台到游戏异帐号的九种情况
 ----
 
-开发无需关心，只需要关心MSDK给游戏回调中的flag。：
+**开发无需关心，只需要关心MSDK给游戏回调中的flag。**：
 
 |           |拉起带完整票据|拉起不带完整票据|拉起无票据|
 |: ------------- :|: ------------- :|: ------------- :|: ------------- :|
@@ -71,75 +71,8 @@ MSDK会根据用户选择的结果尝试登录，并把登录的结果通过onLo
 |本地票据无效|提示用户异账号|提示用户异账号|游戏回到登录页|
 |本地无票据|通过拉起账号登陆|游戏回到登录页|游戏回到登录页|
 
-手Q拉起游戏场景
----
 
-手Q的结构化消息分享和后端分享可以有不同的跳转链接（tatgetURL），不同游戏可以填入不同的跳转链接来实现通过分享消息拉起游戏的场景。
-
-1. 通过手Q游戏中心点启动拉起游戏
-
-	效果：此时会带票据拉起游戏
-
-	MSDK对应的接口：无
-
-2. 通过手Q结构化消息结构体拉起游戏
-
-	效果：取决于填写的targetURL，详细内容看下一部分（手Q结构化消息的跳转链接设置）
-
-	MSDK对应的接口：WGSendToQQGameFriend，WGSendToQQ，WGSendToQQWithMusic
-
-![sendtoqqgamefriend](./diff-account-sendtoqqgamefriend.png) ![sendtoqq](./diff-account-sendtoqq.png) ![sendtoqqwithmusic](./diff-account-sendtoqqwithmusic.png) 
-
-3. 通过手Q结构化消息或者大图分享的小尾巴拉起游戏
-
-	效果：会拉起游戏，但是不带任何票据，包括openID，无法做异帐号提示
-
-	MSDK对应的接口：WGSendToQQGameFriend，WGSendToQQ，WGSendToQQWithMusic，WGSendToQQWithPhoto
-
-![sendtoqqgamefriend](./diff-account-sendtoqqgamefriend.png) ![sendtoqq](./diff-account-sendtoqq.png) ![sendtoqqwithmusic](./diff-account-sendtoqqwithmusic.png) ![sendtoqqwithphoto](./diff-account-sendtoqqwithphoto.png) 
-
-手Q结构化消息跳转链接设置
----
-1. 通过PR2评审的游戏
-
-	链接配置：可以将跳转链接设置为手Q游戏中心的游戏详情页（详见MSDK接入文档）
-
-	对应情况：此种情况等价于在游戏中心点击启动游戏拉起游戏。通过在游戏中心的不同配置（配置方法看下一部分）可以实现带票据拉起游戏或者不带票据拉起游戏
-
-2. 没有通过PR2评审的游戏
-
-	链接配置：可以将跳转链接设置为应用宝详情页（具体可以咨询应用宝vivianhui）
-
-	对应情况：可以拉起游戏或者下载游戏
-
-3. 即没有通过PR2又不接应用宝的游戏
-
-	链接配置：跳转链接只能设置为其他链接
-
-	对应情况：点击消息会跳转到对应的网址，游戏可以在网址自己做游戏的下载或者web拉起
-
-手Q游戏中心快速登陆配置
----
-
-这部分由游戏的**`运营协同规划PM`**提交需求给手Q游戏中心，由游戏中心的负责人完成配置。
-
-1. 支持openID：
-
-	勾选openID一项，如下图
-
-![1](./diff-account-1.png) 
-2. 支持带openID、accessToken、PayToken
-
-	1.勾选对应的选项
-
-	2.填写游戏支持异帐号的版本对应的versionCode。填写以后此code及以上的版本可以带票据拉起游戏，之前版本只会带openID拉起游戏，不会影响游戏的正常逻辑。
-![2](./diff-account-2.png) 
-
-3. 注意事项
-
-	在配置的时候一般只需要配置前三项即可，后面几项不用配置。
-
-注意事项
+异帐号版本支持
 -----
 ####游戏到平台异账号：
 
@@ -150,6 +83,8 @@ MSDK会根据用户选择的结果尝试登录，并把登录的结果通过onLo
 1. MSDK从1.8.0开始支持异账号，目前只有手Q可以完成带票据拉起。
 2. 手Q4.6以下版本， 手Q到游戏的异账号在游戏已经启动的情况下没有。
 
-####手Q支持快速登录的条件：
-1. 游戏分享消息的跳转链接为游戏中心详情页。
-2. 游戏在手Q游戏中心配置了透传给APP的字段（openid,accesstoken,paytoken）
+
+##常见问题
+
+1. 点击分享的消息没有异帐号：点击查看[分享消息点击效果](share.md#分享消息点击效果)确认当前的操作是否会触发异帐号。
+2. 手Q拉起游戏无法登陆：[点击了解手Q支持快速登陆的条件](qq.md#快速登录)，根据内容确认当前游戏手Q是否支持快速登陆。

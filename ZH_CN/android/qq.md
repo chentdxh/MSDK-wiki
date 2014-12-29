@@ -60,107 +60,6 @@ MSDK 手Q 相关模块
 
 	1. baseInfo值游戏填写错误将导致 QQ、微信的分享，登录失败 ，切记 ！！！
 
-授权登录
-------
-
-拉起手Q客户端或web页面(手Q未安装)授权, 授权完成返回游戏openId、accessToken、payToken, pf, pfKey几种票据。要完成此功能需要用到的接口有: WGLogin。 接口详细说明如下:
-
-#### 接口声明：
-	
-	/**
-	 * @param platform 游戏传入的平台类型, 可能值为: ePlatform_QQ, ePlatform_Weixin
-	 * @return void
-	 *   通过游戏设置的全局回调的OnLoginNotify(LoginRet& loginRet)方法返回数据给游戏
-	 *     loginRet.platform表示当前的授权平台, 值类型为ePlatform, 可能值为ePlatform_QQ, ePlatform_Weixin
-	 *     loginRet.flag值表示返回状态, 可能值(eFlag枚举)如下：
-	 *       eFlag_Succ: 返回成功, 游戏接收到此flag以后直接读取LoginRet结构体中的票据进行游戏授权流程.
-	 *       eFlag_QQ_NoAcessToken: 手Q授权失败, 游戏接收到此flag以后引导用户去重新授权(重试)即可.
-	 *       eFlag_QQ_UserCancel: 用户在授权过程中
-	 *       eFlag_QQ_LoginFail: 手Q授权失败, 游戏接收到此flag以后引导用户去重新授权(重试)即可.
-	 *       eFlag_QQ_NetworkErr: 手Q授权过程中出现网络错误, 游戏接收到此flag以后引导用户去重新授权(重试)即可.
-	 *     loginRet.token是一个Vector<TokenRet>, 其中存放的TokenRet有type和value, 通过遍历Vector判断type来读取需要的票据. type(TokenType)类型定义如下:
-	 *       eToken_QQ_Access,
-	 *       eToken_QQ_Pay,
-	 *       eToken_WX_Access,
-	 *       eToken_WX_Refresh
-	 */
-	void WGLogin(ePlatform platform);
-
-#### 接口调用：
-
-接口调用示例：
-
-	WGPlatform::GetInstance()->WGLogin(ePlatform_QQ); 
-回调接受事例：
-
-	virtual void OnLoginNotify(LoginRet& loginRet) {
-	if (loginRet.platform == ePlatform_QQ) {
-		// 读取QQ的授权票据
-		switch (loginRet.flag) {
-		case eFlag_Succ: {
-			// 进行正常游戏登陆逻辑
-			std::string accessToken = "";
-			std::string payToken = "";
-			for (int i = 0; i < loginRet.token.size(); i++) {
-				if (loginRet.token.at(i).type == eToken_QQ_Access) {
-					accessToken.assign(loginRet.token.at(i).value);
-				} else if (loginRet.token.at(i).type == eToken_QQ_Pay) {
-					payToken.assign(loginRet.token.at(i).value);
-				}
-			}
-			break;
-		}
-		case eFlag_QQ_NotInstall:
-		case eFlag_QQ_NotSupportApi:
-			// 没有安装或者版本太低, 引导用户下载新版手Q
-			break;
-		case eFlag_QQ_UserCancel:
-			// 用户取消, 提示用户重新授权
-			break;
-		case eFlag_QQ_NoAcessToken:
-            // 居然没有accesstoken，没救了，弹出登录界面让用户重新授权吧
-            break;
-		case eFlag_QQ_LoginFail:
-            // 授权失败了，弹出登录界面让用户重新授权吧
-            break;
-		case eFlag_QQ_NetworkErr:
-			// 授权过程中网络失败, 或者其他错误, 引导用户重新授权即可
-			break;
-        case eFlag_Error:
-            // 授权过程中发生错误，弹出登录界面让用户重新授权吧
-            break;
-        case eFlag_Local_Invalid:
-            // 授权过程中发生错误，弹出登录界面让用户重新授权吧
-            break;
-        case eFlag_QQ_AccessTokenExpired:
-            // QQ accesstoken过期(有效期90天不容易过期的)，微信可刷新QQ不能唉，只能弹出登录界面让用户重新授权吧
-            break;
-        case eFlag_QQ_PayTokenExpired:
-            // QQ paytoken过期（有效期六天），只能弹出登录界面让用户重新授权吧
-            break;
-        case eFlag_NotInWhiteList:
-            // 抢号失败了不在白名单，弹出登录界面建议用户重试下了
-            break;
-		}
-	} else if (loginRet.platform == ePlatform_Weixin) {
-        ...
-		}
-	}
-
-#### 低内存机器授权过程游戏被杀后的登陆方案
-
-由于目前大部分游戏占用内存很大，因此在授权过程中，当拉起手Q授权时，会触发android的内存回收机制将后台的游戏进程杀掉导致游戏手Q授权没有没有进入游戏。游戏需要在主Activity中增加以下代码来保证被杀以后依然可以带票据拉起进入游戏。
-
-
-	// TODO GAME 在onActivityResult中需要调用WGPlatform.onActivityResult
-    @Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		WGPlatform.onActivityResult(requestCode, resultCode, data);
-		Logger.d("onActivityResult");
-	}
-
-
 #### 使用场景：
 
 上面提到拉起登录页面如下所示，用户点击与QQ好友玩调用WGLogin
@@ -177,22 +76,30 @@ MSDK 手Q 相关模块
 
 - 如果游戏的Activity为Launch Activity, 则需要在游戏Activity声明中添加android:configChanges="orientation|screenSize|keyboardHidden", 否则可能造成没有登录没有回调。
 
-自动登录
--------
-从MSDK 2.0.0版本开始, MSDK为游戏自动登录提供了全新的接口WGLoginWithLocalInfo, 使用此接口的游戏在自动登录的时候无需处理微信票据刷新, 手Q/微信AccessToken验证等工作, 游戏只需要在启动时候（WGPlatform.Initialized已调用完成）调用此接口（如onResume中）, 此接口通过OnLoginNotify将本地票据验证结果返回给游戏, 游戏根据返回结果继续后续流程即可。 详细的接口说明如下:
- 
-    /**
-     *  @since 2.0.0
-     *  此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据
-     *  此接口会通过OnLoginNotify将结果回调给游戏, 本接口只会返回两种flag, eFlag_Local_Invalid和eFlag_Succ,
-     *  如果本地没有票据或者本地票据验证失败返回的flag为eFlag_Local_Invalid, 游戏接到此flag则引导用户到授权页面授权即可.
-     *  如果本地有票据并且验证成功, 则flag为eFlag_Succ, 游戏接到此flag则可以直接使用sdk提供的票据, 无需再次验证.
-     *  @return void
-     *   Callback: 验证结果通过我OnLoginNotify返回
-     */
-    void WGLoginWithLocalInfo();
+## 快速登录
 
-如果游戏从未登录过，调用WGLoginWithLocalInfo返回的flag为eFlag_Local_Invalid，此时游戏需要弹出登录界面让用户登录。
+快速登陆是指当玩家在手Q或者微信内点击分享消息直接拉起并进入游戏时，平台会透传登陆相关的票据信息从而直接完成登陆进入游戏。这种场景下，游戏在被拉起以后无需用户再次授权才能进入游戏。
+
+### 手Q游戏中心快速登陆配置
+
+手Q通过游戏中心点击启动的时候可以直接快速登录游戏，但是通过游戏中心详情页进入的时候取决于游戏的配置，具体配制方法由游戏的**`运营协同规划PM`**提交需求给手Q游戏中心，由游戏中心的负责人完成配置。配置如下：
+
+1. 支持openID：
+
+	勾选openID一项，如下图
+
+![1](./diff-account-1.png) 
+
+2. 支持带openID、accessToken、PayToken
+
+	1.勾选对应的选项
+
+	2.填写游戏支持异帐号的版本对应的versionCode。填写以后此code及以上的版本可以带票据拉起游戏，之前版本只会带openID拉起游戏，不会影响游戏的正常逻辑。
+![2](./diff-account-2.png) 
+
+3. 注意事项
+
+	在配置的时候一般只需要配置前三项即可，后面几项不用配置。
 
 查询个人信息
 ------
