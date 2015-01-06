@@ -67,25 +67,21 @@ MSDK公告模块
 
 #### 公告AndroidMainfest配置：
 
-这部分内容主要是MSDK公告界面相关的权限设置，**如果游戏使用自定义UI，这部分内容可以不用设置。**
+这部分内容主要是MSDK公告界面相关的权限设置。
 
-- 游戏使用自定义公告界面
+	<!-- TODO Notice 公告 配置 START -->
+    <!--  MSDK弹出公告相关配置 -->
+   	<activity
+       	android:name="com.tencent.msdk.notice.AlertMsgActivity"
+       	android:configChanges="orientation|screenSize|keyboardHidden"
+       	android:screenOrientation="sensor"
+       	android:theme="@style/NoticeAlertTheme" >
+    </activity>
+	<!--  MSDK滚动公告相关配置 -->
+    <service android:name="com.tencent.msdk.notice.RollFloatService" >
+    </service>
+    <!-- TODO Notice 公告 配置  END -->
 
-	无
-- 游戏使用MSDK提供公告界面
-
-		<!-- TODO Notice 公告 配置 START -->
-        <!--  MSDK弹出公告相关配置 -->
-       	<activity
-           	android:name="com.tencent.msdk.notice.AlertMsgActivity"
-           	android:configChanges="orientation|screenSize|keyboardHidden"
-           	android:screenOrientation="sensor"
-           	android:theme="@style/NoticeAlertTheme" >
-        </activity>
-		<!--  MSDK滚动公告相关配置 -->
-        <service android:name="com.tencent.msdk.notice.RollFloatService" >
-        </service>
-        <!-- TODO Notice 公告 配置  END -->
 **备注：游戏可以根据屏幕的方向设置公告activity的屏幕方向（android:screenOrientation的值）。**
 
 开关配置

@@ -51,7 +51,6 @@ eFlag_Succ                     //成功
     eFlag_QQ_NetworkErr           //网络异常
 
 
-
 #### 示例代码
 - 授权调用代码如下：
 ```
@@ -98,6 +97,21 @@ else
 }
 }
 ```
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService setPermission:eOPEN_ALL];
+[authService login:ePlatform_QQ];
+```
+- 回调代码如下：
+```
+-(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
+{
+    //内部实现逻辑同void MyObserver::OnLoginNotify(LoginRet& loginRet)
+}
+```
+
 
 ####注意事项
 - 手Q版本4.0及以上才支持客户端授权
@@ -267,6 +281,20 @@ OnRelationNotify(RelationRet &relationRet)
 }
 ```
 
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service queryMyInfo];
+```
+- 回调代码如下：
+```
+-(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
+{
+    //内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
+}
+```
+
  ###查询同玩好友信息
 ####概述
 - 游戏授权后需要查询用户同玩好友的昵称，性别，头像、openid等信息，可以调用WGQueryQQGameFriendsInfo获取。
@@ -297,6 +325,20 @@ OnRelationNotify(RelationRet &relationRet)
     }
 }
 ```
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service queryMyGameFriendsInfo];
+```
+- 回调代码如下：
+```
+-(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
+{
+    //内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
+}
+```
+
 ####注意事项
 - 手Q授权成功
 ---
@@ -359,6 +401,26 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
     }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToQQ:QQScene_QZone
+title:(unsigned char*)[gameid UTF8String]
+desc:(unsigned char*)[revStr UTF8String]
+url:(unsigned char*)"XXXX"
+imgData:NULL
+imgDataLen:0];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ###直接分享到好友（不需要唤起手Q客户端）
 ####概述
 - 不会唤起手Q客户端直接发送的指定的同玩好友，同玩好友的openId可以通过WGQueryQQGameFriendsInfo接口获取。此分享消息在pc QQ上不显示。
@@ -426,6 +488,28 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
     }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToQQGameFriend:0
+fopenid:(unsigned char *)"E7B0E64C39A09127A698326F4941A9B6"
+title:(unsigned char *)"WGShare_WGSendToQQGameFriend_LONG_URL"
+summary:(unsigned char *)"WGShare_WGSendToQQGameFriend_LONG_URL_Summary"
+targetUrl:(unsigned char *)"http://bbs.oa.com"
+imgUrl:(unsigned char *)"http://bbs.oa.com"
+previewText:(unsigned char *)"WGShare_WGSendToQQGameFriend_LONG_URL_PreviewText"
+gameTag:(unsigned char *)"MSG_INVITE"];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ####注意事项
  - 需要手Q版本4.0及以上
  - 直接分享必须先手Q授权成功
@@ -478,6 +562,25 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
     }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+UIImage *image = [UIImage imageNamed:@"422.png"];
+NSData *data = UIImageJPEGRepresentation(image, 1.0);
+[MSDKService setMSDKDelegate:self];
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[shareService WGSendToQQWithPhoto:QQScene_QZone
+imgData:(unsigned char*)[data bytes]
+imgDataLen:(int)[data length]];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ###注意事项
  - 手Q4.2及以上版本
  - 唤起手Q分享到Qzone的弹框需要手Q4.5及以上版本
@@ -488,6 +591,7 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
 通过`WGGetIphoneQQVersion()`方法可以获取手Q版本号。
 ```ruby
 int WGGetIphoneQQVersion();
+[MSDKInfoService getIphoneQQVersion];//2.4.0i及之后版本
 ```
 >描述: 获取用户QQ帐号基本信息
     手Q版本号枚举如下：
@@ -582,6 +686,37 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
     }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+//加好友
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service addFriend:@"C1BF66286792F24E166C9A5D27CFB519"
+remark:@"测试加好友"
+description:@"你好吗～"
+subId:nil];
+//绑定群
+NSString *uinionId = @"33";
+NSString *zoneId = @"1";
+NSString *openId = [NSString stringWithCString:ret.open_id.c_str() encoding:NSUTF8StringEncoding];
+NSString *appId = @"100703379";
+NSString *appKey = @"4578e54fb3a1bd18e0681bc1c734514e";
+NSString *orgSigStr = [NSString stringWithFormat:@"%@_%@_%@_%@_%@",openId,appId,appKey,uinionId,zoneId];
+NSString *md5Str = [self md5HexDigest:orgSigStr];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service bindGroup:md5Str
+unionId:uinionId
+zoneId:zoneId
+appDisplayName:@"MSDKSampleTest"];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ###注意事项
  - 手Q5.1及以上版本
  - 一个工会只能绑定一个群，如果需要解绑，请查看QQ API 文档（如下）。如有其它问题可rtx联系OpenAPIHelper(OpenAPI技术支持)。

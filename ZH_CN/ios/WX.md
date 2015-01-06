@@ -81,6 +81,20 @@ else
 }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService login:login:ePlatform_Weixin];
+```
+- 回调代码如下：
+```
+-(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
+{
+//内部实现逻辑同void MyObserver::OnLoginNotify(LoginRet& loginRet)
+}
+```
 - ### 注意事项
  - 微信版本4.0及以上
  
@@ -117,7 +131,21 @@ OnRelationNotify(RelationRet &relationRet)
 }
 ```
 
- - ###查询微信同玩好友信息
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service queryMyInfo];
+```
+- 回调代码如下：
+```
+-(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
+{
+//内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
+}
+```
+
+- ###查询微信同玩好友信息
 通过调用WGQueryWXGameFriendsInfo查询微信同玩信息，包括：昵称，性别，头像、城市、省份等信息。
 ```ruby
 bool WGQueryWXGameFriendsInfo();
@@ -148,6 +176,21 @@ OnRelationNotify(RelationRet &relationRet)
     }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service queryMyGameFriendsInfo];
+```
+- 回调代码如下：
+```
+-(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
+{
+//内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
+}
+```
+
 ###注意事项
  - 微信正确授权
 
@@ -217,6 +260,27 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
 }
 ```
 
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+UIImage *image = [UIImage imageNamed:@"4.jpg"];
+NSData *data = UIImageJPEGRepresentation(image, 0.5);
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToWeixin:(unsigned char*)"分享标题"
+desc:(unsigned char*)"分享内容"
+mediaTagName:(unsigned char*)"MSG_INVITE"
+thumbImgData:(unsigned char*)[data bytes]
+thumbImgDataLen:(int)[data length]
+messageExt:(unsigned char*)"msdkwuwuwu"];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
  ###直接分享到微信好友
  - 调用WGSendToWXGameFriend分享到指定openid的微信同玩好友。不会唤起微信客户端。
  ```ruby
@@ -263,6 +327,25 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
     }
 }
 ```
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToWXGameFriend:(unsigned char*)"oGRTijiaT-XrbyXKozckdNHFgPyc"
+title:(unsigned char*)"msdk 测试 QQ 分享来了"
+description:(unsigned char*)"我在玩天天爱消除"
+mediaId:(unsigned char*)""
+messageExt:(unsigned char*)"balabalabalabala"
+mediaTagName:(unsigned char*)"MSG_INVITE"];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ### 注意事项
 -  WGSendToWeixin分享图片必须小于32K
  - 图片大小不能大于10M
@@ -334,6 +417,28 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
     }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+UIImage *image = [UIImage imageNamed:@"356.png"];
+NSData *data = UIImageJPEGRepresentation(image, 1.0);
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToWeixinWithPhoto:WechatScene_Session
+mediaTagName:(unsigned char*)"mediaTag"
+imgData:(unsigned char*)[data bytes]
+imgDataLen:(int)[data length]
+messageExt:NULL
+messageAction:NULL];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ###注意事项
  - 图片大小不能大于10M
 
@@ -370,21 +475,14 @@ void WGSendToWeixinWithUrl(
 调用代码示例：
 ```ruby
 WGPlatform *plat = WGPlatform::GetInstance();
-unsigned char* fOpenid = (unsigned char*)"xxx";
-unsigned char* title = (unsigned char*)"xxx";
-unsigned char* content = (unsigned char*)"xxx";
-TypeInfoImage info("xxx.png", 140, 140); 
-WXMessageTypeInfo *pInfo = &info;
-ButtonApp button("launch", "messageExt");
-WXMessageButton *pButton = &button;
-plat->WGSendMessageToWechatGameCenter(
-		fOpenid, 
-		title, 
-		content, 
-		pInfo, 
-		pButton,
-		(unsigned char*)"xxx"
-);
+NSString* title=@"分享标题";
+NSString* desc=@"分享内容";
+NSString* url = @"http://www.baidu.com";
+const char*  mediaTag = "MSG_INVITE";
+const char*  ext = "msdkwuwuwu";
+NSString *path = [[QQViewController testResourcePath] stringByAppendingPathComponent:@"4.png"];
+NSData* data = [NSData dataWithContentsOfFile:path];
+plat->WGSendToWeixinWithUrl(WechatScene_Session, (unsigned char*)[title UTF8String], (unsigned char*)[desc UTF8String],(unsigned char*)[url UTF8String], (unsigned char*)mediaTag,(unsigned char*)[data bytes],(int)[data length], (unsigned char*)ext);
 ```
 回调代码事例：
 ```ruby
@@ -409,6 +507,30 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
     }
 }
 ```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+UIImage *image = [UIImage imageNamed:@"4.png"];
+NSData* data = UIImageJPEGRepresentation(image, 1.0);
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToWeixinWithUrl:WechatScene_Session
+title:(unsigned char*)"分享标题"
+desc:(unsigned char*)"分享内容"
+url:(unsigned char*)"http://www.baidu.com"
+mediaTagName:(unsigned char*)"MSG_INVITE"
+thumbImgData:(unsigned char*)[data bytes]
+thumbImgDataLen:(int)[data length]
+messageExt:(unsigned char*)"msdkwuwuwu"];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ###注意事项
  - 需要微信5.2版本以上支持
 
@@ -462,6 +584,20 @@ else
 }
 }
 ```
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService refreshWXToken];
+```
+- 回调代码如下：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+}
+```
+
 ###注意事项
 - 刷新回调flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail
 - 每个refreshToken只能用与一次刷新即过期

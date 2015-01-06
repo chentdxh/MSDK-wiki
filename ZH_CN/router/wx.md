@@ -744,3 +744,176 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ![分享图片](./profileWxscore.jpg)
 
+### 3.4.2/profile/wxbattle_report ###
+
+#### 3.4.2.1接口说明 ####
+
+上报战斗信息到微信游戏中心
+
+#### 3.4.2.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| json|json对象|战斗json数据 |
+
+	//战斗json数据
+	{
+	    "baseinfo": { //游戏基础信息
+	        "gamename": "xxx",//游戏名称;
+	        "platid": 0,//平台id ios:0, android:1
+	        "partitionid": 2,//分区ID，默认填0
+	        "roleid": "",//角色ID字符串
+	        "level": 2 //用户游戏等级
+	    },
+	    "battleinfo": {//对战信息
+	        "score": 1,//分数
+	        "modeid": 0,//游戏模式 1:经典模式 2
+	        "acttime": "2014-09-24 13:10:45"//对战时间 2014-09-24 13:10:45
+	    }
+	}
+
+***（请注意输入参数的类型，参考1.5）***
+
+#### 3.4.2.3输出参数说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+
+#### 3.4.2.4 接口调用说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/profile/wxbattle_report/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 3.4.2.5 请求示例 ####
+
+	POST http://msdktest.qq.com/profile/wxbattle_report/?timestamp=1380018062&appid=wxcde873f99466f74a&sig=dc5a6330d54682c88846b1294fbd5fde&openid=A3284A812E%20CA15269F85AE1C2D94EB37&encode=1
+	
+	{
+	    "appid": "wxcde873f99466f74a",
+	    "openid": "oGRTijrV0l67hDGN7dstOl8CphN0",
+		"json":{
+		    "baseinfo": { 
+		        "gamename": "xxx",
+		        "platid": 0,
+		        "partitionid": 2,
+		        "roleid": "hunter",
+		        "level": 2 
+		    },
+		    "battleinfo": {
+		        "score": 1,
+		        "modeid": 0,
+		        "acttime": "2014-09-24 13:10:45"
+		    }
+		}
+	}
+	
+	//返回结果
+	{
+	    "msg": "success",
+	    "ret": 0
+	}
+
+### 3.4.3/profile/wxget_vip ###
+
+#### 3.4.3.1接口说明 ####
+
+获取微信特权
+
+#### 3.4.3.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|请求用户登录态 |
+| json|json对象|请求json,内容为：{"optype":1}, "optype:1"：表示获取自己和同玩好友, 暂时没有其他值 |
+
+
+***（请注意输入参数的类型，参考1.5）***
+
+#### 3.4.3.3输出参数说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| data|特权信息 `vipinfo`|
+
+	{
+	    "vipinfo": [	//vipinfo数组中第一条记录默认为请求者，好友排在其后；若没有数据，则data为空
+						//logo_url及logo_faceurl参数暂时不可用，无需关注
+	        {
+	            "openid": "xxx",
+	            "level": 1,			//等级
+	            "score": 310,		//积分
+	            "nick": "VIP1",		//vip名称
+	            "logo_url": "xxxx", //vip logo图片url
+	            "logo_faceurl": "xxx" //用于嵌入头像的vip logo图片url
+	        },
+	        {
+	            "openid": "xxx",
+	            "level": 0,
+	            "score": 0,
+	            "nick": "VIP0",
+	            "logo_url": "xxxx",
+	            "logo_faceurl": "xxx"
+	        }
+	    ]
+	}
+
+#### 3.4.3.4 接口调用说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/profile/wxget_vip/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 3.4.3.5 请求示例 ####
+
+	POST http://msdktest.qq.com/profile/wxget_vip?timestamp=1380018062&appid=wxcde873f99466f74a&sig=dc5a6330d54682c88846b1294fbd5fde&openid=A3284A812E%20CA15269F85AE1C2D94EB37&encode=1
+	
+	{
+	    "appid": "wxcde873f99466f74a",
+	    "openid": "oGRTijrV0l67hDGN7dstOl8CphN0",
+	    "accessToken": "OezXcEiiBSKSxW0eoylIeLl3C6OgXeyrDnhDI73sCBJYyBcXKXYWTlxU_BAMfu7Rzsr51Nu-CarhcPT6zYlD9FrWRzuA0ccQMgrTGqpao2C-TqXCXdT-DZ44iKkidglb5Q9jQbXnMPrSTck_DUdGMg",
+	    "json": {
+	        "optype": 1
+	    }
+	}
+	
+	//返回结果
+	{
+	    "msg": "success",
+	    "ret": 0,
+		"data":{
+		    "vipinfo": [
+		        {
+		            "openid": "xxx",
+		            "level": 1,			
+		            "score": 310,		
+		            "nick": "VIP1",		
+		            "logo_url": "xxxx", 
+		            "logo_faceurl": "xxx" 
+		        },
+		        {
+		            "openid": "xxx",
+		            "level": 0,
+		            "score": 0,
+		            "nick": "VIP0",
+		            "logo_url": "xxxx",
+		            "logo_faceurl": "xxx"
+		        }
+		    ]
+		}
+	}
+

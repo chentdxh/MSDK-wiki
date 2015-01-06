@@ -92,7 +92,7 @@ vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-r
 
 
 
-加解密登陆态
+加解密登录态
 ------
 ###1、如何解密
 业务页面获得上述URL，组装请求调用MSDK解密接口。目前解密接口有两种传参方案，业务后台需根据algorithm参数实现并兼容两种加密参数传输方案：

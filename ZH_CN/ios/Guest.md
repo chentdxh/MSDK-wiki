@@ -18,7 +18,7 @@ Guest模式
 
 ##需要做的改动
 ###Step1:如何登录Guest模式
- - 调用如下代码
+- 调用如下代码
 ```ruby
 WGPlatform* plat = WGPlatform::GetInstance();
     //如果没有设置OB，请先设置
@@ -28,10 +28,26 @@ WGPlatform* plat = WGPlatform::GetInstance();
     plat->WGLogin(ePlatform_Guest);
 ```
 
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService setPermission:eOPEN_ALL];
+[authService login:ePlatform_Guest];
+```
+
 ###Step2:onLoginNotify回调
  - 在onLoginNotify返回的LoginRet如下： 
  ![GUEST](./Guest4.png)
 如果返回注册错误（eFlag_Guest_RegisterFailed），建议调用WGResetGuestID后再次发起注册请求[增加容错机制]。注册成功后获得的GuestID将被写入到Keychain中，App删除后再安装也不会丢失游客进度。
+
+- - 2.4.0i及以后版本使用delegate方式回调代码如下：
+```
+-(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
+{
+    //内部实现逻辑同void MyObserver::OnLoginNotify(LoginRet& loginRet)
+}
+```
 
 ###Step3:如何支付
  - 支付与之前一致，都是registerPay->pay，参数稍有不同，注意session_id和session_type的传值。
@@ -145,4 +161,11 @@ Pay：
 ```ruby
 WGPlatform* plat = WGPlatform::GetInstance();
 plat->WGResetGuestID();
+```
+
+- 2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService resetGuestId];
 ```

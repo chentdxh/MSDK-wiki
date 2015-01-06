@@ -4,9 +4,9 @@
 
 该模块将会对MSDK所有授权相关的模块做一次梳理，包括授权登录、自动登录、快速登录、票据刷新、读取等模块的详细说明。游戏可以先参照该模块熟悉MSDK所有授权相关的模块，然后再根据游戏自己的需求使用对应接口完成授权等功能。
 
-##名次解释、接口说明
+##名词解释、接口说明
 	
-###登陆相关名词解释：
+###登录相关名词解释：
 | 名称| 描述 |支持平台| 调用接口 |
 |: ------------- :|
 | 授权登录 | 游戏通过拉起平台的授权界面，引导用户授权游戏获得登录所需票据| 手Q/微信 | WGLogin |
@@ -15,43 +15,43 @@
 | 自动刷新 | MSDK提供自动刷新微信票据接口 | MSDK 提供功能 | 无 |
 | 异帐号 | 当前游戏内登录的帐号和平台登录的帐号不一致 | 平台/MSDK均支持| WGSwitchUser |
 
-### 登陆相关接口概述
+### 登录相关接口概述
 
 与登录相关的调用接口中`WGGetLoginRecord`，`WGLogout`是同步接口，其他接口都是异步实现，因此通过callback的形式将最终的结果通过OnLoginNotify（LoginRet）来回调给游戏。异帐号相关的接口单独在MSDK的异帐号模块说明。具体如下:
 
 | 名称| 描述 |备注 |
 |: ------------- :|
-| WGGetLoginRecord | 获取本地保存的当前用户登陆票据 |  |
+| WGGetLoginRecord | 获取本地保存的当前用户登录票据 |  |
 | WGSetPermission | 设置游戏需要用户授权获取的平台信息 | |
-| WGLogin | 拉起平台授权登陆 |  |
-| WGLogout | 清空当前登陆帐号的登陆信息 |  |
-| WGLoginWithLocalInfo | 通过本地保存的登陆票据尝试登陆|  |
+| WGLogin | 拉起平台授权登录 |  |
+| WGLogout | 清空当前登录帐号的登录信息 |  |
+| WGLoginWithLocalInfo | 通过本地保存的登录票据尝试登录|  |
 | handleCallback | 处理各个平台唤起 |  |
 | WGRefreshWXToken | 通过微信refreshToken刷新获取accessToken |  从MSDK 2.0开始不建议游戏自己刷新微信票据 |
 
-###登陆相关接口推荐用法
+###登录相关接口推荐用法
 
-1. 授权登陆：直接调用`WGLogin`拉起对应平台的授权
+1. 授权登录：直接调用`WGLogin`拉起对应平台的授权
 - 游戏启动、游戏从后台切换会前台检查票据是否有效：调用`WGLoginWithLocalInfo`完成票据有效性的验证
 - 获取票据：直接调用`WGGetLoginRecord`从本地读取
-- 注销登陆：直接调用`WGLogout`清空当前用户的登陆信息
+- 注销登录：直接调用`WGLogout`清空当前用户的登录信息
 
-## 接入登陆具体工作（开发必看）
+## 接入登录具体工作（开发必看）
 
-**游戏开发可以按照下面提供的步骤完成MSDK登陆模块的接入，降低接入成本和遗漏的处理逻辑。强烈推荐认真了解！！！**
+**游戏开发可以按照下面提供的步骤完成MSDK登录模块的接入，降低接入成本和遗漏的处理逻辑。强烈推荐认真了解！！！**
 
 1. 设置需要用户授权的权限：
 	- 游戏在MSDK初始化以后要调用手Q权限设置的接口设置需要用户授权给游戏的平台权限。具体方法[点击查看](#设置需要用户授权的权限WGSetPermission)。
-- **处理授权登陆**：
-	1. 在登陆按钮的点击事件的处理函数中调用`WGLogin`完成授权登陆。具体方法[点击查看](#处理授权登陆WGLogin)。
-- **处理自动登陆**：
-	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登陆。具体方法[点击查看](#处理自动登陆WGLoginWithLocalInfo)。
-	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登陆
+- **处理授权登录**：
+	1. 在登录按钮的点击事件的处理函数中调用`WGLogin`完成授权登录。具体方法[点击查看](#处理授权登录WGLogin)。
+- **处理自动登录**：
+	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
+	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
 		- 对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差
 - **处理用户注销**：
-	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登陆。具体方法[点击查看](#处理用户注销WGLogout)
-- **处理MSDK的登陆回调**：
-	- 在游戏对MSDK回调处理的逻辑中增加对于对onLoginNotify的处理。具体方法[点击查看](#处理MSDK的登陆回调)
+	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登录。具体方法[点击查看](#处理用户注销WGLogout)
+- **处理MSDK的登录回调**：
+	- 在游戏对MSDK回调处理的逻辑中增加对于对onLoginNotify的处理。具体方法[点击查看](#处理MSDK的登录回调)
 - **处理平台的拉起**：
 	- 在游戏的主activity的onCreate和onNewIntent里调用handleCallback完成对平台拉起的处理。具体方法[点击查看](#处理平台唤起handleCallback)
 - **处理MSDK的拉起陆回调**：
@@ -59,9 +59,9 @@
 - **处理异帐号逻辑**：
 	- 游戏对于异帐号的处理逻辑，具体内容参照[MSDK异帐号接入](diff-account.md#异帐号处理逻辑（开发关注）)
 - **其余特殊逻辑处理**：
-	- 低内存机器授权过程游戏被杀后的登陆方案。具体方法[点击查看](#手Q授权在低内存机器授权过程游戏被杀后的登陆方案)
+	- 低内存机器授权过程游戏被杀后的登录方案。具体方法[点击查看](#手Q授权在低内存机器授权过程游戏被杀后的登录方案)
 	- MSDK微信票据过期自动刷新机制。具体方法[点击查看](#微信票据自动刷新)
-	- 登陆数据上报接口调用要求。具体方法[点击查看](#登陆数据上报)
+	- 登录数据上报接口调用要求。具体方法[点击查看](#登录数据上报)
 
 ##设置需要用户授权的权限WGSetPermission
 
@@ -87,11 +87,11 @@
 1. 游戏需要在MSDK初始化之后调用该接口，建议接口参数就填**`WGQZonePermissions.eOPEN_ALL`**。缺少该项会导致游戏调用部分接口时提示没有权限。
 
 
-##处理授权登陆WGLogin
+##处理授权登录WGLogin
 
 #### 概述：
 
-拉起手Q/微信客户端或web页面(手Q未安装)授权，在用户授权以后通过onLoginNotify通知游戏获取到的登陆信息
+**拉起手Q/微信客户端或web页面(手Q未安装)授权，在用户授权以后通过onLoginNotify通知游戏获取到openID、accessToken、payToken、pf、pfkey等登录信息**
 
 #### 效果展示：
 
@@ -130,7 +130,7 @@
 	- `WXEntryActivity.java` 位置不正确（必须在包名/wxapi 目录下）则不能收到回调.
 
 
-##处理自动登陆WGLoginWithLocalInfo
+##处理自动登录WGLoginWithLocalInfo
 
 #### 概述：
 
@@ -157,7 +157,7 @@
 
 #### 概述：
 
-调用该接口可以清空当前登陆帐号的登陆信息。
+调用该接口可以清空当前登录帐号的登录信息。
 
 ####接口声明：
 
@@ -172,16 +172,16 @@
 
 ####注意事项：
 
-1. 游戏**点击注销按钮或者其余弹出登录框的逻辑中都必须要调用WGLogout来清空本地的登陆信息**。否则会导致授权失败等问题
+1. 游戏**点击注销按钮或者其余弹出登录框的逻辑中都必须要调用WGLogout来清空本地的登录信息**。否则会导致授权失败等问题
 
-##处理MSDK的登陆回调
+##处理MSDK的登录回调
 
 #### 概述：
 
-MSDK的登陆回调来自以下几个场景：
+MSDK的登录回调来自以下几个场景：
 
 - WGLogin授权回来
-- WGLoginWithLocalInfo登陆回来
+- WGLoginWithLocalInfo登录回来
 - 处理平台拉起以后（如果是带票据拉起）
 
 #### 具体处理：
@@ -216,7 +216,7 @@ MSDK的登陆回调来自以下几个场景：
 				//玩家账号不在白名单中逻辑
 				break;
             default:
-                // 其余登陆失败逻辑
+                // 其余登录失败逻辑
                 break;
         }
     }
@@ -228,10 +228,10 @@ MSDK的登陆回调来自以下几个场景：
 
 #### 概述：
 
-平台唤起是指通过平台或渠道（手Q/微信/游戏大厅/应用宝等）启动游戏。平台在有些场景下会带票据拉起游戏实现游戏的直接登陆。因此游戏需要处理平台的拉起。
+平台唤起是指通过平台或渠道（手Q/微信/游戏大厅/应用宝等）启动游戏。平台在有些场景下会带票据拉起游戏实现游戏的直接登录。因此游戏需要处理平台的拉起。
 
 #### 具体处理：
-游戏需要在自己的`launchActivity`的`onCreat()`和`onNewIntent()`中调用handleCallback，负责会造成登陆无回调等问题。
+游戏需要在自己的`launchActivity`的`onCreat()`和`onNewIntent()`中调用handleCallback，负责会造成登录无回调等问题。
 
 - **onCreate**:
 
@@ -266,16 +266,16 @@ MSDK的登陆回调来自以下几个场景：
 
         if (CallbackFlag.eFlag_Succ == ret.flag
                 || CallbackFlag.eFlag_AccountRefresh == ret.flag) {
-            //代表拉起以后通过本地帐号登陆游戏，处理逻辑与onLoginNotify的一致
+            //代表拉起以后通过本地帐号登录游戏，处理逻辑与onLoginNotify的一致
             
         } else if (CallbackFlag.eFlag_UrlLogin == ret.flag) {
-            // MSDK会尝试去用拉起账号携带票据验证登陆，结果在OnLoginNotify中回调，游戏此时等待onLoginNotify的回调
+            // MSDK会尝试去用拉起账号携带票据验证登录，结果在OnLoginNotify中回调，游戏此时等待onLoginNotify的回调
 
         } else if (ret.flag == CallbackFlag.eFlag_NeedSelectAccount) {
-            // 当前游戏存在异账号，游戏需要弹出提示框让用户选择需要登陆的账号
+            // 当前游戏存在异账号，游戏需要弹出提示框让用户选择需要登录的账号
 
         } else if (ret.flag == CallbackFlag.eFlag_NeedLogin) {
-            // 没有有效的票据，无法登陆游戏，此时游戏调用WGLogout登出游戏让用户重新登录
+            // 没有有效的票据，无法登录游戏，此时游戏调用WGLogout登出游戏让用户重新登录
 
         } else {
             //默认的处理逻辑建议游戏调用WGLogout登出游戏让用户重新登录
@@ -287,7 +287,7 @@ MSDK的登陆回调来自以下几个场景：
 
 ##其余特殊逻辑处理
 
-### 手Q授权在低内存机器授权过程游戏被杀后的登陆方案
+### 手Q授权在低内存机器授权过程游戏被杀后的登录方案
 
 由于目前大部分游戏占用内存很大，因此在授权过程中，当拉起手Q授权时，会触发android的内存回收机制将后台的游戏进程杀掉导致游戏手Q授权没有没有进入游戏。游戏需要在主Activity中增加以下代码来保证被杀以后依然可以带票据拉起进入游戏。
 
@@ -300,7 +300,7 @@ MSDK的登陆回调来自以下几个场景：
 		Logger.d("onActivityResult");
 	}
 
-### 登陆数据上报
+### 登录数据上报
 
 为了保证登录数据上报正确, 游戏接入时候必须在在自己的`launchActivity`的`onResume`中调用`WGPlatform.onResume`, `onPause`中调用`WGPlatform.onPause`
 
@@ -322,7 +322,7 @@ MSDK的登陆回调来自以下几个场景：
 
 	/**
 	 * @param loginRet 返回的记录
-	 * @return 返回值为平台id, 类型为ePlatform, 返回ePlatform_None表示没有登陆记录
+	 * @return 返回值为平台id, 类型为ePlatform, 返回ePlatform_None表示没有登录记录
 	 *   loginRet.platform(类型为ePlatform)表示平台id, 可能值为ePlatform_QQ, ePlatform_Weixin, ePlatform_None.
 	 *   loginRet.flag(类型为eFlag)表示当前本地票据的状态, 可能值及说明如下:
 	 *     eFlag_Succ: 授权票据有效

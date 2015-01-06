@@ -1,5 +1,73 @@
 变更历史
 ===
+## 2.4.0
+- 【组件更新】
+1.【修改】MSDK模块化，按功能拆分为四个模块：MSDK.framework、MSDKFoundation.framework、MSDKMarketing.framework、MSDKXG.framework。其中MSDKFoundation.framework为基础依赖库，使用其他库均需先导入该库。MSDK.framework提供基础的登录分享功能，MSDKMarketing.framework提供交叉营销、内置浏览器功能，MSDKXG.framework提供推送功能。
+    另：模块化版本除了支持2.3.4及之前版本的Observer回调外还新增了delegate回调，此处以手Q授权登陆为例（其他接口详见各自接口说明文档）：
+    授权调用代码如下：
+```
+WGPlatform* plat = WGPlatform::GetInstance();//初始化MSDK
+MyObserver* ob = new MyObserver();
+plat->WGSetObserver(ob);//设置回调
+plat->WGSetPermission(eOPEN_ALL);//设置授权权限
+plat->WGLogin(ePlatform_QQ);//调用手Q客户端或web授权
+```
+    授权回调代码如下：
+```ruby
+void MyObserver::OnLoginNotify(LoginRet& loginRet)
+{
+if(eFlag_Succ == loginRet.flag)
+{
+…//login success
+std::string openId = loginRet.open_id;
+std::string payToken;
+std::string accessToken;
+if(ePlatform_QQ == loginRet.Platform)
+{
+for(int i=0;i< loginRet.token.size();i++)
+{
+TokenRet* pToken = & loginRet.token[i];
+if(eToken_QQ_Pay == pToken->type)
+{
+paytoken = pToken->value;
+}
+else if (eToken_QQ_Access == pToken->type)
+{
+accessToken = pToken->value;
+}
+}
+}
+else if (ePlatform_Weixin == loginRet.platform)
+{
+….
+}
+} 
+else
+{
+…//login fail
+NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
+}
+}
+```
+    2.4.0i及以后版本还可使用delegate方式，代码如下：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService setPermission:eOPEN_ALL];
+[authService login:ePlatform_QQ];
+```
+    回调代码如下：
+```
+-(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
+{
+//内部实现逻辑同void MyObserver::OnLoginNotify(LoginRet& loginRet)
+}
+```
+
+
+## 2.3.4
+ - 【组件更新】
+1.【修改】更新OpenSDK2.5.1，修正在5.1.1下crash的问题。
 
 ## 2.3.3
  - 【代码变更】

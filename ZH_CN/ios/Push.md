@@ -35,6 +35,16 @@
     …
 } 
 ```
+
+- 2.4.0i及以后版本还可使用如下方式：
+```
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions{
+…
+[MSDKXG WGRegisterAPNSPushNotification:launchOptions];
+…
+}
+```
+
 ---
 
 ##注册成功
@@ -46,6 +56,17 @@
     plat->WGSuccessedRegisterdAPNSWithToken(deviceToken);
 } 
 ```
+
+- 2.4.0i及以后版本还可使用如下方式：
+```
+-(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+…
+[MSDKXG WGSuccessedRegisterdAPNSWithToken:deviceToken];
+…
+}
+```
+
 ---
 
 ##注册失败
@@ -57,6 +78,17 @@
     plat->WGFailedRegisteredAPNS();
 } 
 ```
+
+- 2.4.0i及以后版本还可使用如下方式：
+```
+-(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+…
+[MSDKXG WGFailedRegisteredAPNS];
+…
+}
+```
+
 ---
 
 
@@ -69,6 +101,17 @@
     plat->WGReceivedMSGFromAPNSWithDict(userInfo);
 } 
 ```
+
+- 2.4.0i及以后版本还可使用如下方式：
+```
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+…
+[MSDKXG WGReceivedMSGFromAPNSWithDict:userInfo];
+…
+}
+```
+
 ---
 
 ##清空badge
@@ -80,4 +123,14 @@
     WGPlatform *plat = WGPlatform::GetInstance();
     plat->WGCleanBadgeNumber();
 } 
+```
+
+- 2.4.0i及以后版本还可使用如下方式：
+```
+-(void)applicationDidBecomeActive:(UIApplication *)application
+{
+…
+[MSDKXG WGCleanBadgeNumber];
+…
+}
 ```

@@ -16,9 +16,9 @@ MSDK 灯塔 相关模块
 
 ![beacon_1](./beacon_res/beacon_2.png)
 
-2、     游戏虽然接入了MSDK1.7或之后的版本，但灯塔并没有将其之前申请的appkey与qqAppid进行关联，这样也会看不到数据，联系灯塔同事@jaffaqiu或者@chloezhang确认，并告之其qqAppId
+2、     游戏虽然接入了MSDK1.7或之后的版本，但灯塔并没有将其之前申请的appkey与qqAppid进行关联，这样也会看不到数据，联系灯塔同事@jiaganzheng确认，并告之其qqAppId
 
-3、     首次接入请先确认是否有权限，这个可以联系灯塔同事@jaffaqiu或者@chloezhang确认，告之其qqAppId。
+3、     首次接入请先确认是否有权限，这个可以联系灯塔同事@jiaganzheng确认，告之其qqAppId。
 
 
 自定义数据上报

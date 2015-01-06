@@ -1,4 +1,4 @@
-﻿
+
 MSDK iOS 介绍
 =======
 
@@ -9,7 +9,7 @@ MSDK iOS 介绍
 #### MSDK 是腾讯IEG为自研以及第三方 手游开发团队开发提供的，旨在帮助游戏快速接入腾讯各个主要平台并上线运营的公共组件及服务库
 
 ## 安装包结构
-* 2.3.0i以及之前的版本:
+* 2.3.4i以及之前的版本:
 
 
 	压缩文件中包含demo工程，其中包含WGPlatform.embeddedframework/WGPlatform_C11.embeddedframework:
@@ -24,11 +24,33 @@ MSDK iOS 介绍
 ![linkBundle](./文件结构2.PNG) 
 
 
+* 2.4.0i以及以后的版本:
+
+
+    压缩文件中包含demo工程，其中包含：
+    1.MSDKFoundation.framework，基础依赖库。
+    2.MSDK.framework，提供基础的登录分享功能。
+    3.MSDKMarketing.framework提供交叉营销、内置浏览器功能。
+    4.MSDKXG.framework提供推送功能。
+    其中MSDKFoundation.framework为基础依赖库，必须导入，另外三个为可选库，可按实际需求导入。
+    MSDK.framework、MSDKFoundation.framework、MSDKMarketing.framework、MSDKXG.framework适用“Build Setting->C++ Language Dialect”配置为GNU++98，“Build Setting->C++ Standard Library”为“libstdc++(GNU C++ standard library)”的工程；
+    对应带_C11的framework适用于该两项配置分别为“GNU++11”和“libc++(LLVM C++ standard library with C++11 support)”的工程。
+
+
+![linkBundle](./文件结构_2.4.0_1.PNG)
+
+
+    升级方式同2.3.4i版本一致，删除原有文件，将新文件导入即可。
 
 ## 包含内容
 
-####　头文件与静态库文件在：`WGPlatform.framework`；资源文件在：`WGPlatformResources.bundle`（2.3.0i之前的版本为文件夹“MsdkResources”）。
+* 2.3.4i以及之前的版本:
+####　头文件与静态库文件在：`WGPlatform.framework`；资源文件在：`WGPlatformResources.bundle`（2.3.4i之前的版本为文件夹“MsdkResources”）。
 ####　主要接口在`WGPlatform.h`文件，MSDK相关结构体在`WGCommon.h`文件，枚举值在`WGPublicDefine.h`中定义，推送接口在`WGApnInterface.h`文件，主回调对象在`WGObserver.h`文件，广告回调对象在`WGADObserver.h`文件。
+
+* 2.4.0i以及以后的版本:
+#### 头文件与静态库文件分别在各个framework下；资源文件在`/MSDKMarketing/WGPlatformResources.bundle`。
+#### 主要接口在`MSDK.framework/WGPlatform.h`文件，MSDK相关结构体在`MSDKFoundation.framework/MSDKStructs.h`文件，枚举值在`MSDKFoundation.framework/MSDKEnums.h`中定义，推送接口在`MSDKXG.framework/MSDKXG.h`文件，主回调对象在`MSDK.framework/WGPlatformObserver.h`文件，广告回调对象在`MSDK.framework/WGADObserver.h`文件。
 
 ## 模块介绍
  

@@ -27,18 +27,25 @@ CFNetwork.framewrok
 CoreData.framework
 Security.framework
 CoreLocation.framework
+ImageIO.framework
+CoreText.framework
+QuartzCore.framework
 ```
 ---	
 ##Step2:引入MSDK
+* 2.3.4i以及之前的版本:
   - [下载SDK](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD)
   - SDK中头文件、类库文件放置在`WGPlatform.framework`，需要引入到工程设置的`Target->Build Phases->>Link Binary With Libraries`中。
-1. ![linkLibrary](./linkFramework1.png)
-2. ![linkLibrary](./linkFramework2.png)
-3. ![linkLibrary](./linkFramework3.png)
+  1. ![linkLibrary](./linkFramework1.png)
+  2. ![linkLibrary](./linkFramework2.png)
+  3. ![linkLibrary](./linkFramework3.png)
   - SDK中内置浏览器、公告所需的资源文件，放置在`WGPlatformResources.bundle`，需要引入到工程设置的`Target->Build Phases->Build Phases->Copy Bundle Resources`中。
-1. ![linkBundle](./linkBundle1.png)
-2. ![linkBundle](./linkBundle2.png)
-3. ![linkBundle](./linkBundle3.png)
+  1. ![linkBundle](./linkBundle1.png)
+  2. ![linkBundle](./linkBundle2.png)
+  3. ![linkBundle](./linkBundle3.png)
+
+* 2.4.0i以及之后的版本:
+  - 2.4.0i及以后为插件化版本，可按需求导入相应的框架，导入方式同2.3.4i。其中MSDKFoundation.framework/MSDKFoundation_C11.framework库为基础依赖库，若要使用其他库均需先导入该框架。另提供交叉营销、内置浏览器功能的框架为MSDKMarketing.framework/MSDKMarketing_C11.framework，相对应的公告、内置浏览器所需的资源文件放置在该框架下WGPlatformResources.bundle文件中。
 
 ---
 ##Step3:配置项
@@ -77,9 +84,9 @@ CoreLocation.framework
  
   * 全局回调对象处理游戏授权、分享、查询或平台唤起等结果，此对象需要继承并实现`WGPlatformObserver`类中的所有方法。
   * 示例：新建名为MyObserver的全局回调对象，粘贴代码如下：
+  * 2.3.4i以及之前的版本:
   ```ruby
 //MyObserver.h
-//若使用C99编译选项
 //若使用C99编译选项
 #import <WGPlatform/WGPlatform.h>
 #import <WGPlatform/WGPublicDefine.h>
@@ -112,12 +119,46 @@ void MyObserver::OnFeedbackNotify(int flag,std::string desc){}
 std::string MyObserver::OnCrashExtMessageNotify(){return "message";}
 ```
 
-
+  * 2.4.0i以及之后的版本:
+```ruby
+//MyObserver.h
+//若使用C99编译选项
+#import <MSDK/MSDK.h>
+//若使用C11编译选项
+#import <MSDK_C11/MSDK.h>
+class MyObserver: public WGPlatformObserver,public WGADObserver
+{
+public:
+void OnLoginNotify(LoginRet& loginRet);//登录回调
+void OnShareNotify(ShareRet& shareRet);//分享回调
+void OnWakeupNotify(WakeupRet& wakeupRet);//平台唤起回调
+void OnRelationNotify(RelationRet& relationRet);//查询关系链相关回调
+void OnLocationNotify(RelationRet &relationRet);//定位相关回调
+void OnLocationGotNotify(LocationRet& locationRet);//定位相关回调
+void OnFeedbackNotify(int flag,std::string desc);//反馈相关回调
+std::string OnCrashExtMessageNotify();//crash时的处理
+void OnADNotify(ADRet& adRet);//广告回调
+}
+```
+```ruby
+//MyObserver.mm
+#include "MyObserver.h"
+void MyObserver::OnLoginNotify(LoginRet& loginRet){}
+void MyObserver::OnShareNotify(ShareRet& shareRet){}
+void MyObserver::OnWakeupNotify(WakeupRet& wakeupRet){}
+void MyObserver::OnRelationNotify(RelationRet &relationRet){}
+void MyObserver::OnLocationNotify(RelationRet &relationRet) {}
+void MyObserver::OnLocationGotNotify(LocationRet& locationRet){}
+void MyObserver::OnFeedbackNotify(int flag,std::string desc){}
+std::string MyObserver::OnCrashExtMessageNotify(){return "message";}
+void MyObserver::OnADNotify(ADRet& adRet){}
+```
 
 ---
 ## Step5:设置全局回调对象
 
  * 打开 `AppDelegate.mm` 文件，添加下列导入语句到头部：
+  * 2.3.4i以及之前的版本:
  ```ruby
 //若使用C99编译选项
 #import <WGPlatform/WGPlatform.h>
@@ -129,17 +170,17 @@ std::string MyObserver::OnCrashExtMessageNotify(){return "message";}
 #import <WGPlatform_C11/WGPublicDefine.h>
 #import "MyObserver.h"
 ```
- * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
+   * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
  ```ruby
 WGPlatform *plat = WGPlatform::GetInstance();
 MyObserver  *pObserver =plat->GetObserver();
 MyADObserver *adObserver =(MyADObserver *)plat->GetADObserver();
-If(!pObserver){
+if(!pObserver){
         pObserver = new MyObserver(); 
         plat -> WGSetObserver(pObserver);
 }
 ```
- * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
+   * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
 ```ruby
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob =(MyObserver *) plat->GetObserver();
@@ -149,6 +190,57 @@ MyObserver* ob =(MyObserver *) plat->GetObserver();
         }
 return  [WGInterface  HandleOpenURL:url];
 ```
+
+  * 2.4.0i以及之后的版本:
+```ruby
+//若使用C99编译选项
+#import <MSDK/MSDK.h>
+#import "MyObserver.h"
+//若使用C11编译选项
+#import <MSDK_C11/MSDK.h>
+#import "MyObserver.h"
+```
+   * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
+```ruby
+WGPlatform* plat = WGPlatform::GetInstance();
+WGPlatformObserver *ob = plat->GetObserver();
+if (!ob)
+{
+        MyObserver* ob = MyObserver::GetInstance();
+        plat->WGSetObserver(ob);
+}
+
+或
+WGPlatformObserver *ob = [MSDKService getObserver];
+if (!ob)
+{
+        MyObserver* ob = MyObserver::GetInstance();
+        [MSDKService setObserver:ob];
+}
+
+```
+   * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
+```ruby
+WGPlatform* plat = WGPlatform::GetInstance();
+WGPlatformObserver *ob = plat->GetObserver();
+if (!ob)
+{
+        MyObserver* ob = MyObserver::GetInstance();
+        plat->WGSetObserver(ob);
+}
+return  [WGInterface  HandleOpenURL:url];
+
+或
+WGPlatformObserver *ob = [MSDKService getObserver];
+if (!ob)
+{
+        MyObserver* ob = MyObserver::GetInstance();
+        [MSDKService setObserver:ob];
+}
+return [MSDKService handleOpenUrl:url];
+
+```
+
 >**创建对象后，此对象只需被设置一次，重复设置会覆盖，只有最近设置的才能收到回调。建议于游戏初始化时设置全局回调对象。**
 
 ---
