@@ -106,13 +106,18 @@ MSDK初始化是使用SDK所提供功能可以执行的前提。游戏在应用�
     }
 
 
-此外，需要在MainActivty中加载必要的动态库，示例代码如下：
+此外，MSDK2.5以下版本需要在MainActivty中加载RQD的动态库，示例代码如下：
 
 	// TODO GAME 要加载必要的动态库
     static {
         System.loadLibrary("NativeRQD"); // 游戏需要加载此动态库, 数据上报用
         System.loadLibrary("WeGameSample"); // 游戏不需要这个, 这是MSDKDemo自用的
     }
+
+**注意：**
+
+* MSDK2.5及以上版本已经将RQD替换为Bugly，接入2.5及以上版本时，如果游戏原工程下的libs文件平中存在`libNativeRQD.so`则需要将其删除。并且不需要加载“NativeRQD"动态库。
+
 
 **C++类游戏除了在MainActivity的onCreate方法中初始化SDK外，还要在 **`JNI_OnLoad`**中初始化SDK相关的内容。**
 所有WG开头的接口均提供了C++层和Java层接口。Java层通过`WGPlatform`调用, C++层通过`WGPlatform::GetInstance()`调用。这里调用方式可以参考 jni/PlatformTest.cpp 。

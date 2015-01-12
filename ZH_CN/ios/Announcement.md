@@ -96,3 +96,10 @@ std::vector<NoticeInfo> vec = plat->WGGetNoticeData(eMSG_NOTICETYPE_ALERT, (unsi
                 [NSString stringWithUTF8String: info.msg_content.c_str()]);
             }
 ```
+## 常见问题
+ - 没有正确导入资源文件导致Crash：
+	如果没有将MsdkReources.bundle正确导入工程的”Copy Bundle Resources“，将会在展示公告时出现crash
+![linkBundle](./Crash_Annoucement.PNG)
+ - 如果没有在AppDelegate(AppController)创建window属性，会导致调用公告时crash：	
+	[AppController window]: unrecognized selector sent to instance 0x17fa7130
+	解决方法：在AppDelegate(AppController)增加一个window的property，指向它创建的keywindow

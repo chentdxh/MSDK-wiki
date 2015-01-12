@@ -1,10 +1,25 @@
 变更历史
 ===
+## 2.5.0
+- 【代码变更】
+1.【新增】新增在线时长上报统计。
+2.【新增】新增内置浏览器分享入口开关，可在info.plist文件中配置MSDK_WebView_Share_SWITCH，YES时内置浏览器会显示分享按钮，NO时不显示。
+3.【修改】Guest模式优化，进行keychain数据备份。
+4.【修改】修复内置浏览器在iOS5.1.1系统iPad端不能拉起微信分享的bug。
+- 【组件新增】
+1.【新增】在demo中集成手游宝助手SDK，游戏可根据需要集成。
+
 ## 2.4.0
-- 【组件更新】
-1.【修改】MSDK模块化，按功能拆分为四个模块：MSDK.framework、MSDKFoundation.framework、MSDKMarketing.framework、MSDKXG.framework。其中MSDKFoundation.framework为基础依赖库，使用其他库均需先导入该库。MSDK.framework提供基础的登录分享功能，MSDKMarketing.framework提供交叉营销、内置浏览器功能，MSDKXG.framework提供推送功能。
+- 【代码变更】
+1.【修改】MSDK模块化，按功能拆分为四个模块：
+  1. MSDKFoundation：基础依赖库，若要使用其他库均需先导入该框架。
+  2. MSDK:手Q和微信登录、分享功能；
+  3. MSDKMarketing：提供交叉营销、内置浏览器功能。公告、内置浏览器所需的资源文件放置在WGPlatformResources.bundle文件中。
+  4. MSDKXG：提供信鸽Push功能。
+  以上四个组件同时提供C99和C11语言标准，其中**_C11包为C11的版本。
+  ![linkBundle](./2.4.0_structure_of_framework.png)
     另：模块化版本除了支持2.3.4及之前版本的Observer回调外还新增了delegate回调，此处以手Q授权登陆为例（其他接口详见各自接口说明文档）：
-    授权调用代码如下：
+    原授权调用代码如下：
 ```
 WGPlatform* plat = WGPlatform::GetInstance();//初始化MSDK
 MyObserver* ob = new MyObserver();
@@ -12,7 +27,7 @@ plat->WGSetObserver(ob);//设置回调
 plat->WGSetPermission(eOPEN_ALL);//设置授权权限
 plat->WGLogin(ePlatform_QQ);//调用手Q客户端或web授权
 ```
-    授权回调代码如下：
+    原授权回调代码如下：
 ```ruby
 void MyObserver::OnLoginNotify(LoginRet& loginRet)
 {

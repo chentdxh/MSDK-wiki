@@ -643,7 +643,7 @@ http://gamecenter.qq.com/gcjump
 | plat | 必须 |	String | 来源平台，值为qq |
 | from | 必须 | String | <p>消息来源平台，可能值有：</p><p>androidqq：安卓QQ</p><p>iphoneqq：iPhone QQ</p> |
 | ADTAG | 必须 | String | <p>标识不同的结构化消息来源，可能值有：</p><p>gameobj.msg_invite（代表邀请）</p><p>gameobj.msg_exceed（代表超越）</p><p>gameobj.msg_heart（代表送心）</p><p>gameobj.msg_pvp（代表挑战）</p><p>gameobj.msg_show（代表炫耀）</p> |
-| originuin	| 必须 | Integer | 发起方openID |
+| originuin	| 必须 | String | 发起方openID |
 | platformdata | 可选 | String | 透传给游戏的数据 |
 | gamedata | 可选 | String | 透传给游戏的数据 |
 

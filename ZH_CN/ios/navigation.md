@@ -62,7 +62,8 @@
   * [由MSDK展示界面的公告接口](Announcement.md#由MSDK展示界面的公告接口)
   * [公告数据列表接口](Announcement.md#公告数据列表接口)  
   * [示例代码](Announcement.md#示例代码)  
- 
+  * [常见问题](Announcement.md#常见问题)  
+  
 [广告]()
 
   * [概述](Advertisement.md#概述)

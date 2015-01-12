@@ -76,7 +76,7 @@
 |平台|token类型|token作用|type|有效期|
 |: ------- :|: ------- :|: ------- :|: ------- :|: ------- :|: ------- :|
 |手Q	|accesstoken|查询手Q个人、好友、关系链、分享等功能|eToken_QQ_Access|	90天|
-|手Q	|paytoken	|支付相关|eToken_QQ_Pay|	2天|
+|手Q	|paytoken	|支付相关|eToken_QQ_Pay|	6天|
 |微信|	accesstoken|查询微信个人、好友、关系链、分享、支付等|	eToken_WX_Access|	2小时|
 |微信|refreshtoken|	刷新accesstoken|	eToken_WX_Refresh|	30天|
 

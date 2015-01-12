@@ -412,7 +412,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	struct WXInfo {
 		string          nickName;       //昵称
 		int             sex;            //性别1男2女
-		string          picture;        //用户头像,规格有原始图片(/0)、132*132(/132)、96*96(/96)、64*64(/64)、46*46(/46)
+		string          picture;        //用户头像URL,必须在URL后追加以下参数/0，/132，/96，/64，这样可以分别获得不同规格的图片：原始图片(/0)、132*132(/132)、96*96(/96)、64*64(/64)、46*46(/46)
 		string          provice;        //省份
 		string          city;           //城市
 		string          openid;        //用户标识

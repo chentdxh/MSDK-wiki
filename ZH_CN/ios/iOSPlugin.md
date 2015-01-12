@@ -44,9 +44,13 @@ QuartzCore.framework
   2. ![linkBundle](./linkBundle2.png)
   3. ![linkBundle](./linkBundle3.png)
 
-* 2.4.0i以及之后的版本:
-  - 2.4.0i及以后为插件化版本，可按需求导入相应的框架，导入方式同2.3.4i。其中MSDKFoundation.framework/MSDKFoundation_C11.framework库为基础依赖库，若要使用其他库均需先导入该框架。另提供交叉营销、内置浏览器功能的框架为MSDKMarketing.framework/MSDKMarketing_C11.framework，相对应的公告、内置浏览器所需的资源文件放置在该框架下WGPlatformResources.bundle文件中。
-
+* 2.4.0i及以后为插件化版本，可按需求导入相应的框架，导入方式同2.3.4i。
+  1. MSDKFoundation：基础依赖库，若要使用其他库均需先导入该框架。
+  2. MSDK:手Q和微信登录、分享功能；
+  3. MSDKMarketing：提供交叉营销、内置浏览器功能。公告、内置浏览器所需的资源文件放置在WGPlatformResources.bundle文件中。
+  4. MSDKXG：提供信鸽Push功能。
+  以上四个组件同时提供C99和C11语言标准，其中**_C11包为C11的版本。
+  ![linkBundle](./2.4.0_structure_of_framework.png)
 ---
 ##Step3:配置项
  
