@@ -34,17 +34,17 @@
   * [微信刷新accesstoken](WX.md#微信刷新accesstoken)
   * [微信各版本支持功能情况如下：](WX.md#微信各版本支持功能情况如下：)  
   
-[自动授权与token校验]()
-
-  * [概述](AutoAuth.md#概述)
-  * [注意事项](AutoAuth.md#注意事项)  
-
 [Guest模式]()
 
   * [包含的内容和功能 ](Guest.md#包含的内容和功能 )
   * [登录序列图](Guest.md#登录序列图)
   * [流程比较](Guest.md#流程比较)
   * [需要做的改动](Guest.md#需要做的改动)
+  
+[自动授权与token校验]()
+
+  * [概述](AutoAuth.md#概述)
+  * [注意事项](AutoAuth.md#注意事项)  
   
 [内置浏览器]()
 

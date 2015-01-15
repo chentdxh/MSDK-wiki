@@ -52,8 +52,3 @@
   * # 
   * [错误码](errorCode.md#1.MSDK后台错误码)
   
-  
-[MSDK 客户端接入]()
-
-  * # 
-  * [Android 接入](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html#!index.md)
