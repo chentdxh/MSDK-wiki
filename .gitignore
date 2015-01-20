@@ -1,7 +1,7 @@
 ﻿*.buildpath
 .project
 *.prefs
-*.svn/
+*.svn/*
 *.svn-base
 *.db
 ZH_CN/android/Android排期.xlsx

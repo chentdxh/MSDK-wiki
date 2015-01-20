@@ -1,4 +1,4 @@
-#MSDK登录模块
+#MSDK票据
 
 ##概述
 
@@ -35,30 +35,22 @@
 
 **步骤说明：**
 
-* 步骤1：启动游戏后首先初始化MSDK，调用接口为`WGPlatform.Initialized(Activity activity, MsdkBaseInfo baseInfo)`。
+* 步骤1：启动游戏后首先初始化MSDK。
 * 步骤2：调用自动登录接口`WGLoginWithLocalInfo()`，此接口会去MSDK服务端检查本地票据是否有效。
-* 步骤3：自动登录接口会通过`OnLoginNotify(LoginRet ret)`将登录结果回调给游戏。通过`ret.flag`判断登录结果，如果为`CallbackFlag.eFlag_Succ`(0)则为登录成功，其他为失败。
+* 步骤3：自动登录接口会通过`OnLoginNotify(LoginRet ret)`将登录结果回调给游戏。通过`ret.flag`判断登录结果，如果为`eFlag_Succ`(0)或`eFlag_WX_RefreshTokenSucc`(2005)则为登录成功，其他为失败。
 * 步骤4：登录授权成功，跳到步骤9
 * 步骤5：自动登录失败，调用` WGLogin(EPlatform platform)`拉起手Q或微信平台登录授权。
-* 步骤6：登录结果通过`OnLoginNotify(LoginRet ret)`回调。通过`ret.flag`判断登录结果，如果为`CallbackFlag.eFlag_Succ`(0)则为登录成功，其他为失败。
-* 步骤7：拉起平台登录授权失败，游戏引导用户重新登录。若用户重新登录则跳到步骤5。
+* 步骤6：登录结果通过`OnLoginNotify(LoginRet ret)`回调。通过`ret.flag`判断登录结果，如果为`eFlag_Succ`(0)则为登录成功，其他为失败。
+* 步骤7：拉起平台登录授权失败，游戏引导用户重新登录，跳到步骤5。
 * 步骤8：登录授权成功。
 * 步骤9：同步客户端中最新的票据给游戏服务器。如果游戏服务端需要使用登录票据，**注意一定要在收到登录成功的回调后同步最新票据**，以免服务端使用失效的票据操作。 
 
-### 登录相关接口推荐用法
+###登录相关接口推荐用法
 
 1. 授权登录：直接调用`WGLogin`拉起对应平台的授权
 - 游戏启动、游戏从后台切换会前台检查票据是否有效：调用`WGLoginWithLocalInfo`完成票据有效性的验证
 - 获取票据：直接调用`WGGetLoginRecord`从本地读取
 - 注销登录：直接调用`WGLogout`清空当前用户的登录信息
-
-**特别说明：**
-WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需要调用WGLogin，成功后MSDK会保存票据在本地。之后再次启动游戏可采用自动登录WGLoginWithLocalinfo，自动登录逻辑建议游戏按此种方式调用，其调用时序图如下所示。
-
-![login](./login_new1.png)
-
-存在部分游戏在刚启动游戏时通过调用WGGetLoginRecord来判断本地票据是否有效，如果本地票据有效，直接将票据与Game服务器进行交互。`请不要如此使用！！！请使用自动登录接口WGLoginWithLocalinfo`
-
 
 ## 接入登录具体工作（开发必看）
 
@@ -69,16 +61,14 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 - **处理授权登录**：
 	1. 在登录按钮的点击事件的处理函数中调用`WGLogin`完成授权登录。具体方法[点击查看](#处理授权登录WGLogin)。
 - **处理自动登录**：
-	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
-	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
+	1. 在游戏回到前台之后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
+	- 在AppDelegate的applicationDidEnterBackground里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
 		- 对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差
 - **处理用户注销**：
 	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登录。具体方法[点击查看](#处理用户注销WGLogout)
 - **处理MSDK的登录回调**：
 	- 在游戏对MSDK回调处理的逻辑中增加对于对onLoginNotify的处理。具体方法[点击查看](#处理MSDK的登录回调)
-- **处理平台的拉起**：
-	- 在游戏的主activity的onCreate和onNewIntent里调用handleCallback完成对平台拉起的处理。具体方法[点击查看](#处理平台唤起handleCallback)
-- **处理MSDK的拉起陆回调**：
+- **处理MSDK的拉起回调**：
 	- 在游戏对MSDK回调处理的onWakeUpNotify中增加对平台拉起的处理。具体方法[点击查看](#处理MSDK的拉起回调)
 - **处理异帐号逻辑**：
 	- 游戏对于异帐号的处理逻辑，具体内容参照[MSDK异帐号接入](diff-account.md#异帐号处理逻辑（开发关注）)
@@ -108,7 +98,7 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 
 #### 注意事项：
 
-1. 游戏需要在MSDK初始化之后调用该接口，建议接口参数就填**`WGQZonePermissions.eOPEN_ALL`**。缺少该项会导致游戏调用部分接口时提示没有权限。
+1. 游戏需要在MSDK初始化之后调用该接口，建议接口参数就填**`eOPEN_ALL`**。缺少该项会导致游戏调用部分接口时提示没有权限。
 
 
 ##处理授权登录WGLogin
@@ -117,10 +107,6 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 
 **拉起手Q/微信客户端或web页面(手Q未安装)授权，在用户授权以后通过onLoginNotify通知游戏获取到openID、accessToken、payToken、pf、pfkey等登录信息**
 
-#### 效果展示：
-
-![login](./lg1.png)
-![login](./lg2.png)
 
 ####接口声明：
 
@@ -138,27 +124,16 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 #### 注意事项：
 
 - **通用**：
-	- **因为微信和手Q各自的bug，会导致游戏在多个场景下收不到回调。游戏在调用WGLogin后可以开始一个倒计时, 倒计时完毕如果没有收到回调则算作超时, 让用户回到登录界面。倒计时推荐时间为30s，游戏也可以自己设置**其中收不到回调的场景包括但不限于：
-		- 在微信未登录的情况下, 游戏拉起微信输入用户名密码以后登录, 可能会没有登录回调, 这是微信客户端已知BUG
-		- 微信授权过程中, 点击左上角的 返回 按钮, 可能会导致没有授权回调
-		- openSDK 2.7 （MSDK 2.5）以下版本通过web授权点击取消授权以后没有回调
-- **手Q 相关**：
-	1. 没有安装手Q的时，精品游戏可以拉起Web页面授权,请确保AndroidMenifest.xml中AuthActivity的声明中要在intent-filter中配置<data android:scheme="***" />, 详见本节手Q相关AndeoidMainfest配置处。 **海纳游戏现在不支持拉起页面授权**。可以通过WGIsPlatformInstalled接口判断是否安装手Q，未安装手Q则提示用户不能授权。
-	- **偶尔收不到OnLoginNotify回调：**请确保`com.tencent.tauth.AuthActivity`和`com.tencent.connect.common.AssistActivity`在`AndroidManifest.xml`与手Q接入权限申明（[点击查看]()）一致。
-	- 如果游戏的Activity为Launch Activity, 则需要在游戏Activity声明中添加android:configChanges="orientation|screenSize|keyboardHidden", 否则可能造成没有登录没有回调。
-
-- **微信相关**：
-
-	1. 微信授权需要保证微信版本高于4.0
-	- 拉起微信时候, 微信会检查应用程序的签名和微信后台配置的签名是否匹配(此签名在申请微信appId时提交过), 如果不匹配则无法唤起已经授权过的微信客户端.
-	- `WXEntryActivity.java` 位置不正确（必须在包名/wxapi 目录下）则不能收到回调.
-
+	- **收不到OnLoginNotify/OnWakeupNotify回调：
+		- 请确保AppDelegate的didFinishLaunchingWithOptions函数return YES;
+		- info.plist中QQ和微信的appid/appkey配置正确;
+		- Url Schemes按照wiki的要求配置;
 
 ##处理自动登录WGLoginWithLocalInfo
 
 #### 概述：
 
-此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据并通过OnLoginNotify将结果回调给游戏。
+此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据并通过OnLoginNotify将结果回调给游戏。游戏不再需要处理微信票据刷新, 手Q/微信AccessToken验证等工作。
 
 ####接口声明：
 
@@ -248,38 +223,6 @@ MSDK的登录回调来自以下几个场景：
 #### 注意事项：
 **这里仅仅处理了重要的loginNotify的逻辑，完整的回调flag信息请点击查看[回调标识eFlag](const.md#回调标识eFlag)，游戏可以根据自己需要处理**
 
-##处理平台唤起handleCallback
-
-#### 概述：
-
-平台唤起是指通过平台或渠道（手Q/微信/游戏大厅/应用宝等）启动游戏。平台在有些场景下会带票据拉起游戏实现游戏的直接登录。因此游戏需要处理平台的拉起。
-
-#### 具体处理：
-游戏需要在自己的`launchActivity`的`onCreat()`和`onNewIntent()`中调用handleCallback，负责会造成登录无回调等问题。
-
-- **onCreate**:
-
-        if (WGPlatform.wakeUpFromHall(this.getIntent())) {
-        	// 拉起平台为大厅 
-        	Logger.d("LoginPlatform is Hall");
-        } else {  
-        	// 拉起平台不是大厅
-            Logger.d("LoginPlatform is not Hall");
-            WGPlatform.handleCallback(this.getIntent());
-        }
-
-- **onNewIntent**
-
-		if (WGPlatform.wakeUpFromHall(intent)) {
-            Logger.d("LoginPlatform is Hall");
-        } else {
-            Logger.d("LoginPlatform is not Hall");
-            WGPlatform.handleCallback(intent);
-        }
-#### 注意事项：
-
-- 对于游戏大厅的拉起，需要预先在大厅增加对应的配置才能支持，因此如果游戏不接入大厅，需要调用`WGPlatform.wakeUpFromHall`来判断本次拉起是否来自大厅，如果是则不调用handleCallback。对于大厅如何支持带票据拉起可以[点击查看](qqgame.md)
-
 ##处理MSDK的拉起回调
 
 #### 概述
@@ -313,28 +256,32 @@ MSDK的登录回调来自以下几个场景：
 
 ### 手Q授权在低内存机器授权过程游戏被杀后的登录方案
 
-由于目前大部分游戏占用内存很大，因此在授权过程中，当拉起手Q授权时，会触发android的内存回收机制将后台的游戏进程杀掉导致游戏手Q授权没有没有进入游戏。游戏需要在主Activity中增加以下代码来保证被杀以后依然可以带票据拉起进入游戏。
-
-
-	// TODO GAME 在onActivityResult中需要调用WGPlatform.onActivityResult
-    @Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		WGPlatform.onActivityResult(requestCode, resultCode, data);
-		Logger.d("onActivityResult");
-	}
-
-**注意：此接口在2.5.0a及以上版本才添加，之前的版本请不要调用。**
-
-### 登录数据上报
-
-为了保证登录数据上报正确, 游戏接入时候必须在在自己的`launchActivity`的`onResume`中调用`WGPlatform.onResume`, `onPause`中调用`WGPlatform.onPause`
-
+由于目前大部分游戏占用内存很大，因此在授权过程中，当拉起手Q授权时，会触发iOS的内存回收机制将后台的游戏进程杀掉导致游戏手Q授权没有没有进入游戏。游戏需要在AppDelegate中增加以下代码来保证被杀以后依然可以带票据拉起进入游戏。
+```ruby
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    NSLog(@"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!url == %@",url);
+    WGPlatform* plat = WGPlatform::GetInstance();
+    WGPlatformObserver *ob = plat->GetObserver();
+    if (!ob) {
+        MyObserver* ob = new MyObserver();
+        ob->setViewcontroller(self.viewController);
+        plat->WGSetObserver(ob);
+    }
+	//没有实现广告功能可不设置WGADObserver
+    WGADObserver *adOb = plat->GetADObserver();
+    if (!adOb) {
+        MyAdObserver *adObserver = new MyAdObserver();
+        plat->WGSetADObserver(adObserver);
+    }
+     return  [WGInterface  HandleOpenURL:url];
+}
+```
 ### 微信票据自动刷新
 
 1. MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新,MSDK会自动刷新完成, 并通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail（已经包含在onLoginNotify的回调中）。
 - **游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程。**
-- 如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。
+- 如果游戏不需要微信票据自动刷新功能，在`info.plist`中，将`AutoRefreshToken`设为`NO`即可。
 
 ## 其余接口列表
 
@@ -369,25 +316,25 @@ MSDK的登录回调来自以下几个场景：
 
 微信平台：
 
-    std::string accessToken = "";
-    std::string refreshToken = "";
+    NSString *accessToken = "";
+    NSString *refreshToken = "";
     for (int i = 0; i < loginRet.token.size(); i++) {
              if (loginRet.token.at(i).type == eToken_WX_Access) {
-                 accessToken.assign(loginRet.token.at(i).value);
+                 accessToken = [NSString stringWithCString:loginRet.token.at(i).value.c_str() encoding:NSUTF8StringEncoding];
              } else if (loginRet.token.at(i).type == eToken_WX_Refresh) {
-                 refreshToken.assign(loginRet.token.at(i).value);
+                 payToken = [NSString stringWithCString:loginRet.token.at(i).value.c_str() encoding:NSUTF8StringEncoding];
              }
     }
 
 QQ平台：
 
-    std::string accessToken = "";
-    std::string payToken = "";
+    NSString *accessToken = "";
+    NSString *payToken = "";
     for (int i = 0; i < loginRet.token.size(); i++) {
         if (loginRet.token.at(i).type == eToken_QQ_Access) {
-            accessToken.assign(loginRet.token.at(i).value);
+            accessToken = [NSString stringWithCString:loginRet.token.at(i).value.c_str() encoding:NSUTF8StringEncoding];
         } else if (loginRet.token.at(i).type == eToken_QQ_Pay) {
-            payToken.assign(loginRet.token.at(i).value);
+            payToken = [NSString stringWithCString:loginRet.token.at(i).value.c_str() encoding:NSUTF8StringEncoding];
         }
     }
 

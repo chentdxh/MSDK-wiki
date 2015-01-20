@@ -34,6 +34,8 @@
   * [微信刷新accesstoken](WX.md#微信刷新accesstoken)
   * [微信各版本支持功能情况如下：](WX.md#微信各版本支持功能情况如下：)  
   
+[关于登录](login.md)
+  
 [Guest模式]()
 
   * [包含的内容和功能 ](Guest.md#包含的内容和功能 )

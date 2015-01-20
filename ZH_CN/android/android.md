@@ -5,6 +5,8 @@ Android 接入
 
 MSDK的发布包(zip)主要包含两个重要部分`MSDKLibrary`和`MSDKSample`，前者为MSDK库，后者MSDK接口的使用示例。在MSDKLibrary/jni/CommonFiles/WGPlatform.h中包含了所有的接口说明(java与C++的接口是对应的)，一些不常用在接口的说明可在这个文件中查看。
 
+`推荐`只使用`launchActivity`(游戏启动的第一个Activity)初始化MSDK并处理MSDK接口调用。若使用多个Activity处理MSDK接口调用，在接入微信时容易发生登录无回调的错误。
+
 ## Step1: 引入MSDK包
 
 ### 使用Android Library Project的游戏

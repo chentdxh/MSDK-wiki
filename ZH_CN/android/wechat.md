@@ -38,7 +38,8 @@ MSDK 微信 相关模块
 
 
 #### Appid 配置：
- - 这部分内容在Java层初始化部分中已经完成, **不能用MSDKSample的appId和appKey进行联调, 游戏需要使用自己的appId和appKey.**
+
+这部分内容在Java层初始化部分中已经完成, **不能用MSDKSample的appId和appKey进行联调, 游戏需要使用自己的appId和appKey.**
 
 ```
 public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,43 @@ public void onCreate(Bundle savedInstanceState) {
 	WGPlatform.Initialized(this, baseInfo);
 	WGPlatform.handleCallback(getIntent());
 	...
+}
+```
+
+#### 必须调用的方法
+
+游戏需要在自己的`launchActivity`(游戏启动的第一个Activity)的`onCreat()`和`onNewIntent()`中调用`handleCallback`，否则会造成登录无回调等问题。
+
+- **onCreate**:
+
+```	
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	......
+    if (WGPlatform.wakeUpFromHall(this.getIntent())) {
+    	// 拉起平台为大厅 
+    	Logger.d("LoginPlatform is Hall");
+    } else {  
+    	// 拉起平台不是大厅
+        Logger.d("LoginPlatform is not Hall");
+        WGPlatform.handleCallback(this.getIntent());
+    }
+}
+```
+
+- **onNewIntent**
+
+```
+@Override
+protected void onNewIntent(Intent intent) {
+	super.onNewIntent(intent);
+	if (WGPlatform.wakeUpFromHall(intent)) {
+	    Logger.d("LoginPlatform is Hall");
+	} else {
+	    Logger.d("LoginPlatform is not Hall");
+	    WGPlatform.handleCallback(intent);
+	}
 }
 ```
 
@@ -211,10 +249,11 @@ public void onCreate(Bundle savedInstanceState) {
 		}
 		}
 	}
+
 #### 注意事项
 
 1. 微信分享需要保证微信版本高于4.0 
-2. 缩略图大小不能超过32k, 长宽比无限制，超出大小则不能拉起微信.
+2. `缩略图大小不能超过32k`, 长宽比无限制，超出大小则不能拉起微信.
 3. 分享需要使用到sd卡, 没有sd卡或者sd卡被占用均会照成分享失败
 
 
@@ -297,7 +336,7 @@ public void onCreate(Bundle savedInstanceState) {
 
 #### 注意事项：
 - **朋友圈按钮显示有网络延迟且必须在微信5.1及以上版本**
-
+- `大图分享图片不能超过10M`，否则会分享失败
 
 音乐消息分享
 ------

@@ -58,8 +58,8 @@ QuartzCore.framework
 
 | Key      |    Type | Value  |备注|相关模块|
 | :-------- | --------:| :-- |:--|:---:|
-| MSDK_URL  | String |  msdktest.qq.com |MSDK测试环境，正式上线前需改为msdk.qq.com|所有|
-| MSDK_PUSH_URL  | String |  pushtest.msdk.qq.com |为MSDK上报信息测试环境，正式上线前需改为push.msdk.qq.com|所有|
+| MSDK_URL  | String |  http://msdktest.qq.com |MSDK测试环境，正式上线前需改为http://msdk.qq.com|所有|
+| MSDK_PUSH_URL  | String |  http://pushtest.msdk.qq.com |为MSDK上报信息测试环境，正式上线前需改为http://push.msdk.qq.com|所有|
 | QQAppID  | String |  各游戏不同 |手Q的Appid|所有|
 | QQAppKey  | String |  各游戏不同 |手Q的AppKey|所有|
 | WXAppID  | String |  各游戏不同 |微信的Appid|所有|

@@ -67,6 +67,8 @@ assets/msdkconfig.ini中配置打开消息推送开关：
 
 第三步，登陆http://dev.ied.com/在消息管理模块中进行推送消息设置，请使用 **消息（正式环境）发送消息**
 
+**如果看不到"消息管理"菜单，请联系marsrabelma(马腾)添加。**
+
 ![msdkpush_1](./push_1.png)
 
 联调测试

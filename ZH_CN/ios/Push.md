@@ -8,6 +8,7 @@
  - 在info.plist中配置推送开关，如下图：
 ![Alt text](./Push1.png)
 已经接入信鸽推送的游戏在更新MSDK2.3.0时，若想关闭MSDK的信鸽推送，则不配置此开关，或者设置为OFF。其他游戏若接入MSDK的信鸽推送，则必须配置此开关为ON。
+在MSDK2.4.0i以上版本，该值已经改为Boolean型，请留意修改Info.plist。
 
  - MSDK ios 推送依赖苹果APNS实现，需要在developer.apple.com中开通应用的推送功能。并制作推送证书和签名文件(.mobileprovision)。
  - 推送ssl证书：MSDK需要使用此证书向应用发送推送消息，所以需要将此证书及密码交由MSDK。在dev.ied.com配置此证书
