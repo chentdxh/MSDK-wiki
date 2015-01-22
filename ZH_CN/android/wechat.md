@@ -61,7 +61,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ```
 
-#### 必须调用的方法
+#### 必须调用的方法:
 
 游戏需要在自己的`launchActivity`(游戏启动的第一个Activity)的`onCreat()`和`onNewIntent()`中调用`handleCallback`，否则会造成登录无回调等问题。
 

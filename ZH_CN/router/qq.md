@@ -368,6 +368,285 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	　　　"is_lost": "0"
 	}
 
+
+### 2.3.4 /relation/qqfriends_vip ###
+
+#### 2.3.4.1接口说明 ####
+ 　批量查询QQ会员信息。
+
+#### 2.3.4.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|用户在应用中的登录凭据 |
+| fopenids|vector<string>|好友openid列表，每次最多可输入50个|
+| flags|string|VIP业务查询标识。目前只支持查询QQ会员信息：qq_vip。后期会支持更多业务的用户VIP信息查询。如果要查询多种VIP业务，通过“,”分隔。如果不输入该值，默认为全部查询|
+| userip|string|调用方ip信息|
+| pf|string|玩家登录平台，默认openmobile，有openmobile_android/openmobile_ios/openmobile_wp等，该值来自客户端手Q登录返回|
+
+***（请注意输入参数的类型，参考1.5） ***
+
+### 2.3.4.3输出参数说明 ###
+
+| 参数名称| 描述|
+| ------------- |: -----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| list|类型：vector<QQFriendsVipInfo>,QQ游戏好友vip信息列表(见下文)|
+| is_lost|is_lost为1时表示oidb获取数据超时，建议游戏业务检测到is_lost为1时做降级处理，直接读取缓存数据或默认数据|
+	
+	struct QQFriendsVipInfo {
+	    1   optional     string          openid;          //好友openid
+	    2   optional     int             is_qq_vip;       //是否为QQ会员（0：不是； 1：是）
+	    3   optional     int             qq_vip_level;    //QQ会员等级（如果是QQ会员才返回此字段）
+	    4   optional     int             is_qq_year_vip;  //是否为年费QQ会员（0：不是； 1：是）
+	};
+
+#### 2.3.4.4 接口调用说明 ####
+
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/qqfriends_vip/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.4.5 请求示例 ####
+
+	POST /relation/qqfriends_vip/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid": "100703379",
+	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
+	    "accessToken": "964EE8FACFA24AE88AEEEEBD84028E19",
+	    "fopenids": [
+	        "69FF99F3B17436F2F6621FA158B30549"
+	    ],
+	    "flags": "qq_vip",
+	    "pf": "openmobile",
+	    "userip": "127.0.0.1"
+	}
+	//返回结果
+	{
+	    "is_lost": "0",
+	    "lists": [
+	        {
+	            "is_qq_vip": 1,
+	            "is_qq_year_vip": 1,
+	            "openid": "69FF99F3B17436F2F6621FA158B30549",
+	            "qq_vip_level": 6
+	        }
+	    ],
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+### 2.3.5 /relation/get_groupopenid ###
+
+#### 2.3.4.1接口说明 ####
+ 　获取QQ公会绑群相关信息
+
+#### 2.3.4.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|用户在应用中的登录凭据 |
+| opt|string|功能选项；传0或者不传（兼容之前的调用情况）：使用公会id和区id换取groupOpenid；opt为1时：即使用QQ群号换取group_openid|
+| unionid|string|跟groupOpenid绑定的游戏公会ID，opt不传或者opt=0时必须要|
+| zoneid|string|游戏大区值，将公会ID与QQ群绑定时，传入参数“zoneid”的值。|
+| groupCode|string|QQ群的原始号码|
+
+***（请注意输入参数的类型，参考1.5） ***
+
+### 2.3.4.3输出参数说明 ###
+
+| 参数名称| 描述|
+| ------------- |: -----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+| groupOpenid|和游戏公会ID绑定的QQ群的groupOpenid，获取群成员信息、解绑群的时候作为输入参数|
+
+#### 2.3.4.4 接口调用说明 ####
+
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_groupopenid/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.4.5 请求示例 ####
+
+	POST /relation/get_groupopenid/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid":"100703379",
+		"openid":"A3284A812ECA15269F85AE1C2D94EB37",
+		"accessToken":"964EE8FACFA24AE88AEEEEBD84028E19",
+		"opt":"0",	//string
+		"unionid":"xxx",
+		"zoneid":"0", //string
+		"groupCode":"113172721" //string
+	}
+	//返回结果
+	{
+		"is_lost":"0",
+		"groupOpenid":"xxxx",
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+
+### 2.3.5 /relation/get_groupinfo ###
+
+#### 2.3.5.1接口说明 ####
+ 　QQ获取游戏公会绑定QQ群基本信息
+
+#### 2.3.5.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|用户在应用中的登录凭据 |
+| groupOpenid|string|和游戏公会ID绑定的QQ群的groupOpenid|
+
+
+***（请注意输入参数的类型，参考1.5） ***
+
+### 2.3.5.3输出参数说明 ###
+
+| 参数名称| 描述|
+| ------------- |: -----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+| groupName|群名称|
+| fingerMemo|群的相关简介|
+| memberNum|群成员数|
+| maxNum|该群可容纳的最多成员数|
+| ownerOpenid|群主openid|
+| unionid|与该QQ群绑定的公会ID|
+| zoneid|大区ID|
+| adminOpenids|管理员openid。如果管理员有多个的话，用“,”隔开，例如:0000000000000000000000002329FBEF,0000000000000000000000002329FAFF|
+
+
+#### 2.3.5.4 接口调用说明 ####
+
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_groupinfo/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.5.5 请求示例 ####
+
+	POST /relation/get_groupinfo/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid":"100703379",
+		"openid":"A3284A812ECA15269F85AE1C2D94EB37",
+		"accessToken":"964EE8FACFA24AE88AEEEEBD84028E19",
+		"groupOpenid":"84A812ECA15269F85AE1C2"
+	}
+	//返回结果
+	{
+		"is_lost":"0",
+		"groupName":"xxxx",
+		"fingerMemo":"xxxx",
+		"memberNum":"1000",
+		maxNum:"2000",
+		"ownerOpenid":"A3284A812ECA15269F85AE1C2D94EB38",
+		"unionid":"xxxx",
+		"zoneid":"1",
+		"adminOpenids":"0000000000000000000000002329FBEF,0000000000000000000000002329FAFF",
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+### 2.3.6 /relation/unbind_group ###
+
+#### 2.3.6.1接口说明 ####
+ 　QQ游戏公会解绑QQ群息
+
+#### 2.3.6.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|用户在应用中的登录凭据 |
+| groupOpenid|string|和游戏公会ID绑定的QQ群的groupOpenid|
+| unionid|string|与该groupOpenid绑定的公会ID|
+
+
+***（请注意输入参数的类型，参考1.5） ***
+
+### 2.3.6.3输出参数说明 ###
+
+| 参数名称| 描述|
+| ------------- |: -----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+
+
+#### 2.3.6.4 接口调用说明 ####
+
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/unbind_group/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.6.5 请求示例 ####
+
+	POST /relation/unbind_group/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid":"100703379",
+		"openid":"A3284A812ECA15269F85AE1C2D94EB37",
+		"accessToken":"964EE8FACFA24AE88AEEEEBD84028E19",
+		"groupOpenid":"84A812ECA15269F85AE1C2",
+		"unionid":"xxxx"
+	}
+	//返回结果
+	{
+		"is_lost":"0",
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+
+
+
 ##  2.4.profile服务  ##
 
 　　提供查询QQ账号VIP信息服务。
@@ -469,10 +748,10 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    }]
 	}
 
-### 2.4.2 /relation/qqfriends_vip ###
+### 2.4.2 /profile/get_gift ###
 
 #### 2.4.2.1接口说明 ####
- 　批量查询QQ会员信息。
+　　　领取蓝钻礼包，调用一次过后就清空了礼包。
 
 #### 2.4.2.2输入参数说明 ####
 
@@ -480,86 +759,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ------------- |:-------------:|:-----|
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
-| accessToken|string|用户在应用中的登录凭据 |
-| fopenids|vector<string>|好友openid列表，每次最多可输入50个|
-| flags|string|VIP业务查询标识。目前只支持查询QQ会员信息：qq_vip。后期会支持更多业务的用户VIP信息查询。如果要查询多种VIP业务，通过“,”分隔。如果不输入该值，默认为全部查询|
-| userip|string|调用方ip信息|
-| pf|string|玩家登录平台，默认openmobile，有openmobile_android/openmobile_ios/openmobile_wp等，该值来自客户端手Q登录返回|
 
-***（请注意输入参数的类型，参考1.5） ***
-
-### 2.4.2.3输出参数说明 ###
-
-| 参数名称| 描述|
-| ------------- |: -----|
-| ret|返回码  0：正确，其它：失败 |
-| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
-| list|类型：vector<QQFriendsVipInfo>,QQ游戏好友vip信息列表(见下文)|
-| is_lost|is_lost为1时表示oidb获取数据超时，建议游戏业务检测到is_lost为1时做降级处理，直接读取缓存数据或默认数据|
-	
-	struct QQFriendsVipInfo {
-	    1   optional     string          openid;          //好友openid
-	    2   optional     int             is_qq_vip;       //是否为QQ会员（0：不是； 1：是）
-	    3   optional     int             qq_vip_level;    //QQ会员等级（如果是QQ会员才返回此字段）
-	    4   optional     int             is_qq_year_vip;  //是否为年费QQ会员（0：不是； 1：是）
-	};
-
-#### 2.4.2.4 接口调用说明 ####
-
-
-| 参数名称| 描述|
-| ------------- |:-----|
-| url|http://msdktest.qq.com/relation/qqfriends_vip/ |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
-| 格式|JSON |
-| 请求方式|POST  |
-
-#### 2.4.2.5 请求示例 ####
-
-	POST /relation/qqfriends_vip/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
-	Host:$domain
-	Content-Type: application/x-www-form-urlencoded
-	Content-Length: 198
-	
-	{
-	    "appid": "100703379",
-	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
-	    "accessToken": "964EE8FACFA24AE88AEEEEBD84028E19",
-	    "fopenids": [
-	        "69FF99F3B17436F2F6621FA158B30549"
-	    ],
-	    "flags": "qq_vip",
-	    "pf": "openmobile",
-	    "userip": "127.0.0.1"
-	}
-	//返回结果
-	{
-	    "is_lost": "0",
-	    "lists": [
-	        {
-	            "is_qq_vip": 1,
-	            "is_qq_year_vip": 1,
-	            "openid": "69FF99F3B17436F2F6621FA158B30549",
-	            "qq_vip_level": 6
-	        }
-	    ],
-	    "msg": "success",
-	    "ret": 0
-	}
-
-### 2.4.3 /profile/get_gift ###
-
-#### 2.4.3.1接口说明 ####
-　　　领取蓝钻礼包，调用一次过后就清空了礼包。
-
-#### 2.4.3.2输入参数说明 ####
-
-| 参数名称| 类型|描述|
-| ------------- |:-------------:|:-----|
-| appid|string| 应用在平台的唯一id |
-| openid|string|用户在某个应用的唯一标识 |
-
-#### 2.4.3.3输出参数说明 ####
+#### 2.4.2.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -573,7 +774,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	};
 
 
-#### 2.4.3.4 接口调用说明 ####
+#### 2.4.2.4 接口调用说明 ####
 | 参数名称| 描述|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/get_gift/ |
@@ -581,7 +782,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.4.3.5 请求示例 ####
+#### 2.4.2.5 请求示例 ####
 
 	POST http://msdktest.qq.com/profile/get_gift/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -602,18 +803,18 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "ret": 0
 	}
 
-### 2.4.4 /profile/get_wifi ###
+### 2.4.3 /profile/get_wifi ###
 
-#### 2.4.4.1接口说明 ####
+#### 2.4.3.1接口说明 ####
 　　　获取随身wifi的资格。
-#### 2.4.4.2输入参数说明 ####
+#### 2.4.3.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 
-#### 2.4.4.3输出参数说明 ####
+#### 2.4.3.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -621,7 +822,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 | wifiVip|1:表示是wifivip资格，0:表示非wifivip资格|
 
-#### 2.4.4.4 接口调用说明 ####
+#### 2.4.3.4 接口调用说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -630,7 +831,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.4.4.5 请求示例 ####
+#### 2.4.3.5 请求示例 ####
 
 	POST http://msdktest.qq.com/profile/get_wifi/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -646,12 +847,12 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "wifiVip": 1
 	}
 
-### 2.4.5 /profile/qqscore_batch ###
+### 2.4.4 /profile/qqscore_batch ###
 
-#### 2.4.5.1接口说明 ####
+#### 2.4.4.1接口说明 ####
 　　　上报玩家成就到QQ平台，在QQ游戏中心显示好友分数排行。（实时生效）
 
-#### 2.4.5.2输入参数说明 ####
+#### 2.4.4.2输入参数说明 ####
 
 
 | 参数名称| 类型|描述|
@@ -670,14 +871,14 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	};
 ***（请注意输入参数的类型，参考1.5）***
 
-#### 2.4.5.3输出参数说明 ####
+#### 2.4.4.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 
-#### 2.4.5.4 接口调用说明 ####
+#### 2.4.4.4 接口调用说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -686,7 +887,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-### 2.4.5.5 请求示例 ###
+### 2.4.4.5 请求示例 ###
 
 	POST http://msdktest.qq.com/profile/qqscore_batch/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
