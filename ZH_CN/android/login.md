@@ -255,7 +255,7 @@ MSDK的登录回调来自以下几个场景：
 平台唤起是指通过平台或渠道（手Q/微信/游戏大厅/应用宝等）启动游戏。平台在有些场景下会带票据拉起游戏实现游戏的直接登录。因此游戏需要处理平台的拉起。
 
 #### 具体处理：
-游戏需要在自己的`launchActivity`的`onCreat()`和`onNewIntent()`中调用handleCallback，负责会造成登录无回调等问题。
+游戏需要在自己的`launchActivity`的`onCreat()`和`onNewIntent()`中调用handleCallback，否则会造成登录无回调等问题。
 
 - **onCreate**:
 

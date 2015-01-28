@@ -65,6 +65,8 @@
   * [公告数据列表接口](Announcement.md#公告数据列表接口)  
   * [示例代码](Announcement.md#示例代码)  
   * [常见问题](Announcement.md#常见问题)  
+  * [附录](Announcement.md#附录)
+  * [附录](Announcement.md#附录)  
   
 [广告]()
 

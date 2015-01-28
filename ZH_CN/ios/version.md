@@ -18,6 +18,14 @@
   4. MSDKXG：提供信鸽Push功能。
   以上四个组件同时提供C99和C11语言标准，其中**_C11包为C11的版本。
   ![linkBundle](./2.4.0_structure_of_framework.png)
+  
+  如果只想使用C++接口，只需要导入以下几个头文件即可：
+```
+<MSDKFoundation/MSDKStructs.h>
+<MSDK/WGInterface.h>
+<MSDK/WGPlatform.h>
+<MSDK/WGPlatformObserver.h>
+```  
     另：模块化版本除了支持2.3.4及之前版本的Observer回调外还新增了delegate回调，此处以手Q授权登陆为例（其他接口详见各自接口说明文档）：
     原授权调用代码如下：
 ```

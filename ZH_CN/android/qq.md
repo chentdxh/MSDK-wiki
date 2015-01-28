@@ -88,14 +88,15 @@ MSDK 手Q 相关模块
 
 	勾选openID一项，如下图
 
-![1](./diff-account-1.png) 
+	![1](./diff-account-1.png) 
 
 2. 支持带openID、accessToken、PayToken
 
-	1.勾选对应的选项
+	1. 勾选对应的选项
 
-	2.填写游戏支持异帐号的版本对应的versionCode。填写以后此code及以上的版本可以带票据拉起游戏，之前版本只会带openID拉起游戏，不会影响游戏的正常逻辑。
-![2](./diff-account-2.png) 
+	2. 填写游戏支持异帐号的版本对应的versionCode。填写以后此code及以上的版本可以带票据拉起游戏，之前版本只会带openID拉起游戏，不会影响游戏的正常逻辑。
+
+	![2](./diff-account-2.png) 
 
 3. 注意事项
 

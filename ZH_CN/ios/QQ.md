@@ -22,8 +22,10 @@ QQ接入
 | QQ  | 格式：QQ+游戏的QQAppID的16进制 |QQ06009C93 | 接入手Q必填，中间无空格   |
 | QQLaunch  | 格式：tencentlaunch+游戏的QQAppID |tencentlaunch100703379|  接入手Q必填，中间无空格   |
 
-   > **注：各游戏配置存在不一致，具体请咨询各游戏与MSDK接口人或RTX联系“连线MSDK”。**
- 
+   > **注：
+  1. 各游戏配置存在不一致，具体请咨询各游戏与MSDK接口人或RTX联系“连线MSDK”。
+  2. Xcode6.0创建工程时，有可能没有配置Bundle Display Name，但OpenSDK需要该配置才能正确启动，所以请务必确保这个属性存在，如果没有请配置。**
+  ![Alt text](./QQ_config.png)
  ---
 ## 授权登录
  ### 概述
@@ -723,3 +725,6 @@ appDisplayName:@"MSDKSampleTest"];
 http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup
  - 使用游戏内绑定好友和群的接口，需要接入的App id已经在手Q后台审核通过并上线
  ---
+ 
+ ## 常见问题
+ ###注意事项
