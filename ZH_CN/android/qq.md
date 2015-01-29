@@ -267,7 +267,6 @@ MSDK 手Q 相关模块
 	邀请、炫耀
 #### 接口声明：
 
-	WGSendToQQWithMusic。
 	/**
 	 * 把音乐消息分享到手Q会话
 	 * @param scene eQQScene:

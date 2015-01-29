@@ -2,8 +2,6 @@
 
 [gimmick:theme (inverse: true)](cerulean)
 
-[站点地图](http://wiki.dev.4g.qq.com/v2/site.html)
-
 [SDK介绍]()
 
   * # 
@@ -158,6 +156,8 @@
  * [手游宝](qmi.md)
  - - - -
  * [米大师](midas.md)
+ - - - -
+ * [金刚审计](jg.md)
  - - - -
  * # 游戏大厅
  * [不带登录态拉起游戏](qqgame.md)

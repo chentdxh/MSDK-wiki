@@ -78,7 +78,7 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 	- 在游戏对MSDK回调处理的逻辑中增加对于对onLoginNotify的处理。具体方法[点击查看](#处理MSDK的登录回调)
 - **处理平台的拉起**：
 	- 在游戏的主activity的onCreate和onNewIntent里调用handleCallback完成对平台拉起的处理。具体方法[点击查看](#处理平台唤起handleCallback)
-- **处理MSDK的拉起陆回调**：
+- **处理MSDK的拉起回调**：
 	- 在游戏对MSDK回调处理的onWakeUpNotify中增加对平台拉起的处理。具体方法[点击查看](#处理MSDK的拉起回调)
 - **处理异帐号逻辑**：
 	- 游戏对于异帐号的处理逻辑，具体内容参照[MSDK异帐号接入](diff-account.md#异帐号处理逻辑（开发关注）)

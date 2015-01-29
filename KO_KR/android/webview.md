@@ -119,153 +119,151 @@ msdkEncodeParam 의 암호문 URL Decode를 body에 넣어 Post 방식으로 전
 ###3. 암호문 디코딩 코드 샘플(C 코드)
 1. 아래 파일 UrlCoding.h 도입:
 
-    #ifndef URL_H
-    #define URL_H
+		#ifndef URL_H
+		#define URL_H
 
-    #ifdef __cplusplus
-       extern "C" {
-          #endif
-    
-          int php_url_decode(const char *str, int len, char *out, int *outLen);
-          char *php_url_encode(char const *s, int len, int *new_length);
-          int php_url_decode_special(const char *str, int len, char *out, int *outLen);
-    
-          #ifdef __cplusplus
-       }
-    #endif
+		#ifdef __cplusplus
+		   extern "C" {
+			  #endif
+		
+			  int php_url_decode(const char *str, int len, char *out, int *outLen);
+			  char *php_url_encode(char const *s, int len, int *new_length);
+			  int php_url_decode_special(const char *str, int len, char *out, int *outLen);
+		
+			  #ifdef __cplusplus
+		   }
+		#endif
 
-    #endif /* URL_H */
+		#endif /* URL_H */
 
 2. 아래 파일 UrlCoding.c 도입:
 
-    #include <stdlib.h>
-    #include <string.h>
-    #include <ctype.h>
-    #include <sys/types.h>
-    #include <stdio.h>
-    #include "UrlCoding.h"
-    
-    static unsigned char hexchars[] = "0123456789ABCDEF";
-    
-    static int php_htoi(const char *s)
-    {
-        int value;
-        int c;
-        
-        c = ((unsigned char *)s)[0];
-        if (isupper(c))
-            c = tolower(c);
-        value = (c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10) * 16;
-        
-        c = ((unsigned char *)s)[1];
-        if (isupper(c))
-            c = tolower(c);
-        value += c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10;
-        
-        return (value);
-    }
-    
-    
-    char *php_url_encode(char const *s, int len, int *new_length)
-    {
-        register unsigned char c;
-        unsigned char *to, *start;
-        unsigned char const *from, *end;
-        
-        from = (unsigned char *)s;
-        end  = (unsigned char *)s + len;
-        start = to = (unsigned char *) calloc(1, 3*len+1);
-        
-        while (from < end)
-        {
-            c = *from++;
-            
-            if (c == ' ')
-            {
-                *to++ = '+';
-            }
-            else if ((c < '0' && c != '-' && c != '.') ||
-                     (c < 'A' && c > '9') ||
-                     (c > 'Z' && c < 'a' && c != '_') ||
-                     (c > 'z'))
-            {
-                to[0] = '%';
-                to[1] = hexchars[c >> 4];
-                to[2] = hexchars[c & 15];
-                to += 3;
-            }
-            else
-            {
-                *to++ = c;
-            }
-        }
-        *to = 0;
-        if (new_length)
-        {
-            *new_length = to - start;
-        }
-        return (char *) start;
-    }
-    
-    
-    int php_url_decode(const char *str, int len, char *out, int *outLen)
-    {
-        const char *data = str;
-        char *orgOut = out;
-        while (len--)
-        {
-            if (*data == '+')
-            {
-                *out = ' ';
-            }
-            else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
-            {
-                *out = (char) php_htoi(data + 1);
-                data += 2;
-                len -= 2;
-            }
-            else
-            {
-                *out = *data;
-            }
-            data++;
-            out++;
-        }
-    //  *out = '/0';
-        *outLen = out - orgOut;
-        return *outLen;
-    }
-    
-    //WGCommonMethods.h의 encodeForURL을 위해 특별히 구현한 디코딩 방법 haywoodfu 2014-04-23
-    int php_url_decode_special(const char *str, int len, char *out, int *outLen)
-    {
-        const char *data = str;
-        char *orgOut = out;
-        while (len--)
-        {
-            if (*data == '+')
-            {
-                *out = ' ';
-            }
-            else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
-            {
-                int value = 0;
-                sscanf((data+1), "%2x", &value);
-                *out = (char) value;
-                data += 2;
-                len -= 2;
-            }
-            else
-            {
-                *out = *data;
-            }
-            data++;
-            out++;
-        }
-    //  *out = '/0';
-        *outLen = out - orgOut;
-        return *outLen;
-    }
+		#include <stdlib.h>
+		#include <string.h>
+		#include <ctype.h>
+		#include <sys/types.h>
+		#include <stdio.h>
+		#include "UrlCoding.h"
+		
+		static unsigned char hexchars[] = "0123456789ABCDEF";
+		
+		static int php_htoi(const char *s)
+		{
+			int value;
+			int c;
+			
+			c = ((unsigned char *)s)[0];
+			if (isupper(c))
+				c = tolower(c);
+			value = (c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10) * 16;
+			
+			c = ((unsigned char *)s)[1];
+			if (isupper(c))
+				c = tolower(c);
+			value += c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10;
+			
+			return (value);
+		}
+		
+		char *php_url_encode(char const *s, int len, int *new_length)
+		{
+			register unsigned char c;
+			unsigned char *to, *start;
+			unsigned char const *from, *end;
+			
+			from = (unsigned char *)s;
+			end  = (unsigned char *)s + len;
+			start = to = (unsigned char *) calloc(1, 3*len+1);
+			
+			while (from < end)
+			{
+				c = *from++;
+				
+				if (c == ' ')
+				{
+					*to++ = '+';
+				}
+				else if ((c < '0' && c != '-' && c != '.') ||
+						 (c < 'A' && c > '9') ||
+						 (c > 'Z' && c < 'a' && c != '_') ||
+						 (c > 'z'))
+				{
+					to[0] = '%';
+					to[1] = hexchars[c >> 4];
+					to[2] = hexchars[c & 15];
+					to += 3;
+				}
+				else
+				{
+					*to++ = c;
+				}
+			}
+			*to = 0;
+			if (new_length)
+			{
+				*new_length = to - start;
+			}
+			return (char *) start;
+		}
+		
+		int php_url_decode(const char *str, int len, char *out, int *outLen)
+		{
+			const char *data = str;
+			char *orgOut = out;
+			while (len--)
+			{
+				if (*data == '+')
+				{
+					*out = ' ';
+				}
+				else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
+				{
+					*out = (char) php_htoi(data + 1);
+					data += 2;
+					len -= 2;
+				}
+				else
+				{
+					*out = *data;
+				}
+				data++;
+				out++;
+			}
+		//  *out = '/0';
+			*outLen = out - orgOut;
+			return *outLen;
+		}
+		
+		//WGCommonMethods.h의 encodeForURL을 위해 특별히 구현한 디코딩 방법 haywoodfu 2014-04-23
+		int php_url_decode_special(const char *str, int len, char *out, int *outLen)
+		{
+			const char *data = str;
+			char *orgOut = out;
+			while (len--)
+			{
+				if (*data == '+')
+				{
+					*out = ' ';
+				}
+				else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
+				{
+					int value = 0;
+					sscanf((data+1), "%2x", &value);
+					*out = (char) value;
+					data += 2;
+					len -= 2;
+				}
+				else
+				{
+					*out = *data;
+				}
+				data++;
+				out++;
+			}
+		//  *out = '/0';
+			*outLen = out - orgOut;
+			return *outLen;
+		}
 
 3. 전송된 문자열 encodeParam을 php_url_decode와 php_url_decode_special을 이용하여 차례로 디코딩하여 얻은 것이 암호문이다
 

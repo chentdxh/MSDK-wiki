@@ -1,6 +1,6 @@
 {
     "useSideMenu": true,
     "lineBreaks": "gfm",
-    "additionalFooterText": "文档内容由 MSDK Android 开发团队提供",
+    "additionalFooterText": "해당 문서는 MSDK Android 개발팀에서 제공 ",
     "anchorCharacter": "#"
 }

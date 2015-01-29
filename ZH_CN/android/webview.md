@@ -74,11 +74,30 @@ MSDK2.0.0a及以后按如下方式配置。
 ###2、被加密的数据
 要加密的登录态参数如下表：
 
-![webview](./webview_extend_1.png)
+| 参数名  | 参数说明  |
+| ------------- |:-------------:|
+| acctype| 账号类型，取值为qq或wx |
+| appid| 游戏ID |  
+| openId | 用户授权后平台返回的唯一标识|  
+| access_token| 用户授权票据 | 
+| platid| 终端类型，取值为0表示ios，1表示android |
+
+
+
 
 MSDK会在URL后附加的参数如下，__请勿传入重复的参数，会导致解密失败：
 
-![webview](./webview_extend_2.png)
+| 参数名  |         参数说明  |  
+| ------------- |:-------------:|
+| timestamp| 请求的时间戳 |
+| appid| 游戏ID |
+| algorithm | 加密算法标识，值为v1或者v2 | 
+| msdkEncodeParam | 密文 |
+| version | MSDK版本号，例如：1.6.2a |
+| sig | 请求本身签名 |
+| encode | 编码参数，如1 |
+| openid | 用户授权后平台返回的惟一标识 |
+
 
 ###3、举例说明
 假设浏览器拉起URL：http://apps.game.qq.com/ams/gac/index.html， 实际截包会看到访问的URL如下：

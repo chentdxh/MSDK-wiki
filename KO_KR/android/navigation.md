@@ -2,8 +2,6 @@
 
 [gimmick:theme (inverse: true)](cerulean)
 
-[사이트맵](http://wiki.dev.4g.qq.com/v2/site.html)
-
 [SDK 소개]()
 
   * # 
