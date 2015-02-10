@@ -12,14 +12,14 @@ MSDK 异账号梳理
 异帐号的场景
 ---
 
-1. 游戏分享消息的时候拉起平台，因为账号不一致，平台会弹框提示异账号，目前平台都已经支持该功能。
+ 1. 游戏分享消息的时候拉起平台，因为账号不一致，平台会弹框提示异账号，目前平台都已经支持该功能。
 
-![game2qq](./diff-account-game2qq.png) 
-![game2wechat](./diff-account-game2wechat.png)
+	![game2qq](./diff-account-game2qq.png) 
+	![game2wechat](./diff-account-game2wechat.png)
 
-2. 用户从平台拉起进入游戏，因为账号不一致，需要游戏弹框提示异账号
+ 2. 用户从平台拉起进入游戏，因为账号不一致，需要游戏弹框提示异账号
 
-![plat2wechat](./diff-account-plat2wechat.png) 
+	![plat2wechat](./diff-account-plat2wechat.png) 
 
 `目前游戏上线时平台要求游戏处理的异账号、MSDK实现的异帐号都为第二种。`
 

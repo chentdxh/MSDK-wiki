@@ -1,245 +1,245 @@
-#MSDK登录模块
+#MSDK 로그인 모듈
 
-##概述
+##개요
 
-该模块将会对MSDK所有授权相关的模块做一次梳理，包括授权登录、自动登录、快速登录、票据刷新、读取等模块的详细说明。游戏可以先参照该模块熟悉MSDK所有授权相关的模块，然后再根据游戏自己的需求使用对应接口完成授权等功能。
+이 모듈은 MSDK 모든 인증 관련 모듈을 정리하고 인증 로그인, 자동 로그인, 빠른 로그인, 토큰 갱신, 읽기 등 모듈에 대한 자세한 설명 포함. 게임은 먼저 이 모듈을 참조하여 MSDK의 모든 인증 관련 모듈을 이해한 후 게임 자체 수요에 따라 상응한 인터페이스를 사용하여 인증 등 기능 구현 가능
 
-##名词解释、接口说明
+##용어 해석, 인터페이스 설명
 	
-###登录相关名词解释：
-| 名称| 描述 |支持平台| 调用接口 |
+###로그인 관련 용어 해석:
+| 명칭| 설명 |지원 플랫폼| 호출 인터페이스 |
 |: ------------- :|
-| 授权登录 | 游戏通过拉起平台的授权界面，引导用户授权游戏获得登录所需票据| 手Q/微信 | WGLogin |
-| 快速登录 | 玩家的操作使平台拉起游戏时会透传登录相关的票据信息从而登录进入游戏。| 手Q| 无 |
-| 自动登录 | 游戏启动的时候，直接使用用户上次登录游戏的票据信息登录进入游戏| MSDK 提供功能| WGLoginWithLocalInfo |
-| 自动刷新 | MSDK提供自动刷新微信票据接口 | MSDK 提供功能 | 无 |
-| 异帐号 | 当前游戏内登录的帐号和平台登录的帐号不一致 | 平台/MSDK均支持| WGSwitchUser |
+| 인증 로그인 | 플랫폼의 인증 화면을 불러와 유저가 게임에 인증하고 로그인에 필요한 토큰을 받도록 인도| 모바일QQ/Wechat | WGLogin |
+| 빠른 로그인 | 유저의 조작은 플랫폼에서 게임 실행시 로그인 관련 토큰 정보를 투과 전송하여 게임에 로그인하게 함| 모바일QQ| 없음 |
+| 자동 로그인 | 게임 시작시 유저의 최근 게임 로그인 토큰 정보를 직접 사용하여 게임에 로그인| MSDK가 기능 제공| WGLoginWithLocalInfo |
+| 자동 갱신 | MSDK가 Wechat 토큰 자동 갱신 인터페이스 제공| MSDK가 기능 제공 | 없음 |
+| 다른 계정 | 현재 게임에 로그인한 계정과 플랫폼에 로그인한 계정 불일치 | 플랫폼/MSDK 전부 지원| WGSwitchUser |
 
-### 登录相关接口概述
+### 로그인 관련 인터페이스 개요
 
-与登录相关的调用接口中`WGGetLoginRecord`，`WGLogout`是同步接口，其他接口都是异步实现，因此通过callback的形式将最终的结果通过OnLoginNotify（LoginRet）来回调给游戏。异帐号相关的接口单独在MSDK的异帐号模块说明。具体如下:
+로그인과 관련된 호출 인터페이스 중 `WGGetLoginRecord`, `WGLogout`는 동기적 인터페이스이고 기타 인터페이스는 전부 비동기적으로 구현되기에 callback 형식을 이용하여 OnLoginNotify(LoginRet)를 통해 최종 결과를 게임에 콜백. 다른계정과 관련된 인터페이스는 MSDK의 다른계정 모듈에서 별도로 설명. 구체 내용:
 
-| 名称| 描述 |备注 |
+| 명칭| 설명 |비고 |
 |: ------------- :|
-| WGGetLoginRecord | 获取本地保存的当前用户登录票据 |  |
-| WGSetPermission | 设置游戏需要用户授权获取的平台信息 | |
-| WGLogin | 拉起平台授权登录 |  |
-| WGLogout | 清空当前登录帐号的登录信息 |  |
-| WGLoginWithLocalInfo | 通过本地保存的登录票据尝试登录|  |
-| handleCallback | 处理各个平台唤起 |  |
-| WGRefreshWXToken | 通过微信refreshToken刷新获取accessToken |  从MSDK 2.0开始不建议游戏自己刷新微信票据 |
+| WGGetLoginRecord | 로컬에 저장된 현재 유저의 로그인 토큰 획득 |  |
+| WGSetPermission | 게임이 유저 인증을 통해 획득할 플랫폼 정보 설정 | |
+| WGLogin | 플랫폼을 실행하여 인증 로그인 진행 |  |
+| WGLogout | 현재 로그인한 계정의 로그인 정보 전부 제거 |  |
+| WGLoginWithLocalInfo | 로컬에 저장된 로그인 토큰으로 로그인 시도|  |
+| handleCallback | 각 플랫폼 호출 처리 |  |
+| WGRefreshWXToken | WechatrefreshToken으로 갱신하여 accessToken 획득 |  MSDK 2.0부터 게임이 스스로 Wechat 토큰을 갱신하는 방식을 권장하지 않음 |
 
-###登录相关接口推荐用法
+###로그인 관련 인터페이스 권장 사용법
 
-1. 授权登录：直接调用`WGLogin`拉起对应平台的授权
-- 游戏启动、游戏从后台切换会前台检查票据是否有效：调用`WGLoginWithLocalInfo`完成票据有效性的验证
-- 获取票据：直接调用`WGGetLoginRecord`从本地读取
-- 注销登录：直接调用`WGLogout`清空当前用户的登录信息
+1. 인증 로그인: 직접 `WGLogin`을 호출하여 상응한 플랫폼의 인증 획득
+- 게임 시작 또는 게임이 백그라운드에서 포어그라운드로 전환시 토큰 유효성 검사: `WGLoginWithLocalInfo`를 호출하여 토큰 유효성 검사 진행
+- 토큰 획득: 직접 `WGGetLoginRecord`를 호출하여 로컬에서 읽기
+- 로그아웃: 직접 `WGLogout`를 호출하여 현재 유저의 로그인 정보 제거
 
-## 接入登录具体工作（开发必看）
+## 로그인 액세스 구체 작업(개발자 필독)
 
-**游戏开发可以按照下面提供的步骤完成MSDK登录模块的接入，降低接入成本和遗漏的处理逻辑。强烈推荐认真了解！！！**
+**게임 개발자는 아래 제공한 절차에 따라 MSDK로그인 모듈의 액세스를 진행하여 액세스 비용과 누락된 처리 로직을 줄일 수 있다. 이 부분 내용을 숙지할 것을 강력히 권장!!**
 
-1. 设置需要用户授权的权限：
-	- 游戏在MSDK初始化以后要调用手Q权限设置的接口设置需要用户授权给游戏的平台权限。具体方法[点击查看](#设置需要用户授权的权限WGSetPermission)。
-- **处理授权登录**：
-	1. 在登录按钮的点击事件的处理函数中调用`WGLogin`完成授权登录。具体方法[点击查看](#处理授权登录WGLogin)。
-- **处理自动登录**：
-	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
-	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
-		- 对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差
-- **处理用户注销**：
-	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登录。具体方法[点击查看](#处理用户注销WGLogout)
-- **处理MSDK的登录回调**：
-	- 在游戏对MSDK回调处理的逻辑中增加对于对onLoginNotify的处理。具体方法[点击查看](#处理MSDK的登录回调)
-- **处理平台的拉起**：
-	- 在游戏的主activity的onCreate和onNewIntent里调用handleCallback完成对平台拉起的处理。具体方法[点击查看](#处理平台唤起handleCallback)
-- **处理MSDK的拉起陆回调**：
-	- 在游戏对MSDK回调处理的onWakeUpNotify中增加对平台拉起的处理。具体方法[点击查看](#处理MSDK的拉起回调)
-- **处理异帐号逻辑**：
-	- 游戏对于异帐号的处理逻辑，具体内容参照[MSDK异帐号接入](diff-account.md#异帐号处理逻辑（开发关注）)
-- **其余特殊逻辑处理**：
-	- 低内存机器授权过程游戏被杀后的登录方案。具体方法[点击查看](#手Q授权在低内存机器授权过程游戏被杀后的登录方案)
-	- MSDK微信票据过期自动刷新机制。具体方法[点击查看](#微信票据自动刷新)
-	- 登录数据上报接口调用要求。具体方法[点击查看](#登录数据上报)
+1. 유저 인증이 필요한 권한 설정:
+	- 게임은 MSDK 초기화 이후 모바일QQ 권한 설정 인터페이스를 호출하여 유저 인증이 필요한 게임 플랫폼 권한을 설정해야 한다. 구체 방법[클릭하여 보기](#유저 인증이 필요한 권한 설정 WGSetPermission).
+- **인증 로그인 처리**：
+	1. 로그인 버튼의 클릭 이벤트의 처리 함수에서 `WGLogin`을 호출하여 인증 로그인 진행. 구체 방법[클릭하여 보기](#인증 로그인 처리 WGLogin)
+- **자동 로그인 처리**：
+	1. 메인 Activity의 onCreate에서 MSDK 초기화 이후 `WGLoginWithLocalInfo`를 호출하여 게임 실행시 자동 로그인 진행. 구체 방법[클릭하여 보기](#자동 로그인 처리 WGLoginWithLocalInfo)
+	- 메인 Activity의 onResume에서 게임이 백그라운드로 전환하는 시간 판단. 30분을 초과하면 자동으로 `WGLoginWithLocalInfo`를 호출하여 자동 로그인 진행
+		- 게임이 백그라운드로 전환하는 시간의 판단에 있어, 게임은 MSDK의 demo 방식을 참조하여 전환시 타임 스탬프를 1개 기록하고 반환하여 시간차 계산 가능
+- **유저 로그아웃 처리**:
+	- 로그아웃 버튼의 클릭 이벤트의 처리 함수에서 WGLogout를 호출하여 인증 로그인 진행. 구체방법[클릭하여 보기](#유저 로그아웃 처리 WGLogout)
+- **MSDK의 로그인 콜백 처리**:
+	- 게임의 MSDK 콜백 처리 로직에 onLoginNotify에 대한 처리 추가. 구체방법[클릭하여 보기](#MSDK의 로그인 콜백 처리)
+- **플랫폼의 실행 처리**:
+	- 게임 메인 activity의 onCreate와 onNewIntent에서 handleCallback를 호출하여 플랫폼 실행에 대한 처리 진행. 구체방법[클릭하여 보기](#플랫폼 실행 처리 handleCallback)
+- **MSDK의 실행 콜백 처리**:
+	- 게임의 MSDK 콜백 처리 onWakeUpNotify에서 플랫폼 실행에 대한 처리 추가. 구체방법[클릭하여 보기](#MSDK의 실행 콜백 처리)
+- **다른계정 처리 로직**:
+	- 게임이 다른계정에 대한 처리 로직, 구체 내용은 [MSDK 다른계정 액세스](diff-account.md#다른계정 처리 로직(개발자 주목)) 참조
+- **기타 특수 로직 처리**:
+	- 저메모리 설비에서 인증 진행시 게임이 강제 종료된 후 로그인 방안. 구체 방법[클릭하여 보기](#모바일QQ가 저메모리 설비에서 인증 진행시 게임이 강제 종료된 후 로그인 방안)
+	- MSDKWechat 토큰 기한 만료시 자동 갱신 메커니즘. 구체방법[클릭하여 보기](#Wechat 토큰 자동 갱신)
+	- 로그인 데이터 업로드 인터페이스 호출 요구. 구체방법[클릭하여 보기](#로그인 데이터 업로드)
 
-##设置需要用户授权的权限WGSetPermission
+##유저 인증이 필요한 권한 설정 WGSetPermission
 
-####概述
+####개요
 
-游戏在MSDK初始化以后要调用手Q权限设置的接口设置需要用户授权给游戏的平台权限。
+게임은 MSDK 초기화 이후 모바일QQ 권한 설정 인터페이스를 호출하여 유저 인증이 필요한 게임 플랫폼 권한을 설정해야 한다.
 
-####接口声明
+####인터페이스 선언
 
 	/**
-	 * @param permissions ePermission枚举值 或 运算的结果, 表示需要的授权项目
+	 * @param permissions ePermission 열거값 또는 연산 결과, 필요한 인증 항 표시
 	 * @return void
 	 */
 	void WGSetPermission(int permissions);
 
-#### 接口调用：
+#### 인터페이스 호출:
 
-	// 设置拉起QQ时候需要用户授权的项
+	// QQ 실행시 필요한 유저 인증 항 설정
 	WGPlatform.WGSetPermission(WGQZonePermissions.eOPEN_ALL); 
 
-#### 注意事项：
+#### 주의사항:
 
-1. 游戏需要在MSDK初始化之后调用该接口，建议接口参数就填**`WGQZonePermissions.eOPEN_ALL`**。缺少该项会导致游戏调用部分接口时提示没有权限。
+1. 게임은 MSDK 초기화 이후에 이 인터페이스를 호출해야 하며 인터페이스 파라미터는 **`WGQZonePermissions.eOPEN_ALL`**을 입력할 것을 제안한다. 이 내용이 부족하면 게임이 일부 인터페이스 호출 시 권한이 없다고 통지할 수 있다.
 
 
-##处理授权登录WGLogin
+##인증 로그인 처리 WGLogin
 
-#### 概述：
+#### 개요:
 
-**拉起手Q/微信客户端或web页面(手Q未安装)授权，在用户授权以后通过onLoginNotify通知游戏获取到openID、accessToken、payToken、pf、pfkey等登录信息**
+**모바일QQ/Wechat 클라이언트 또는 web페이지(모바일QQ 미설치)를 실행하여 인증을 진행하고 유저가 인증한 후 onLoginNotify를 통해 openID, accessToken, payToken, pf, pfkey 등 로그인 정보를 획득했다고 게임에 통지**
 
-#### 效果展示：
+#### 효과 보기:
 
 ![login](./lg1.png)
 ![login](./lg2.png)
 
-####接口声明：
+####인터페이스 선언:
 
 	/**
-	 * @param platform 游戏传入的平台类型, 可能值为: ePlatform_QQ, ePlatform_Weixin
+	 * @param platform 게임이 전송한 플랫폼 유형, 가능한 값: ePlatform_QQ, ePlatform_Weixin
 	 * @return void
-	 *   通过游戏设置的全局回调的OnLoginNotify(LoginRet& loginRet)方法返回数据给游戏
+	 *   게임이 설정한 전역 콜백의 OnLoginNotify(LoginRet& loginRet) 메소드를 통해 데이트를 게임에 반환
 	 */
 	void WGLogin(ePlatform platform);
 
-#### 接口调用：
+#### 인터페이스 호출:
 
 	WGPlatform::GetInstance()->WGLogin(ePlatform_QQ); 
 
-#### 注意事项：
+#### 주의사항:
 
-- **通用**：
-	- **因为微信和手Q各自的bug，会导致游戏在多个场景下收不到回调。游戏在调用WGLogin后可以开始一个倒计时, 倒计时完毕如果没有收到回调则算作超时, 让用户回到登录界面。倒计时推荐时间为30s，游戏也可以自己设置**其中收不到回调的场景包括但不限于：
-		- 在微信未登录的情况下, 游戏拉起微信输入用户名密码以后登录, 可能会没有登录回调, 这是微信客户端已知BUG
-		- 微信授权过程中, 点击左上角的 返回 按钮, 可能会导致没有授权回调
-		- openSDK 2.7 （MSDK 2.5）以下版本通过web授权点击取消授权以后没有回调
-- **手Q 相关**：
-	1. 没有安装手Q的时，精品游戏可以拉起Web页面授权,请确保AndroidMenifest.xml中AuthActivity的声明中要在intent-filter中配置<data android:scheme="***" />, 详见本节手Q相关AndeoidMainfest配置处。 **海纳游戏现在不支持拉起页面授权**。可以通过WGIsPlatformInstalled接口判断是否安装手Q，未安装手Q则提示用户不能授权。
-	- **偶尔收不到OnLoginNotify回调：**请确保`com.tencent.tauth.AuthActivity`和`com.tencent.connect.common.AssistActivity`在`AndroidManifest.xml`与手Q接入权限申明（[点击查看]()）一致。
-	- 如果游戏的Activity为Launch Activity, 则需要在游戏Activity声明中添加android:configChanges="orientation|screenSize|keyboardHidden", 否则可能造成没有登录没有回调。
+- **통용**:
+	- **Wechat와 모바일QQ 각자의 bug로 인하여 게임이 일부 시나리오에서 콜백을 받지 못하는 문제를 초래할 수 있다. 게임은 WGLogin을 호출한 후 초읽기를 시작하고 초읽기가 끝난 후에도 콜백을 받지 못하면 타임아웃으로 간주하여 유저를 로그인창에 돌아가게 할 수 있다. 초읽기 시간은 30s를 제안하지만 자체적으로 설정할 수 있다**콜백을 받지 못하는 일부 시나리오:
+		- Wechat에 로그인하지 않은 상황에서 게임이 Wechat을 불러와 유저명과 비밀번호를 입력하고 로그인하면 로그인 콜백이 없을 수 있다. 이는 Wechat 클라이언트의 이미 알려진 BUG이다
+		- Wechat 인증 과정에서 좌측 상단의  돌아가기 버튼을 클릭하면 인증 콜백이 없을 수 있다
+		- openSDK 2.7 (MSDK 2.5) 이하 버전은 web 인증을 통해 인증 취소를 클릭한 후 콜백이 없다
+- **모바일QQ 관련**：
+	1. 모바일QQ가 설치되지 않은 경우, 프리미엄 게임은 Web페이지를 불러와 인증을 진행할 수 있다. AndroidMenifest.xml에서 AuthActivity 선언 중 반드시 intent-filter에서 <data android:scheme="***" />를 설정해야 한다. 자세한 내용은 본 장절 모바일QQ 관련 AndeoidMainfest 설정을 참조하면 된다. **해납(海納) 게임은 아직 페이지를 불러와 인증하는 방식을 지원하지 않는다**. WGIsPlatformInstalled 인터페이스를 통해 모바일QQ 설치 여부를 판단할 수 있으며, 모바일QQ가 설치되지 않았으면 유저에게 인증할 수 없다고 제시.
+	- **간혹 OnLoginNotify 콜백을 받지 못하는 경우: **`com.tencent.tauth.AuthActivity`와 `com.tencent.connect.common.AssistActivity`는 `AndroidManifest.xml`에서 모바일QQ 액세스 권한 선언([클릭하여 보기]())과 반드시 일치해야 한다.
+	- 게임 Activity가 Launch Activity이면 게임 Activity 선언에 android:configChanges="orientation|screenSize|keyboardHidden"를 추가해야 한다. 그렇지 않으면 로그인이 없고 콜백이 없는 문제를 초래할 수 있다.
 
-- **微信相关**：
+- **Wechat 관련**:
 
-	1. 微信授权需要保证微信版本高于4.0
-	- 拉起微信时候, 微信会检查应用程序的签名和微信后台配置的签名是否匹配(此签名在申请微信appId时提交过), 如果不匹配则无法唤起已经授权过的微信客户端.
-	- `WXEntryActivity.java` 位置不正确（必须在包名/wxapi 目录下）则不能收到回调.
+	1. Wechat 인증은 Wechat 버전이 4.0보다 높아야 한다
+	- Wechat 실행시 Wechat은 앱 서명과 Wechat 백그라운드 서명의 매칭 여부를 검사한다(이 서명은 WechatappId를 신청할 때 제출). 매칭되지 않으면 이미 인증된 Wechat 클라이언트를 실행할 수 없다.
+	- `WXEntryActivity.java` 위치가 틀리면(반드시 패키지명 /wxapi 디렉토리에 위치) 콜백을 받을 수 없다.
 
 
-##处理自动登录WGLoginWithLocalInfo
+##자동 로그인 처리 WGLoginWithLocalInfo
 
-#### 概述：
+#### 개요:
 
-此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据并通过OnLoginNotify将结果回调给游戏。游戏不再需要处理微信票据刷新, 手Q/微信AccessToken验证等工作。
+이 인터페이스는 과거에 로그인했던 게임에 사용된다. 유저가 게임에 다시 들어갈 때 게임은 이 인터페이스를 먼저 호출하여 백그라운드에서 토큰을 검사한 후 OnLoginNotify를 통해 결과를 게임에 콜백한다. 게임은 Wechat 토큰 갱신, 모바일QQ/WechatAccessToken 검사 등 작업을 처리할 필요가 없다.
 
-####接口声明：
+####인터페이스 선언:
 
 	/**
 	  *  @since 2.0.0
-	  *  此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据
-	   *  此接口会通过OnLoginNotify将结果回调给游戏, 本接口只会返回两种flag, eFlag_Local_Invalid和eFlag_Succ,
-	  *  如果本地没有票据或者本地票据验证失败返回的flag为eFlag_Local_Invalid, 游戏接到此flag则引导用户到授权页面授权即可.
-	  *  如果本地有票据并且验证成功, 则flag为eFlag_Succ, 游戏接到此flag则可以直接使用sdk提供的票据, 无需再次验证.
+	  *  이 인터페이스는 과거에 로그인했던 게임에 사용된다. 유저가 게임에 다시 들어갈 때 게임은 이 인터페이스를 먼저 호출하여 백그라운드에서 토큰 검사를 시도한다
+	   *  이 인터페이스는 OnLoginNotify를 통해 결과를 게임에 콜백하고 eFlag_Local_Invalid와 eFlag_Succ 등 2개 flag만 반환한다.
+	  *  로컬에 토큰이 없거나 로컬 토큰 검사 실패시 반환하는 flag는 eFlag_Local_Invalid이다. 게임이 이 flag를 받으면 유저를 인증 페이지로 안내하여 인증을 진행하면 된다.
+	  *  로컬에 토큰이 있고 검사에 성공하면 flag는 eFlag_Succ이다. 게임이 이 flag를 받으면 재차 검사할 필요가 없이 sdk가 제공한 토큰을 직접 사용할 수 있다.
 	  *  @return void
-	  *   Callback: 验证结果通过我OnLoginNotify返回
+	  *   Callback: 검사 결과는 OnLoginNotify를 통해 반환
 	  */
  	void WGLoginWithLocalInfo();
 
-####注意事项：
+####주의사항:
 
-1. 游戏在使用`WGLoginWithLocalInfo`登录以后，获得的票据在无需传到游戏后台去验证有效性，MSDK会验证以后才回调给游戏
+1. 게임이 `WGLoginWithLocalInfo`를 사용하여 로그인시 획득한 토큰은 게임 백그라운드에 전송하여 유효성 검사를 진행할 필요가 없이 MSDK가 검사한 후 게임에 콜백한다
 
-##处理用户注销WGLogout
+##유저 로그아웃 처리 WGLogout
 
-#### 概述：
+#### 개요:
 
-调用该接口可以清空当前登录帐号的登录信息。
+이 인터페이스를 호출하면 현재 로그인 계정의 로그인 정보를 제거할 수 있다.
 
-####接口声明：
+####인터페이스 선언:
 
 	/**
-	 * @return bool 返回值已弃用, 全都返回true
+	 * @return bool 리턴값을 이미 폐기, 전부 true 반환
 	 */
 	bool WGLogout();
 
-####调用示例：
+####호출 예:
 
     WGPlatform.WGLogout();
 
-####注意事项：
+####주의사항:
 
-1. 游戏**点击注销按钮或者其余弹出登录框的逻辑中都必须要调用WGLogout来清空本地的登录信息**。否则会导致授权失败等问题
+1. 게임이 **로그아웃 버튼을 클릭하거나 로그인창이 팝업되는 로직에서 반드시 WGLogout를 호출하여 로컬 로그인 정보를 전부 제거해야 한다**. 그렇지 않으면 인증 실패 등 문제를 초래할 수 있다
 
-##处理MSDK的登录回调
+##MSDK의 로그인 콜백 처리
 
-#### 概述：
+#### 개요:
 
-MSDK的登录回调来自以下几个场景：
+MSDK의 로그인 콜백은 아래 몇개 시나리오에서 생긴다:
 
-- WGLogin授权回来
-- WGLoginWithLocalInfo登录回来
-- 处理平台拉起以后（如果是带票据拉起）
+- WGLogin 인증에서 돌아옴
+- WGLoginWithLocalInfo 로그인에서 돌아옴
+- 플랫폼 실행을 처리한 후(토큰을 갖고 실행하면)
 
-#### 具体处理：
+#### 구체적 처리:
 
 	OnLoginNotify(LoginRet ret) {
         Logger.d("called");
         switch (ret.flag) {
             case CallbackFlag.eFlag_Succ:
 				 CallbackFlag.eFlag_WX_RefreshTokenSucc
-            	//授权成功的处理逻辑
+            	//인증 성공의 처리 로직
 				break;
             case CallbackFlag.eFlag_WX_UserCancel:
 				 CallbackFlag.eFlag_QQ_UserCancel
-				//用户取消授权逻辑
+				//유저가 인증을 취소하는 로직
 				break;
 			case CallbackFlag.eFlag_WX_UserDeny
-				//用户拒绝微信授权逻辑
+				//유저가 Wechat인증을 거절하는 로직
 				break;
             case CallbackFlag.eFlag_WX_NotInstall:
-				//玩家设备未安装微信客户端逻辑
+				//유저 설비에 Wechat 클라이언트가 설치되지 않은 로직
 				break;
 			case CallbackFlag.eFlag_QQ_NotInstall:
-				//玩家设备未安装QQ客户端逻辑
+				//유저 설비에 QQ 클라이언트가 설치되지 않은 로직
 				break;
             case CallbackFlag.eFlag_WX_NotSupportApi:
-				//玩家微信客户端不支持此接口逻辑
+				//유저 Wechat 클라이언트가 이 인터페이스 로직을 지원하지 않음
 				break;
             case CallbackFlag.eFlag_QQ_NotSupportApi:
-				//玩家手Q客户端不支持此接口逻辑
+				//유저 모바일QQ 클라이언트가 이 인터페이스 로직을 지원하지 않음
 				break;
             case CallbackFlag.eFlag_NotInWhiteList
-				//玩家账号不在白名单中逻辑
+				//유저 계정이 화이트리스트에 없는 로직
 				break;
             default:
-                // 其余登录失败逻辑
+                // 기타 로그인 실패 로직
                 break;
         }
     }
 
-#### 注意事项：
-**这里仅仅处理了重要的loginNotify的逻辑，完整的回调flag信息请点击查看[回调标识eFlag](const.md#回调标识eFlag)，游戏可以根据自己需要处理**
+#### 주의사항:
+**이곳에서는 중요한 loginNotify의 로직만 처리했을 뿐이고, 완전한 콜백 flag 정보는 [콜백표시eFlag](const.md#콜백표시eFlag)를 클릭하여 확인할 수 있다. 게임은 자체 수요에 따라 처리할 수 있다**
 
-##处理平台唤起handleCallback
+##플랫폼 실행 처리handleCallback
 
-#### 概述：
+#### 개요:
 
-平台唤起是指通过平台或渠道（手Q/微信/游戏大厅/应用宝等）启动游戏。平台在有些场景下会带票据拉起游戏实现游戏的直接登录。因此游戏需要处理平台的拉起。
+플랫폼 실행은 플랫폼 또는 채널(모바일QQ/Wechat/게임로비/마이앱 등)을 통해 게임을 실행하는 방식을 말한다. 플랫폼은 일부 시나리오에서 토큰을 갖고 게임을 실행하여 게임에 직접 로그인할 수 있기에 게임은 플랫폼의 실행을 처리해야 한다.
 
-#### 具体处理：
-游戏需要在自己的`launchActivity`的`onCreat()`和`onNewIntent()`中调用handleCallback，负责会造成登录无回调等问题。
+#### 구체적 처리:
+게임은 자신의 `launchActivity`의 `onCreat()`와 `onNewIntent()`에서 handleCallback를 호출해야 한다. 그렇지 않으면 로그인시 콜백이 없는 등 문제를 초래할 수 있다.
 
 - **onCreate**:
 
         if (WGPlatform.wakeUpFromHall(this.getIntent())) {
-        	// 拉起平台为大厅 
+        	// 실행 플랫폼은 게임 로비
         	Logger.d("LoginPlatform is Hall");
         } else {  
-        	// 拉起平台不是大厅
+        	// 실행 플랫폼은 게임 로비가 아님
             Logger.d("LoginPlatform is not Hall");
             WGPlatform.handleCallback(this.getIntent());
         }
@@ -252,47 +252,47 @@ MSDK的登录回调来自以下几个场景：
             Logger.d("LoginPlatform is not Hall");
             WGPlatform.handleCallback(intent);
         }
-#### 注意事项：
+#### 주의사항:
 
-- 对于游戏大厅的拉起，需要预先在大厅增加对应的配置才能支持，因此如果游戏不接入大厅，需要调用`WGPlatform.wakeUpFromHall`来判断本次拉起是否来自大厅，如果是则不调用handleCallback。对于大厅如何支持带票据拉起可以[点击查看](qqgame.md)
+- 게임 로비를 불러오려면 게임 로비에 상응한 설정을 미리 추가해야 지원할 수 있기에 게임이 로비를 액세스하지 않으면 `WGPlatform.wakeUpFromHall`을 호출하여 이번 불러오기가 게임 로비에서 나왔는 지 판단해야 한다. 게임 로비에서 나왔으면 handleCallback를 호출하지 않는다. 게임 로비가 토큰을 갖고 불러오는 방식을 지원하는 내용은 [클릭하여 보기](qqgame.md)
 
-##处理MSDK的拉起回调
+##MSDK의 실행 콜백 처리
 
-#### 概述
+#### 개요
 
-游戏对于平台拉起的处理，主要是处理异帐号相关的逻辑。具体的处理如下
+게임이 플랫폼 실행에 대한 처리는 주로 다른계정과 관련된 로직을 처리하는 것이다. 구체적 처리는 다음과 같다
 
-#### 具体处理：
+#### 구체적 처리：
 
         if (CallbackFlag.eFlag_Succ == ret.flag
                 || CallbackFlag.eFlag_AccountRefresh == ret.flag) {
-            //代表拉起以后通过本地帐号登录游戏，处理逻辑与onLoginNotify的一致
+            //실행 후 로컬 계정을 통해 게임에 로그인하는 것을 표시. 처리 로직은 onLoginNotify와 일치
             
         } else if (CallbackFlag.eFlag_UrlLogin == ret.flag) {
-            // MSDK会尝试去用拉起账号携带票据验证登录，结果在OnLoginNotify中回调，游戏此时等待onLoginNotify的回调
+            // MSDK은 계정을 불러와 토큰을 갖고 인증 로그인 시도. 결과는 OnLoginNotify에서 콜백. 이때 게임은 onLoginNotify 콜백 대기
 
         } else if (ret.flag == CallbackFlag.eFlag_NeedSelectAccount) {
-            // 当前游戏存在异账号，游戏需要弹出提示框让用户选择需要登录的账号
+            // 현재 게임에 다른계정이 존재하기에 게임은 대화창을 팝업하여 유저에게 로그인할 계정을 선택하게 해야 한다
 
         } else if (ret.flag == CallbackFlag.eFlag_NeedLogin) {
-            // 没有有效的票据，无法登录游戏，此时游戏调用WGLogout登出游戏让用户重新登录
+            // 유효 토큰이 없어 게임 로그인 실패. 이때 게임은 WGLogout를 호출하여 로그아웃하여 유저가 다시 로그인하게 한다
 
         } else {
-            //默认的处理逻辑建议游戏调用WGLogout登出游戏让用户重新登录
+            //기본 처리 로직은 게임이 WGLogout를 호출하여 게임에서 로그아웃한 후 유저가 다시 로그인할 것을 제안한다
         }
 
-##处理异帐号逻辑
+##다른계정 처리 로직
 
-异帐号相关的模块可以参照[MSDK异帐号接入](diff-account.md#异帐号处理逻辑（开发关注）)
+다른계정 관련 모듈은 [MSDK 다른계정 액세스](diff-account.md#다른계정 처리 로직(개발자 주목）)을 참조할 수 있다
 
-##其余特殊逻辑处理
+##기타 특수 로직 처리
 
-### 手Q授权在低内存机器授权过程游戏被杀后的登录方案
+### 모바일QQ가 저메모리 설비에서 인증 진행시 게임이 강제 종료된 후 로그인 방안
 
-由于目前大部分游戏占用内存很大，因此在授权过程中，当拉起手Q授权时，会触发android的内存回收机制将后台的游戏进程杀掉导致游戏手Q授权没有没有进入游戏。游戏需要在主Activity中增加以下代码来保证被杀以后依然可以带票据拉起进入游戏。
+시중 대부분 게임이 메모리를 많이 점용하기에 인증 과정에서 모바일QQ를 불러와 인증 진행 시 android 메모리 복구 메커니즘이 백그라운드의 게임 프로세스를 강제로 종료시켜 게임 모바일QQ 인증이 게임에 들어가지 못하는 문제를 초래할 수 있다. 게임은 메인 Activity에서 아래 코드를 추가하여 프로세스가 종료된 후에도 토큰을 갖고 게임에 들어갈 수 있게 해야 한다.
 
 
-	// TODO GAME 在onActivityResult中需要调用WGPlatform.onActivityResult
+	// TODO GAME 은 onActivityResult에서 WGPlatform.onActivityResult를 호출해야 한다
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -300,48 +300,48 @@ MSDK的登录回调来自以下几个场景：
 		Logger.d("onActivityResult");
 	}
 
-### 登录数据上报
+### 로그인 데이터 업로드
 
-为了保证登录数据上报正确, 游戏接入时候必须在在自己的`launchActivity`的`onResume`中调用`WGPlatform.onResume`, `onPause`中调用`WGPlatform.onPause`
+로그인 데이터를 정확히 업로드하기 위해 게임 액세스시 반드시 자신의 `launchActivity`의 `onResume`에서 `WGPlatform.onResume`를 호출하고 `onPause`에서 `WGPlatform.onPause`를 호출해야 한다.
 
-### 微信票据自动刷新
+### Wechat 토큰 자동 갱신
 
-1. MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新,MSDK会自动刷新完成, 并通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail（已经包含在onLoginNotify的回调中）。
-- **游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程。**
-- 如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。
+1. MSDK2.0.0부터 게임 운행 기간에 주기적으로 Wechat 토큰을 검사하고 갱신한다. 갱신이 필요할 경우 MSDK가 자동으로 갱신을 진행하고 OnLoginNotify를 통해 게임에 통지한다. flag는 eFlag_WX_RefreshTokenSucc와 eFlag_WX_RefreshTokenFail이다(이미 onLoginNotify의 콜백에 포함됨).
+- **게임이 새로운 토큰을 받으면 게임 클라이언트에 저장된 토큰과 서버의 토큰을 동기적으로 갱신하여 새로운 토큰으로 후속적인 절차를 진행할 수 있게 해야 한다.**
+- 게임에 Wechat 토큰 자동 갱신 기능이 필요하지 않으면 `assets\msdkconfig.ini`에서 `WXTOKEN_REFRESH`를 `false`로 설정하면 된다.
 
-## 其余接口列表
+## 기타 인터페이스 리스트
 
 ###WGGetLoginRecord
 
-#### 概述：
+#### 개요:
 
-调用该接口可以获取到当前的帐号登录信息。
+이 인터페이스를 호출하면 현재 계정의 로그인 정보를 획득할 수 있다.
 
-####接口声明：
+####인터페이스 선언:
 
 	/**
-	 * @param loginRet 返回的记录
-	 * @return 返回值为平台id, 类型为ePlatform, 返回ePlatform_None表示没有登录记录
-	 *   loginRet.platform(类型为ePlatform)表示平台id, 可能值为ePlatform_QQ, ePlatform_Weixin, ePlatform_None.
-	 *   loginRet.flag(类型为eFlag)表示当前本地票据的状态, 可能值及说明如下:
-	 *     eFlag_Succ: 授权票据有效
-	 *     eFlag_QQ_AccessTokenExpired: 手Q accessToken已经过期, 显示授权界面, 引导用户重新授权
-	 *     eFlag_WX_AccessTokenExpired: 微信accessToken票据过期，需要调用WGRefreshWXToken刷新
-	 *     eFlag_WX_RefreshTokenExpired: 微信refreshToken, 显示授权界面, 引导用户重新授权
-	 *   ret.token是一个Vector<TokenRet>, 其中存放的TokenRet有type和value, 通过遍历Vector判断type来读取需要的票据. 
+	 * @param loginRet 반환한 기록
+	 * @return 반환 값은 플랫폼 id, 유형은 ePlatform, ePlatform_None을 반환하면 로그인 기록이 없음을 표시한다
+	 *   loginRet.platform(유형 ePlatform) 플랫폼id 표시, 가능한 값은 ePlatform_QQ, ePlatform_Weixin, ePlatform_None.
+	 *   loginRet.flag(유형 eFlag) 현재 로컬 토큰의 상태 표시, 가능한 값과 설명은 다음과 같다:
+	 *     eFlag_Succ: 인증 토큰 유효
+	 *     eFlag_QQ_AccessTokenExpired: 모바일QQ accessToken 기한 만료, 인증 인터페이스 표시, 유저가 다시 인증하도록 안내
+	 *     eFlag_WX_AccessTokenExpired: WechataccessToken 토큰 기한 만료, WGRefreshWXToken을 호출하여 갱신해야 한다
+	 *     eFlag_WX_RefreshTokenExpired: WechatrefreshToken, 인증 인터페이스 표시, 유저가 다시 인증하도록 안내
+	 *   ret.token은 하나의 Vector<TokenRet>이고 그중에 저장된 TokenRet에 type와 value가 있다. Vector 순회를 통해 type를 판단하여 필요한 토큰을 읽는다.
      *
 	 */
 	int WGGetLoginRecord(LoginRet& loginRet);
 
-####调用示例：
+####호출 예:
 
     LoginRet ret = new LoginRet();
     WGPlatform.WGGetLoginRecord(ret);
 
-如果获取的LoginRet中的flag为eFlag_Succ则可认为登录有效，可读取有效的票据信息。其中token可以按如下方式获取：
+획득한 LoginRet 중 flag가 eFlag_Succ이면 로그인이 유효하다고 인정할 수 있으며 유효한 토큰 정보를 읽을 수 있다. 그중 token은 아래 방식으로 획득할 수 있다.
 
-微信平台：
+Wechat 플랫폼:
 
     std::string accessToken = "";
     std::string refreshToken = "";
@@ -353,7 +353,7 @@ MSDK的登录回调来自以下几个场景：
              }
     }
 
-QQ平台：
+QQ 플랫폼:
 
     std::string accessToken = "";
     std::string payToken = "";
@@ -365,10 +365,10 @@ QQ平台：
         }
     }
 
-#### 注意事项：
+#### 주의사항:
 
-无
+없음
 
-##常见问题
+##자주 발생하는 문제
 
-1. 支付时提示paytoken过期，则需要拉起登录界面重新授权后方能支付。paytoken过期以后必须重新授权。
+1. 결제시 paytoken 기한 만료를 제시하면 로그인 인터페이스를 불러와서 다시 인증해야 결제할 수 있다. paytoken 기한이 만료되면 반드시 다시 인증해야 한다.

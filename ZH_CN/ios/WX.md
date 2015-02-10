@@ -23,7 +23,7 @@
 ##微信授权
  - ###概述
 唤起微信客户端进行授权，获取微信openId、accesstoken和refreshtoken(附录A票据类型)，pf和pfKey。
-```ruby
+```
 void WGLogin(ePlatform platform);
 ```
 >描述: 登录统一接口传入_ePlatform. ePlatform_Weixin调用微信授权。
@@ -32,53 +32,53 @@ void WGLogin(ePlatform platform);
 设置observer的情况下，授权或失败都通过OnLoginNotify（LoginRet ret）回调给游戏。回调结果ret.flag说明如下：
 ```
 eFlag_WX_NotInstall     = 2000,     //微信未安装
-    eFlag_WX_NotSupportApi  = 2001,     //微信版本不支持
+eFlag_WX_NotSupportApi  = 2001,     //微信版本不支持
 eFlag_WX_UserCancel     = 2002,     //用户取消微信授权
-    eFlag_WX_UserDeny       = 2003,     //用户拒绝微信授权
+eFlag_WX_UserDeny       = 2003,     //用户拒绝微信授权
 eFlag_WX_LoginFail      = 2004,     //微信授权失败
 ```
 
 - ###示例代码
 调用代码如下:
-```ruby
+```
 MyObserver* ob = new MyObserver(); 
 plat->WGSetObserver(ob);//设置回调对象
 plat->WGLogin(ePlatform_Weixin);
 ```
 回调代码如下：
-```ruby
+```
 void MyObserver::OnLoginNotify(LoginRet& loginRet)
 {
-if(eFlag_Succ == loginRet.flag)
-{
-    …//login success
-    std::string openId = loginRet.open_id;
-    std::string refreshToken;
-    std::string accessToken;
-    if(ePlatform_Weixin == loginRet.Platform)
-    {
-        for(int i=0;i< loginRet.token.size();i++)
-        {
-            TokenRet* pToken = & loginRet.token[i];
-            if(eToken_WX_Access == pToken->type)
-            {
-                accessToken = pToken->value;
-            }
-            else if (eToken_WX_Refresh == pToken->type)
-{
-     refreshToken = pToken->value;
-}
-        }
-    }
-else if(ePlatform_QQ == loginRet.Platform)
-{
-}
-}
-else
-{
-    …//login fail
-     NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
-}
+	if(eFlag_Succ == loginRet.flag)
+	{
+    	…//login success
+    	std::string openId = loginRet.open_id;
+    	std::string refreshToken;
+    	std::string accessToken;
+    	if(ePlatform_Weixin == loginRet.Platform)
+    	{
+        	for(int i=0;i< loginRet.token.size();i++)
+        	{
+            	TokenRet* pToken = & loginRet.token[i];
+            	if(eToken_WX_Access == pToken->type)
+            	{
+                	accessToken = pToken->value;
+            	}
+            	else if (eToken_WX_Refresh == pToken->type)
+				{
+     				refreshToken = pToken->value;
+				}
+        	}
+    	}
+		else if(ePlatform_QQ == loginRet.Platform)
+		{
+		}
+	}
+	else
+	{
+    	…//login fail
+     	NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
+	}
 }
 ```
 
@@ -92,7 +92,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 ```
 -(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
 {
-//内部实现逻辑同void MyObserver::OnLoginNotify(LoginRet& loginRet)
+	//内部实现逻辑同void MyObserver::OnLoginNotify(LoginRet& loginRet)
 }
 ```
 - ### 注意事项
@@ -103,7 +103,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 ## 微信关系链接口
  - ###查询微信个人信息
  - 调用WGQueryWXMyInfo查询微信个人信息，包括：昵称，性别，头像、城市、省份等信息。
-```ruby
+```
 bool WGQueryWXMyInfo();
 ```
 >描述: 获取用户微信帐号基本信息
@@ -114,7 +114,7 @@ bool WGQueryWXMyInfo();
 RelationRet（附录B）结构体中PersonInfo的小、中、大三幅图片尺寸为：46、96、132（像素），个人信息中的国家和语言信息通过country和lang返回给游戏。[1.7.0新增国家语言信息 ]
 
  - 调用代码事例：
-```ruby
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 plat->WGQueryWXMyInfo();
 回调示例代码：
@@ -141,13 +141,13 @@ MSDKRelationService *service = [[MSDKRelationService alloc] init];
 ```
 -(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
 {
-//内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
+	//内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
 }
 ```
 
 - ###查询微信同玩好友信息
 通过调用WGQueryWXGameFriendsInfo查询微信同玩信息，包括：昵称，性别，头像、城市、省份等信息。
-```ruby
+```
 bool WGQueryWXGameFriendsInfo();
 ```
 >描述: 获取用户微信同玩好友基本信息
@@ -158,12 +158,12 @@ bool WGQueryWXGameFriendsInfo();
 RelationRet（附录A）结构体中PersonInfo的小、中、大三幅图片尺寸为：46、96、132（像素），好友信息里面没有国家和语言
 
  - 调用事例代码：
-```ruby
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 plat->WGQueryWXGameFriendsInfo();
 ```
 回调示例代码：
-```ruby
+```
 OnRelationNotify(RelationRet &relationRet)
 {
     NSLog(@"relation callback");
@@ -187,7 +187,7 @@ MSDKRelationService *service = [[MSDKRelationService alloc] init];
 ```
 -(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
 {
-//内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
+	//内部实现逻辑同OnRelationNotify(RelationRet &relationRet)
 }
 ```
 
@@ -199,7 +199,7 @@ MSDKRelationService *service = [[MSDKRelationService alloc] init];
 ##微信结构化分享
  - ###唤起微信客户端分享到好友
 游戏通过唤起微信客户端来分享，在微信中选择分享到的好友。图片大小不能大于32k，大于32k微信会默认分享一张图片代替。不能分享到微信朋友圈。
-```ruby
+```
 void WGSendToWeixin(unsigned char* title, unsigned char* desc, unsigned char* mediaTagName, unsigned char* thumbImgData, const int& thumbImgDataLen, unsigned char* messageExt);
 ```
 >描述: 分享App消息到微信好友, 点击此分享详细能唤起游戏。此类消息不能分享到朋友圈，分享到朋友圈使用WGSendToWeixinWithPhoto接口。
@@ -213,13 +213,13 @@ void WGSendToWeixin(unsigned char* title, unsigned char* desc, unsigned char* me
  分享成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。Ret.flag表示不同的分享结果，具体见eFlag(附录A)
 
  - 
-```ruby
+```
 void WGSendToWeixin(const eWechatScene& scene, unsigned char* title, unsigned char* desc, unsigned char* url, unsigned char* mediaTagName, unsigned char* thumbImgData, const int& thumbImgDataLen);
 ```
 >描述: 此接口保留只为兼容已经接入的MSDK老版本的游戏，新接入游戏不需要关心此接口
 
  - 调用代码事例：
-```ruby
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob = new MyObserver();
 plat->WGSetObserver(ob);
@@ -238,24 +238,24 @@ plat->WGSendToWeixin(
                          ); 
 ```
  - 回调代码事例：
-```ruby
+```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
-{
-    NSLog(@"分享成功");
-}
-     else if(eFlag_WX_NotInstall == shareRet.flag)
-{
-    NSLog(@"微信未安装");
+	{
+    	NSLog(@"分享成功");
+	}
+    else if(eFlag_WX_NotInstall == shareRet.flag)
+	{
+    	NSLog(@"微信未安装");
     }
- else if(eFlag_WX_UserCancel == shareRet.flag)
-{
-    NSLog(@"用户取消分享");
+ 	else if(eFlag_WX_UserCancel == shareRet.flag)
+	{
+    	NSLog(@"用户取消分享");
     }
     else if(eFlag_WX_UserDeny == shareRet.flag)
-{
-    NSLog(@"用户拒绝分享");
+	{
+    	NSLog(@"用户拒绝分享");
     }
 }
 ```
@@ -283,7 +283,7 @@ messageExt:(unsigned char*)"msdkwuwuwu"];
 
  ###直接分享到微信好友
  - 调用WGSendToWXGameFriend分享到指定openid的微信同玩好友。不会唤起微信客户端。
- ```ruby
+ ```
 WGSendToWXGameFriend(unsigned char *fOpenId, unsigned char *title, unsigned char *description, unsigned char *mediaId, unsigned char *extinfo, unsigned char *mediaTagName,  unsigned char *extMsdkInfo)[1.7.0i]
 ```
 >描述: 将分享消息发送给微信好友（只能发送给安装了相同游戏的好友）。在微信中点击此消息会唤起游戏。
@@ -303,7 +303,7 @@ WGSendToWXGameFriend(unsigned char *fOpenId, unsigned char *title, unsigned char
 分享结束会通过OnShareCallBack(ShareRet ret)回调给游戏。Ret.flag表示不同的分享结果，具体见eFlag(附录A)
 
 - 调用代码事例：
-```ruby
+```
 unsigned char* title = (unsigned char*)"msdk 测试 QQ 分享来了";
 unsigned char* description = (unsigned char*)"我在玩天天爱消除";
 unsigned char* media_tag_name = (unsigned char*)"MSG_INVITE";
@@ -318,12 +318,12 @@ plat->WGSendToWXGameFriend(fopenid, title, description, mediaid, extinfo, media_
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
-{
+	{
         NSLog(@"分享成功");
     }
     else 
-{
-   NSLog(@"error message = %s",shareRet.desc.c_str()); 
+	{
+   		NSLog(@"error message = %s",shareRet.desc.c_str()); 
     }
 }
 ```
@@ -342,7 +342,7 @@ mediaTagName:(unsigned char*)"MSG_INVITE"];
 ```
 -(void)OnShareWithShareRet:(MSDKShareRet *)ret
 {
-//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+	//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
 }
 ```
 
@@ -355,7 +355,7 @@ mediaTagName:(unsigned char*)"MSG_INVITE"];
 ##微信大图分享
  - ### 概述
 游戏通过唤起微信客户端来分享，在微信中选择分享到的好友。图片大小不能大于10M。
-```ruby
+```
 void WGSendToWeixinWithPhoto(const eWechatScene[Int 转为 eWechatScene]& scene, unsigned char* mediaTagName, unsigned char* imgData, const int& imgDataLen, unsigned char* messageExt, unsigned char* messageAction);
 ```
 >描述: 分享图片消息到微信, 此类消息只可以分享到会话和到朋友圈.点击分享的图片则大图展示图片
@@ -378,7 +378,7 @@ void WGSendToWeixinWithPhoto(const int& scene, unsigned char* mediaTagName, unsi
 
  ### 代码示例
 调用代码示例：
-```ruby
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob = new MyObserver();
 ob->setViewcontroller(self);
@@ -396,24 +396,24 @@ plat->WGSendToWeixinWithPhoto(
                                   ); 
 ```
 回调代码事例：
-```ruby
+```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
-{
-    NSLog(@"分享成功");
-}
-     else if(eFlag_WX_NotInstall == shareRet.flag)
-{
-    NSLog(@"微信未安装");
-    }
- else if(eFlag_WX_UserCancel == shareRet.flag)
-{
-    NSLog(@"用户取消分享");
-    }
-    else if(eFlag_WX_UserDeny == shareRet.flag)
-{
-    NSLog(@"用户拒绝分享");
+	{
+    	NSLog(@"分享成功");
+	}
+    else if(eFlag_WX_NotInstall == shareRet.flag)
+	{
+    	NSLog(@"微信未安装");
+	}
+ 	else if(eFlag_WX_UserCancel == shareRet.flag)
+	{
+    	NSLog(@"用户取消分享");
+	}
+    	else if(eFlag_WX_UserDeny == shareRet.flag)
+	{
+    	NSLog(@"用户拒绝分享");
     }
 }
 ```
@@ -435,7 +435,7 @@ messageAction:NULL];
 ```
 -(void)OnShareWithShareRet:(MSDKShareRet *)ret
 {
-//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+	//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
 }
 ```
 
@@ -447,7 +447,7 @@ messageAction:NULL];
 ##分享URL到微信
  - ###概述
 与WGSendToWeixin功能相同，添加分享URL的参数，并能分享至朋友圈。
-```ruby
+```
 void WGSendToWeixinWithUrl(
                         const eWechatScene& scene,
                         unsigned char* title,
@@ -459,7 +459,7 @@ void WGSendToWeixinWithUrl(
                         unsigned char* messageExt
                         );
 ```
->描述: 分享App消息到微信好友, 点击此分享详细能唤起游戏。此类消息不能分享到朋友圈，分享到朋友圈使用WGSendToWeixinWithPhoto接口。
+>描述: 分享App消息到微信好友或朋友圈, 点击此分享详细能打开URL网页。
 参数: 
   - scene 分享的场景
   - title 分享的标题
@@ -473,7 +473,7 @@ void WGSendToWeixinWithUrl(
 
  - ###代码示例
 调用代码示例：
-```ruby
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 NSString* title=@"分享标题";
 NSString* desc=@"分享内容";
@@ -485,25 +485,25 @@ NSData* data = [NSData dataWithContentsOfFile:path];
 plat->WGSendToWeixinWithUrl(WechatScene_Session, (unsigned char*)[title UTF8String], (unsigned char*)[desc UTF8String],(unsigned char*)[url UTF8String], (unsigned char*)mediaTag,(unsigned char*)[data bytes],(int)[data length], (unsigned char*)ext);
 ```
 回调代码事例：
-```ruby
+```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     shareRet.extInfo = “xxx”;//游戏分享是传入的extMsdkInfo字段
     if (eFlag_Succ == shareRet.flag)
-{
-    NSLog(@"分享成功");
-}
-     else if(eFlag_WX_NotInstall == shareRet.flag)
-{
-    NSLog(@"微信未安装");
+	{
+    	NSLog(@"分享成功");
+	}
+    else if(eFlag_WX_NotInstall == shareRet.flag)
+	{
+    	NSLog(@"微信未安装");
     }
- else if(eFlag_WX_UserCancel == shareRet.flag)
-{
-    NSLog(@"用户取消分享");
+ 	else if(eFlag_WX_UserCancel == shareRet.flag)
+	{
+    	NSLog(@"用户取消分享");
     }
     else if(eFlag_WX_UserDeny == shareRet.flag)
-{
-    NSLog(@"用户拒绝分享");
+	{
+    	NSLog(@"用户拒绝分享");
     }
 }
 ```
@@ -527,7 +527,7 @@ messageExt:(unsigned char*)"msdkwuwuwu"];
 ```
 -(void)OnShareWithShareRet:(MSDKShareRet *)ret
 {
-//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
+	//内部实现逻辑同void MyObserver::OnShareNotify(ShareRet& shareRet)
 }
 ```
 
@@ -540,7 +540,7 @@ messageExt:(unsigned char*)"msdkwuwuwu"];
 - 概述
 微信accessToken只有两个小时的有效期，refreshToken的有效期为30天。只要refreshToken不过期就可以通过refreshToken刷新accessToken。刷新后会得到新的accessToken和refreshToken。每个refreshToken只能用一次。
 WGRefreshWXToken()接口对应与MSDK server的/auth/wxexpired_login/ 服务。如果游戏使用WGRefreshWXToken()刷新微信accessToken就不要再调用MSDK server的/auth/wxexpired_login/重复刷新accessToken。建议游戏使用WGRefreshWXToken()接口来进行accessToken续期，游戏不需要保存票据，只需要通过WGGetLoginRecord(loginRet ret)获取票据即可。[1.7.0]
-```ruby
+```
 void WGRefreshWXToken();
 ```
 >描述:　微信accessToken续期，调用WGGetLoginRecord（LoginRet ret），ret.flag 为eFlag_WX_AccessTokenExpired时调用此接口，刷新微信票据。
@@ -550,38 +550,38 @@ ret.flag = eFlag_WX_RefreshTokenFail    刷新token失败
 
 - 示例代码
 调用代码示例：
-```ruby
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 plat->WGRefreshWXToken()
 ```
 回调代码示例：
-```ruby
+```
 void MyObserver::OnLoginNotify(LoginRet& loginRet)
 {
-if(eFlag_WX_RefreshTokenSucc == loginRet.flag)
-{
-    …//refresh success
-    std::string openId = loginRet.open_id;
-    std::string refreshToken;
-    std::string accessToken;
-    for(int i=0;i< loginRet.token.size();i++)
-    {
-        TokenRet* pToken = & loginRet.token[i];
-        if(eToken_WX_Access == pToken->type)
-        {
-            accessToken = pToken->value;
-        }
-        else if (eToken_WX_Refresh == pToken->type)
-{
-refreshToken = pToken->value;
-}
-     }
-}
-else
-{
-    …//login fail
-     NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
-}
+	if(eFlag_WX_RefreshTokenSucc == loginRet.flag)
+	{
+    	…//refresh success
+    	std::string openId = loginRet.open_id;
+    	std::string refreshToken;
+    	std::string accessToken;
+    	for(int i=0;i< loginRet.token.size();i++)
+    	{
+        	TokenRet* pToken = & loginRet.token[i];
+        	if(eToken_WX_Access == pToken->type)
+        	{
+            	accessToken = pToken->value;
+        	}
+        	else if (eToken_WX_Refresh == pToken->type)
+			{
+				refreshToken = pToken->value;
+			}
+     	}
+	}
+	else
+	{
+    	…//login fail
+     	NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
+	}
 }
 ```
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
