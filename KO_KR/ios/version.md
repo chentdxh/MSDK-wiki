@@ -1,5 +1,96 @@
 ﻿변경 역사
 ===
+## 2.5.0
+- 【코드 변경】
+1.【신규 추가】올라인 시간 집계 보고 새로 추가.
+2.【신규 추가】내장 브라우저 공유 입구 스위치를 새로 추가.info.plist파일에서 MSDK_WebView_Share_SWITCH 설정할 수 있고 YES일 경우 내장 브라우저는 공유 버튼을 표시하고 NO일 경우는 버튼 표시 안 한다.
+3.【수정】Guest모드 최적화，keychain데이터 백업을 진행.
+4.【수정】내장 브라우저가 iOS5.1.1시스템의 iPad 단말에서 위챗을 호출하여 공유하지 못하는 bug를 수정.
+- 【플러그인 새로 추가】
+1.【신규 추가】demo에서 모바일 게임 조수 SDK통합하고 게임은 수요에 따라 통합 진행.
+
+## 2.4.0
+- 【코드 변경】
+1.【수정】MSDK모듈화 하여 기능에 의하여 4모듈로 나눈다：
+  1. MSDKFoundation：기초 의뢰 라이브러리, 기타 라이브러리를 사용하려면 우선 해당 이 프레임을 도입해야 한다.
+  2. MSDK:QQ와 위챗 로그인, 공유 기능；
+  3. MSDKMarketing：크로스 마케팅, 내장 브라우저 기능을 제공한다.공지, 내장 브라우저 필요한 리소스 파일은 WGPlatformResources.bundle파일에 있다.
+  4. MSDKXG：XG Push기능을 제공.
+  위에 언급한 4 모듈은 동시에 C99 및 C11언어 기준을 제공 가능하다. 그 중에 **_C11패킷은 C11버전이다.
+  ![linkBundle](./2.4.0_structure_of_framework.png)
+  
+  C++인터페이스를 사용하려면 아래 몇가지 헤더 파일을 도입하면 된다：
+```
+<MSDKFoundation/MSDKStructs.h>
+<MSDK/WGInterface.h>
+<MSDK/WGPlatform.h>
+<MSDK/WGPlatformObserver.h>
+```  
+    그 외에, 모듈화 버전은 2.3.4 및 이전 버전의 Observer콜백을 지원 가능할 뿐만 아니라 delegate콜백을 새로 추가했다. 여기서는 QQ 인증 로그인을 예로 설명한다（기타 인터페이스는 각 인터페이스의 설명 문서를 참고）：
+    원래의 인증 호출 코드는 아래와 같다：
+```
+WGPlatform* plat = WGPlatform::GetInstance();//MSDK 초기화
+MyObserver* ob = new MyObserver();
+plat->WGSetObserver(ob);//콜백 설정
+plat->WGSetPermission(eOPEN_ALL);//인증 권한 설정
+plat->WGLogin(ePlatform_QQ);//QQ클라이언트 혹 web 호출해서 인증 진행
+```
+    원래의 인증 호출 코드는 아래와 같다：
+```ruby
+void MyObserver::OnLoginNotify(LoginRet& loginRet)
+{
+if(eFlag_Succ == loginRet.flag)
+{
+…//login success
+std::string openId = loginRet.open_id;
+std::string payToken;
+std::string accessToken;
+if(ePlatform_QQ == loginRet.Platform)
+{
+for(int i=0;i< loginRet.token.size();i++)
+{
+TokenRet* pToken = & loginRet.token[i];
+if(eToken_QQ_Pay == pToken->type)
+{
+paytoken = pToken->value;
+}
+else if (eToken_QQ_Access == pToken->type)
+{
+accessToken = pToken->value;
+}
+}
+}
+else if (ePlatform_Weixin == loginRet.platform)
+{
+….
+}
+} 
+else
+{
+…//login fail
+NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
+}
+}
+```
+    2.4.0i 및 이후 버전에는 delegate방식을 사용할 수 있으며 코드는 아래와 같다：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService setPermission:eOPEN_ALL];
+[authService login:ePlatform_QQ];
+```
+    콜백 코드는 아래와 같다：
+```
+-(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
+{
+//내부 실현 로직은 void MyObserver::OnLoginNotify(LoginRet& loginRet)와 같다
+}
+```
+
+
+## 2.3.4
+ - 【플러그인 업데이트】
+1.【수정】OpenSDK2.5.1 업데이트，5.1.1버전에 crash문제를 수정.
 
 ## 2.3.3
  - [코드 변경]

@@ -1,9 +1,11 @@
-﻿Android 액세스
+﻿Android 
 =======
 
 ## 패키지 구조 설명
 
 MSDK 릴리스 패키지(zip)는 주로 2 개 중요한 부분 ‘MSDKLibrary’와 ‘MSDKSample’로 구성된다. 전자는 MSDK 라이브러리이고 후자는 MSDK 인터페이스 사용 예이다. MSDKLibrary/jni/CommonFiles/WGPlatform.h에 모든 인터페이스 설명이 포함되었기에 (java와 C++ 인터페이스는 대응 관계) 자주 사용되지 않는 인터페이스 설명은 이 파일에서 찾아볼 수 있다.
+
+`launchActivity`를 (게임 시동한 첫번째 Activity)사용해서 MSDK 초기화하고 MSDK인터페이스 호출 처리하는 것을 `권장함`.여러 개 Activity로 MSDK인터페이스 호출 처리할 경우，위챗에 연동할 때는 로그인에 콜백 없는 에러가 쉽게 발생할 수 있다.
 
 ## Step1: MSDK 패키지 도입
 
@@ -21,7 +23,7 @@ Android Library Project를 사용하지 못하는 게임은 MSDKLibrary에서 li
 
 Android Library Project를 사용하지 못하는 게임은 MSDKLibrary에서 libs, res 디렉토리를 복사하여 게임 프로젝트의 상응한 디렉토리에 붙여 넣고 jni 디렉토리의 .cpp와 .h 파일을 복사하여 게임 프로젝트에 붙여 넣고 Android.mk에 추가해야 한다.
 
-**주의사항:**
+**주의 사항:**
 
 1. `MSDKLibrary`를 도입한 후 컴파일시 패킷 충돌(중복)이 발생하는 이유는 MSDK에 위챗 SDK(`libammsdk.jar`), QQ 연동 sdk(`open_sdk.jar`), MTA(`mta-xxx.jar`), 등탑 SDK(`beacon-xxx.jar`)가 포함되었고 상기 sdk가 전부 최신 안정 버전이기 때문이다. 게임에 이런 SDK를 별도로 설치한 적이 있으면 이전에 설치한 jar 패키지를 삭제해야 한다.
 2. MSDKSample/assets/msdkconfig.ini는 MSDK 구성 파일이며 환경의 선택, 각 기능 모듈의 설정 등을 포함한다. 게임 프로젝트로 복사하여 수요에 따라 변경하여 사용할 수 있다.
@@ -106,13 +108,18 @@ MSDK 초기화는 SDK가 제공하는 기능을 사용할 수 있는 전제이�
     }
 
 
-또한, MainActivty에서 필요한 동적 라이브러리를 로딩해야 한다. 샘플 코드는 다음과 같다:
+또한，MSDK2.5이하의 버전은 MainActivty에서 RQD의 dynamic 라이브러리를 로딩해야 한다.예시 코드：
 
 	// TODO GAME 은 필요한 동적 라이브러리를 로딩해야 함
     static {
         System.loadLibrary("NativeRQD"); // 게임은 이 동적 라이브러리를 로딩해야 한다. 데이터 보고용
         System.loadLibrary("WeGameSample"); // 게임은 이것이 필요치 않다. 이것은 MSDKDemo용
     }
+
+**주의 사항：**
+
+* MSDK2.5 및 이상 버전에는 이미 RQD를 Bugly로 바꿨고，2.5 및 그 이상버전에 연동할 때 게임 원 공정에 있는 libs폴더에 `libNativeRQD.so`가 있으면 삭제해야 한다.그리고 “NativeRQD"의 dynamic 라이브러리를 로딩할 필요가 없다.
+
 
 **C++ 게임은 MainActivity의 onCreate 방법에서 SDK를 초기화해야 하는 것 외에  **`JNI_OnLoad`**에서 SDK 관련 내용을 초기화해야 한다.**
 WG로 시작되는 모든 인터페이스는 C++ 계층과 Java 계층 인터페이스를 제공한다. Java 계층은 ‘WGPlatform’를 통해, C++ 계층은 `WGPlatform::GetInstance()`를 통해 호출한다. 이곳 호출 방법은 jni/PlatformTest.cpp를 참조하면 된다.

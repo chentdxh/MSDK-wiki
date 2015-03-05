@@ -11,6 +11,14 @@ WGPlatform* plat = WGPlatform::GetInstance();
 LoginRet ret;
 ePlatform platform = (ePlatform)plat->WGLoginWithLocalInfo ();
 ```
+
+- 2.4.0i 및 이후 버전에는 delegate방식을 사용할 수 있다. 코드는 아래와 같다：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *service = [[MSDKAuthService alloc] init];
+[service loginWithLocalInfo];
+```
+
 ##주의사항
  - msdk 2.0.0 이후부터 정기적으로 곧 만료될 위챗 token을 갱신한다. 갱신 결과는 OnLoginNotify를 통해 게임에 콜백된다.[2.0.0i 신규 추가]
  - 게임 시작과 백그라운드에서 포어그라운드로 전환할 때 이 인터페이스를 호출하고 다른 경우에는 호출하지 말아야 한다[중요]

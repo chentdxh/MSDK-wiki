@@ -87,10 +87,11 @@ url 중에 msdkExtInfo=xxx（요청 일련번호）를 추가하면 후속 내�
     |summary|string|요약，길이는 45바이트를 초과하지 않음|
     |target_url|string|게임 센터에 관한 자세한 정보 페이지의 URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite<br>，길이는 1024바이트를 초과하지 않음|
    |title|string|공유 타이틀, 길이는 45바이트를 초과해서는 안 됨|
-    |fopenids|json문자열|Json배열，데이터 포맷은  [{"openid":"","type":0}]，openid는 친구 openid이고，type고정 전송0 . 친구 한 명에게만 공유 가능|
+    |fopenids|vector<jsonObject> 혹은 json스트링(호환 가능)|Json배열，데이터 포맷은  [{"openid":"","type":0}]，openid는 친구 openid이고，type고정 전송0 . 친구 한 명에게만 공유 가능|
     |appid|int|QQ플랫폼에서 애플리케이션의 유일한 id， 위의 oauth_consumer_key와 동등|
 	|previewText|string|필수입력 아님공유한 문자 내용은 비어있어도 무방합니다. 예를 들어 “난 지금 2Day’s Match에 있어요”, 길이는 45바이트를 초과하면 안 됩니다.
-    |game_tag|string|필수입력 아님.game_tag	플랫폼에서 공유 유형 통계시 적용됩니다. 예를 들어, 하트 보내기 공유, 초월 공유가 있습니다. 해당 값은 게임이 설정한 후 Q 플랫폼과 동기화시킵니다. 현재 값은 ：<br>MSG_INVITE                //초청 <br>MSG_FRIEND_EXCEED       //초월 자랑하기<br>MSG_HEART_SEND          //하트 보내기<br>MSG_SHARE_FRIEND_PVP    //PVP교전</td>|
+    |game_tag|string|필수입력 아님.game_tag	플랫폼에서 공유 유형 통계시 적용됩니다. 예를 들어, 하트 보내기 공유, 초월 공유가 있습니다. 해당 값은 게임이 설정한 후 Q 플랫폼과 동기화시킵니다. 현재 값은 ：<br>MSG_INVITE                //초청 <br>MSG_FRIEND_EXCEED       //초월 자랑하기<br>MSG_HEART_SEND          //하트 보내기<br>MSG_SHARE_FRIEND_PVP    //PVP교전</td>
+	|
 ***입력된 파라미터 유형에 유의하십시오. 1.5를 참조하십시오.***
 #### 2.2.1.3 파라미터 출력에 관한 설명 
 
@@ -367,6 +368,285 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 	　　　"is_lost": "0"
 	}
 
+
+### 2.3.4 /relation/qqfriends_vip ###
+
+#### 2.3.4.1인터페이스 설명 ####
+ 　대규모로 QQ회원 정보 조회
+
+#### 2.3.4.2 입력 파라미터 설명 ####
+
+| 파라미터명| 타입|설명|
+| ------------- |:-------------:|:-----|
+| appid|string| 앱이 플랫폼에 있는 유일한 id |
+| openid|string|유저가 모 앱에 유일한 표지 |
+| accessToken|string|유저가 응용앱에 로그인 토큰 |
+| fopenids|vector<string>|친구openid리스트, 한번에 최대 50개 입력 가능|
+| flags|string|VIP업무 조회 표지. 현재 QQ회원 정보 조회만 지원 가능：qq_vip. 후속 더 많은 업무의 유저 VIP정보 조회를 지원 가능할 것이다. 만약 여러 VIP업무를 조회할 경우,“,”로 구분. 해당 값을 입력하지 않으면 디폴트로 모두 조회|
+| userip|string|호출측 ip정보|
+| pf|string|유저의 로그인 플랫폼，디폴트로 openmobile，openmobile_android/openmobile_ios/openmobile_wp 등이 있으며 해당 값의 출처는  클라이언트 QQ 로그인 리턴|
+
+***（입력된 파라미터의 타입을 주의해야 한다，1.5 참조） ***
+
+### 2.3.4.3출력 파라미터 설명 ###
+
+| 파라미터명| 설명|
+| ------------- |: -----|
+| ret|리턴 코드  0：정확，기타：실패 |
+| msg|ret비0일 경우,“에러코드，에러 알림”를 표시，상세한 주석은 제5장 내용 확인|
+| list|타입：vector<QQFriendsVipInfo>,QQ 게임 친구 vip정보 리스트(다음 내용 확인)|
+| is_lost|is_lost가 1일 경우는 oidb데이터 불러오기 시간 초과를 표시. 게임 업무에서 is_lost가 1인 것을 알아냈을 때 강등을 처리하고 직접 캐시 데이터 혹은 디폴트 데이터 읽는 것을 제안한다|
+	
+	struct QQFriendsVipInfo {
+	    1   optional     string          openid;          //친구openid
+	    2   optional     int             is_qq_vip;       //QQ회원 여부（0：no； 1：yes）
+	    3   optional     int             qq_vip_level;    //QQ 회원 등급（QQ일 경우 해당 필드에 리턴）
+	    4   optional     int             is_qq_year_vip;  //연간 QQ회원 여부（0：no； 1：yes）
+	};
+
+#### 2.3.4.4 인터페이스 호출 설명 ####
+
+
+| 파라미터명| 설명|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/qqfriends_vip/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
+| 격식|JSON |
+| 요청 방식|POST  |
+
+#### 2.3.4.5 요청 예시 ####
+
+	POST /relation/qqfriends_vip/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid": "100703379",
+	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
+	    "accessToken": "964EE8FACFA24AE88AEEEEBD84028E19",
+	    "fopenids": [
+	        "69FF99F3B17436F2F6621FA158B30549"
+	    ],
+	    "flags": "qq_vip",
+	    "pf": "openmobile",
+	    "userip": "127.0.0.1"
+	}
+	//리턴 결과
+	{
+	    "is_lost": "0",
+	    "lists": [
+	        {
+	            "is_qq_vip": 1,
+	            "is_qq_year_vip": 1,
+	            "openid": "69FF99F3B17436F2F6621FA158B30549",
+	            "qq_vip_level": 6
+	        }
+	    ],
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+### 2.3.5 /relation/get_groupopenid ###
+
+#### 2.3.4.1인터페이스 설명 ####
+ 　QQ 길드 그룹과 바인딩 관련 정보를 획득
+
+#### 2.3.4.2입력 파라미터 설명 ####
+
+| 파라미터명| 타입|설명|
+| ------------- |:-------------:|:-----|
+| appid|string| 응용프로그램이 플랫폼에 유일한 id |
+| openid|string|유저가 모 응용프로그램에 유일한 표지 |
+| accessToken|string|유저가 응용프로에 있는 로그인 증빙 |
+| opt|string|기능 옵션；0 전송 혹은 전송하지 않을 경우（호환 전의 호출 상황）：길드id와 월드id로 groupOpenid를 교환；opt가 1일 경우：QQ 그룹 번호로 group_openid를 교환|
+| unionid|string|groupOpenid와 바인딩 한 게임 길드ID，opt 전송 안 하거나 opt=0일 경우 꼭 필요|
+| zoneid|string|게임 월드값，길드ID를 QQ그굽과 바인딩을 하면， 파라미터“zoneid”의 값을 전송|
+| groupCode|string|QQ그룹의 원사 넘버|
+
+***（입력 파라미터의 타입을 주의해야 한다. 1.5참고） ***
+
+### 2.3.4.3출력 파라미터 설명 ###
+
+| 파라미터명| 설명|
+| ------------- |: -----|
+| ret|리턴 코드  0：정확，기타：실패 |
+| msg|ret비0일 경우，“에러 코드，에러 알림”을 표시，상세한 주석은 제5장 내용을 참조|
+| is_lost|분실된 데이터가 있는지를 판단한다.응용프로그래밍 cache를 사용하지 않을 경우 이 파라미터를 무시해도 된다.0 혹은 리턴이 없을 경우,분실된 데이터가 없고 캐시할 수 있다.1：일부 데이터가 분실되거나 에러가 있어서 캐시하지 않아야 한다|
+| groupOpenid|게임 길드ID와 같이 바인딩한 QQ그룹의 groupOpenid，그룹 멘버 정보, 바인딩 해제때 입력 파라미터로 사용.|
+
+#### 2.3.4.4 인터페이스 호출 설명 ####
+
+
+| 파라미터명| 설명|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_groupopenid/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 격식|JSON |
+| 요청 방식|POST  |
+
+#### 2.3.4.5 요청 예시 ####
+
+	POST /relation/get_groupopenid/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid":"100703379",
+		"openid":"A3284A812ECA15269F85AE1C2D94EB37",
+		"accessToken":"964EE8FACFA24AE88AEEEEBD84028E19",
+		"opt":"0",	//string
+		"unionid":"xxx",
+		"zoneid":"0", //string
+		"groupCode":"113172721" //string
+	}
+	//리턴 결과
+	{
+		"is_lost":"0",
+		"groupOpenid":"xxxx",
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+
+### 2.3.5 /relation/get_groupinfo ###
+
+#### 2.3.5.1인터페이스 설명 ####
+ 　QQ에서 게임 길드 바인딩한 QQ그룹 기본정보를 획득
+
+#### 2.3.5.2입력 파라미터 설명 ####
+
+| 파라미터명| 타입|설명|
+| ------------- |:-------------:|:-----|
+| appid|string| 응용프로그램이 플랫폼에 있는 유일한 id |
+| openid|string|유저가 모 응용프로그램에 유일한 표지 |
+| accessToken|string|유저가 응용프로그램에 있는 로그인 증빙 |
+| groupOpenid|string|게임 길드 ID와 바인딩한 QQ그룹의 groupOpenid|
+
+
+***（입력 파라미터의 타입을 주의해야 한다. 1.5 참조） ***
+
+### 2.3.5.3출력 파라미터 설명 ###
+
+| 파라미터명| 설명|
+| ------------- |: -----|
+| ret|리턴 코드  0：정확，기타：실패 |
+| msg|ret비0일경우，“에러코드, 에러 알림”을 표시，상세한 주석은 제5장을 참고|
+| is_lost|분실된 데이터가 있는지를 판단한다.응용프로그래밍 cache를 사용하지 않을 경우 이 파라미터를 무시해도 된다.0 혹은 리턴이 없을 경우,분실된 데이터가 없고 캐시할 수 있다.1：일부 데이터가 분실되거나 에러가 있어서 캐시하지 않아야 한다|
+| groupName|그룹명|
+| fingerMemo|그룹에 관련 소개|
+| memberNum|그룹 멘버수|
+| maxNum|그룹 수용할 수 있는 최대 멘버수|
+| ownerOpenid|그룹 리더openid|
+| unionid|해당 QQ그룹과 바인딩한 길드 ID|
+| zoneid|월드ID|
+| adminOpenids|관리원openid. 관리원이 여러명이 있을 경우,“,”로 구분.예를 들어:0000000000000000000000002329FBEF,0000000000000000000000002329FAFF|
+
+
+#### 2.3.5.4 인터페이스 호출 설명 ####
+
+
+| 파라미터명| 설명|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_groupinfo/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 격식|JSON |
+| 요청 방식|POST  |
+
+#### 2.3.5.5 요청 예시 ####
+
+	POST /relation/get_groupinfo/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid":"100703379",
+		"openid":"A3284A812ECA15269F85AE1C2D94EB37",
+		"accessToken":"964EE8FACFA24AE88AEEEEBD84028E19",
+		"groupOpenid":"84A812ECA15269F85AE1C2"
+	}
+	//리턴 결과
+	{
+		"is_lost":"0",
+		"groupName":"xxxx",
+		"fingerMemo":"xxxx",
+		"memberNum":"1000",
+		maxNum:"2000",
+		"ownerOpenid":"A3284A812ECA15269F85AE1C2D94EB38",
+		"unionid":"xxxx",
+		"zoneid":"1",
+		"adminOpenids":"0000000000000000000000002329FBEF,0000000000000000000000002329FAFF",
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+### 2.3.6 /relation/unbind_group ###
+
+#### 2.3.6.1인터페이스 설명 ####
+ 　QQ 게임 길드 QQ구룹과의 바인딩을 해제 정보
+
+#### 2.3.6.2입력 파라미터 설명 ####
+
+| 파라미터명| 타입|설명|
+| ------------- |:-------------:|:-----|
+| appid|string| 응용프로그램이 플랫폼에 있는 유일한 id |
+| openid|string|유저가 모 응용프로그램에 유일한 표지 |
+| accessToken|string|유저가 응용프로그램에 있는 로그인 증빙 |
+| groupOpenid|string|게임 길드 ID와 바인딩한 QQ그룹의groupOpenid|
+| unionid|string|해당 groupOpenid와 바인딩한 길드 ID|
+
+
+***（입력 파라미터의 타입을 주의해야 한다.1.5 참고） ***
+
+### 2.3.6.3출력 파라미터 설명 ###
+
+| 파라미터명| 설명|
+| ------------- |: -----|
+| ret|리턴코드  0：정확，기타：실패 |
+| msg|ret비0일 경우，“에러코드，에레 알림”，상세한 주석은 제5장 내용을 참고|
+| is_lost|분실된 데이터가 있는지를 판단한다.응용프로그래밍 cache를 사용하지 않을 경우 이 파라미터를 무시해도 된다.0 혹은 리턴이 없을 경우,분실된 데이터가 없고 캐시할 수 있다.1：일부 데이터가 분실되거나 에러가 있어서 캐시하지 않아야 한다|
+
+
+#### 2.3.6.4 파리미터 호출 설명 ####
+
+
+| 파라미터명| 설명|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/unbind_group/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 격식|JSON |
+| 요청 방식|POST  |
+
+#### 2.3.6.5 요청 예시 ####
+
+	POST /relation/unbind_group/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+	    "appid":"100703379",
+		"openid":"A3284A812ECA15269F85AE1C2D94EB37",
+		"accessToken":"964EE8FACFA24AE88AEEEEBD84028E19",
+		"groupOpenid":"84A812ECA15269F85AE1C2",
+		"unionid":"xxxx"
+	}
+	//리턴 결과
+	{
+		"is_lost":"0",
+	    "msg": "success",
+	    "ret": 0
+	}
+
+
+
+
+	
 ##  2.4.profile서비스  ##
 
 　　QQ계정 VIP정보 검색 서비스 제공.
@@ -468,10 +748,10 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 	    }]
 	}
 
-### 2.4.2 /relation/qqfriends_vip ###
+### 2.4.2 /profile/get_gift ###
 
 #### 2.4.2.1 인터페이스에 관한 설명 ####
- 　QQ 회원 정보 대량 검색.
+　　　블루 다이아몬드 선물보따리 획득, 1회 호출 완료 후 선물보따리를 비움.
 
 #### 2.4.2.2 파라미터 입력에 관한 설명 ####
 
@@ -479,86 +759,8 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 | ------------- |:-------------:|:-----|
 | appid|string|플랫폼에서 애플리케이션의 유일한 id|
 | openid|string|특정 애플리케이션에서 유저의 유일한 표지|
-| accessToken|string|애플리케이션에서 유저의 로그인 증거 |
-| fopenids|vector<string>|친구 openid 리스트，매회 50개까지 입력 가능|
-| flags|string|VIP 업무 검색 표지현재 QQ 회원정보：qq_vip 검색만 지원.향후 다양한 업무의 유저 VIP 정보검색 지원 예정. 다양한 VIP 업무 검색시 “,”로 구분.해당 값을 입력하지 않을 경우 디폴트 상태에서 전부 검색으로 설정됨.|
-| userip|string|호출측 ip정보|
-| pf|string|게이머 로그인 플랫폼, 디폴트 상태는 openmobile이고, openmobile_android/openmobile_ios/openmobile_wp 등이 있으며，해당 값은 클라이언트 휴대폰 Q 로그인 복귀를 통해 획득|
 
-*** (입력된 파라미터 유형에 유의하십시오. 1.5를 참조하십시오.) ***
-
-### 2.4.2.3 파라미터 출력에 관한 설명 ####
-
-| 파라미터 이름| 설명|
-| ------------- |: -----|
-| ret|복귀 코드  0：정확함，기타：실패 |
-| msg|ret는 0이 아닐 경우 “오류 코드，오류 표시”를 뜻합니다. 자세한 주석은 제5절을 참조하십시오.|
-| list|유형：vector<QQFriendsVipInfo>,QQ게임 친구 vip정보 리스트(아래 문장 참조)|
-| is_lost|is_lost가 1인 경우 oidb 데이터 획득 시간초과를 뜻함. 게임 업무에서 is_lost가 1임을 검출하는 시점에서 강등 처리를 하여 캐시 데이터 또는 디폴트 데이터를 직접 판독할 것을 권장함.|
-	
-	struct QQFriendsVipInfo {
-	    1   optional     string          openid;          //친구 openid
-	    2   optional     int             is_qq_vip;       //QQ 회원인지 여부（0：아니요； 1：예）
-	    3   optional     int             qq_vip_level;    //QQ 회원 등급（QQ 회원인 경우에만 이 필드로 복귀됨）
-	    4   optional     int             is_qq_year_vip;  //연간 QQ 회원인지 여부（0：아니요； 1：예）
-	};
-
-#### 2.4.2.4 인터페이스 호출에 관한 설명 ####
-
-
-| 파라미터 이름| 설명|
-| ------------- |:-----|
-| url|http://msdktest.qq.com/relation/qqfriends_vip/ |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
-| 포맷|JSON |
-| 요청 방식|POST  |
-
-#### 2.4.2.5 요청 예시 ####
-
-	POST /relation/qqfriends_vip/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
-	Host:$domain
-	Content-Type: application/x-www-form-urlencoded
-	Content-Length: 198
-	
-	{
-	    "appid": "100703379",
-	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
-	    "accessToken": "964EE8FACFA24AE88AEEEEBD84028E19",
-	    "fopenids": [
-	        "69FF99F3B17436F2F6621FA158B30549"
-	    ],
-	    "flags": "qq_vip",
-	    "pf": "openmobile",
-	    "userip": "127.0.0.1"
-	}
-	//복귀 결과
-	{
-	    "is_lost": "0",
-	    "lists": [
-	        {
-	            "is_qq_vip": 1,
-	            "is_qq_year_vip": 1,
-	            "openid": "69FF99F3B17436F2F6621FA158B30549",
-	            "qq_vip_level": 6
-	        }
-	    ],
-	    "msg": "success",
-	    "ret": 0
-	}
-
-### 2.4.3 /profile/get_gift ###
-
-#### 2.4.3.1 인터페이스에 관한 설명 ####
-　　　블루 다이아몬드 선물보따리 획득, 1회 호출 완료 후 선물보따리를 비움.
-
-#### 2.4.3.2 파라미터 입력에 관한 설명 ####
-
-| 파라미터 이름| 유형|설명|
-| ------------- |:-------------:|:-----|
-| appid|string|플랫폼에서 애플리케이션의 유일한 id|
-| openid|string|특정 애플리케이션에서 유저의 유일한 표지|
-
-#### 2.4.3.3 파라미터 출력에 관한 설명 ####
+#### 2.4.2.3 파라미터 출력에 관한 설명 ####
 
 | 파라미터 이름| 설명|
 | ------------- |:-----|
@@ -572,7 +774,7 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 	};
 
 
-#### 2.4.3.4 인터페이스 호출에 관한 설명 ####
+#### 2.4.2.4 인터페이스 호출에 관한 설명 ####
 | 파라미터 이름| 설명|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/get_gift/ |
@@ -580,7 +782,7 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 | 포맷|JSON |
 | 요청 방식|POST  |
 
-#### 2.4.3.5 요청 예시 ####
+#### 2.4.2.5 요청 예시 ####
 
 	POST http://msdktest.qq.com/profile/get_gift/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -601,18 +803,18 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 	    "ret": 0
 	}
 
-### 2.4.4 /profile/get_wifi ###
+### 2.4.3 /profile/get_wifi ###
 
-#### 2.4.4.1 인터페이스에 관한 설명 ####
+#### 2.4.3.1 인터페이스에 관한 설명 ####
 　　　휴대용 wifi 자격 획득.
-#### 2.4.4.2 파라미터 입력에 관한 설명 ####
+#### 2.4.3.2 파라미터 입력에 관한 설명 ####
 
 | 파라미터 이름| 유형|설명|
 | ------------- |:-------------:|:-----|
 | appid|string|플랫폼에서 애플리케이션의 유일한 id|
 | openid|string|특정 애플리케이션에서 유저의 유일한 표지|
 
-#### 2.4.4.3 파라미터 출력에 관한 설명 ####
+#### 2.4.3.3 파라미터 출력에 관한 설명 ####
 
 | 파라미터 이름| 설명|
 | ------------- |:-----|
@@ -620,7 +822,7 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 | msg|ret는 0이 아닐 경우 “오류 코드，오류 표시”를 뜻합니다. 자세한 주석은 제5절을 참조하십시오.|
 | wifiVip|1: wifivip자격임을 뜻함，0: wifivip 자격이 아님을 뜻함|
 
-#### 2.4.4.4 인터페이스 호출에 관한 설명 ####
+#### 2.4.3.4 인터페이스 호출에 관한 설명 ####
 
 | 파라미터 이름| 설명|
 | ------------- |:-----|
@@ -629,7 +831,7 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 | 포맷|JSON |
 | 요청 방식|POST  |
 
-#### 2.4.4.5 요청 예시 ####
+#### 2.4.3.5 요청 예시 ####
 
 	POST http://msdktest.qq.com/profile/get_wifi/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -645,12 +847,12 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 	    "wifiVip": 1
 	}
 
-### 2.4.5 /profile/qqscore_batch ###
+### 2.4.4 /profile/qqscore_batch ###
 
-#### 2.4.5.1 인터페이스에 관한 설명 ####
+#### 2.4.4.1 인터페이스에 관한 설명 ####
 　　　게이머 실적을 QQ 플랫폼에 보고하고, QQ 게임 센터에 친구 스코어 순위를 표시함.(실시간 발효)
 
-#### 2.4.5.2 파라미터 입력에 관한 설명 ####
+#### 2.4.4.2 파라미터 입력에 관한 설명 ####
 
 
 | 파라미터 이름| 유형|설명|
@@ -669,14 +871,14 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 	};
 *** (입력된 파라미터 유형에 유의하십시오. 1.5를 참조하십시오.) ***
 
-#### 2.4.5.3 파라미터 출력에 관한 설명 ####
+#### 2.4.4.3 파라미터 출력에 관한 설명 ####
 
 | 파라미터 이름| 설명|
 | ------------- |:-----|
 | ret|복귀 코드  0：정확함，기타：실패 |
 | msg|ret는 0이 아닐 경우 “오류 코드，오류 표시”를 뜻합니다. 자세한 주석은 제5절을 참조하십시오.|
 
-#### 2.4.5.4 인터페이스 호출에 관한 설명 ####
+#### 2.4.4.4 인터페이스 호출에 관한 설명 ####
 
 | 파라미터 이름| 설명|
 | ------------- |:-----|
@@ -685,7 +887,7 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 | 포맷|JSON |
 | 요청 방식|POST  |
 
-### 2.4.5.5 요청 예시 ###
+### 2.4.4.5 요청 예시 ###
 
 	POST http://msdktest.qq.com/profile/qqscore_batch/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -711,4 +913,59 @@ QQ 함께 플레이하는 친구의 자세한 개인정보 인터페이스를 �
 	
 	//복귀 결과
 	{"msg":"success","ret":0,"type":0}
+
+#### 2.4.4.6 보고 데이터 타입 설명 ####
+| type(보고 데이터 타입，int)| data(성취값，string)| expires(기간 만료 시간，string)| bcover(보고 데이터 덮어쓰기 여부，int)| 비고`(아주 중요, 주목 필요)`|
+| ------------- |:-------------:|:-----|:-----|:-----|  
+|1  |레벨                                          |  "0"|1|변화시 보고                                                                |
+|2  |골드                                          |  "0"|1|변화시 보고                                                                |
+|3  |프로우 득점(랭킹 데이터에서 사용)                               |  게임 결산 시간과 일치|0|변화시 보고                                                                |
+|4  |경험치                                          |  "0"|1|변화시 보고                                                                |
+|5  |역대 최고점                                       |  "0"|1|QQ플랫폼에서 3에 의거하여 결산, 보고할 필요없다                                                       |
+|6  |지난주 결산 랭킹                                      |  게임 결산 시간과 일치|1|QQ플랫폼에서 3에 의거하여 결산, 보고할 필요없다                                                       |
+|7  |도전전 보고 성적                                     |  게임 결산 시간과 일치|1|변화시 보고                                                                |
+|8  |최근 로그인 시간                                      |  "0"|1|보고 격식：Unix시간 스탬프                                                        |
+|9  |일간 라운드 수                                        |  "0"|1|QQ플랫폼에서 3에 의거하여 결산, 보고할 필요없다                                                       |
+|10 |주간 라운드 수                                         |  "0"|1|QQ플랫폼에서 3에 의거하여 결산, 보고할 필요없다                                                       |
+|11 |일 최고 득점                                        |  "0"|1|QQ플랫폼에서 3에 의거하여 결산, 보고할 필요없다                                                       |
+|12 |플랫폼 타입，1-android，2-ios                        |  "0"|1|*모든 게임，기타 데이터 보고할 때 해당 이 데이터도 보고해야 한다                                                |
+|13 |게임 모드，값은 각 게임의 게임모드 값을 참고                          |  "0"|1|*멀티 모드 게임，기타 데이터 보고할 때 해당 이 데이터도 보고해야 한다                                               |
+|14 |한 라운드 게임 시간                                      |  "0"|1|보고 단위：초.（게임 시간 누적은 QQ플랫폼에서 결산）                                                |
+|15 |금주 최고점                                       |  "0"|1|QQ플랫폼에서 3에 의거하여 결산, 보고할 필요없다                                                       |
+|16 |금주 랭킹순위                                        |  "0"|1|QQ플랫폼에서 3에 의거하여 결산, 보고할 필요없다                                                       |
+|17 |전투력                                          |  "0"|1|변화시 보고                                                                |
+|18 |전투력 랭킹순위                                      |  "0"|1|게임내 랭킹                                                               |
+|19 |클리어한 스테이지수                                       |  "0"|1|변화시 보고                                                                |
+|20 |주간 클리어한 스테이지수                                       |  "0"|1|당분간 사용 안 한다                                                                 |
+|21 |포인트                                          |  "0"|1|변화시 보고                                                                |
+|22 |포인트 랭킹                                        |  "0"|1|게임내 랭킹                                                                |
+|23 |총 라운드수                                         |  "0"|1|변화시 보고                                                                |
+|24 |총 승율                                         |  "0"|1|변화시 보고                                                                |
+|25 |유저 가입 시간                                      |  "0"|1|예전에는 3001로 보고，25로 수정하여 보고                                                      |
+|26 |월드 정보                                        |  "0"|1|*보고 월드ID，월드별 서버별 게임의 기타 데이터 보고할 때, 해당 이 항목의 데이터도 동시에 보고해야 한다                                       |
+|27 |서버정보                                      |  "0"|1|*보고 서버ID，월드별 서버별 게임의 기타 데이터 보고할 때, 해당 이 항목의 데이터도 동시에 보고해야 한다                                      |
+|28 |캐릭터ID                                        |  "0"|1|*월드별 서버별 게임, 기타 데이터 보고할 때, 해당 이 항목의 데이터도 동시에 보고해야 한다. 통일 월드 멀티 캐릭터에 중복을 여과하지 않는다                                    |
+|29 |캐릭터명                                        |  "0"|1|캐릭터 만들 때 보고                                                              |
+|30 |소속 길드ID                                      |  "0"|1|*길드 관련 데이터 보고할 때 동시 해당 데이터를 보고해야 한다                                                      |
+|31 |길드에 가입 시간                                      |  "0"|1|가입할 때 보고，보고 격식：Unix시간 스탬프                                                   |
+|301|길드명                                        |  "0"|1|변화시 보고                                                                |
+|302|길드 레벨（레벨업）                                    |  "0"|1|변화시 보고                                                                |
+|303|길드 전투력                                        |  "0"|1|변화시 보고                                                                |
+|304|길드랭킹                                        |  "0"|1|변화시 보고                                                                |
+|305|길드명예                                        |  "0"|1|변화시 보고                                                                |
+|306|길드 구현 시간                                      |  "0"|1|만들 때 보고，보고 격식：Unix시간 스탬프                                                   |
+|307|길드 해산 시간                                      |  "0"|1|해산할 때 보고，보고 격식：Unix시간 스탬프                                                   |
+|308|길드 멘버수                                       |  "0"|1|변화시 보고                                                                |
+|309|길드 멘버 변경（1-가입，2-아웃）                           |  "0"|1|변화시 보고                                                            |
+|310|길드 소개                                        |  "0"|1|변화시 보고                                                                |
+|311|길드 멘버 신분 변경（1-회장，2-부회장，3-회원）                   |  "0"|1|加入、변화시 보고                                                             |
+|312|길드 바인딩한 QQ그룹                                    |  "0"|1|바인딩, 변화시 보고                                                             |
+|313|QQ그룹 바인딩한 시간                                    |  "0"|1|바인딩, 변화시 보고                                                             |
+
+
+
+
+
+
+
 

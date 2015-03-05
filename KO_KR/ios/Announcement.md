@@ -33,7 +33,7 @@ eMSG_NOTICETYPE_ALERT,
 void WGHideScrollNotice ();
 ```
 >설명: 표시된 롤링 공지 숨기기
-주: 공지 표시 화면은 plist를 통해 맞춤 제작된다. 현재 팝업 공지는 “흰색 바탕, 푸른색 바탕, 검은색 바탕, 사용자정의” 등 4개 템플릿이 있다. 이런 템플릿 및 상응한 리소스 파일은WGPlatformResources.bundle/AnnouncementResources 상응한 하위 디렉토리에 위치한다. 템플릿 요소와 정의는 부록 F 참조..
+주: 공지 표시 화면은 plist를 통해 맞춤 제작된다. 현재 팝업 공지는 “흰색 바탕, 푸른색 바탕, 검은색 바탕, 사용자정의” 등 4개 템플릿이 있다. 이런 템플릿 및 상응한 리소스 파일은WGPlatformResources.bundle/AnnouncementResources 상응한 하위 디렉토리에 위치한다. 템플릿 요소와 정의는 부록 참조..
 ---
 
 ##공지 데이터 리스트 인터페이스
@@ -80,6 +80,7 @@ eMSDK_SCREENDIR screenDir;      //가로세로 화면   1: 가로 2: 세로
 }PicInfo; 
 ```
 
+
 ---
 
 ## 샘플 코드
@@ -95,3 +96,77 @@ std::vector<NoticeInfo> vec = plat->WGGetNoticeData(eMSG_NOTICETYPE_ALERT, (unsi
                 [NSString stringWithUTF8String: info.msg_content.c_str()]);
             }
 ```
+## FAQ
+ - 리소스 파일 잘 도입하지 못해 Crash 초래：
+	MsdkReources.bundle를 정확히 공정의 ”Copy Bundle Resources“로 도입하지 못하면 공지 디스플레이할 때 crash가 발생할 것이다.
+![linkBundle](./Crash_Annoucement.PNG)
+ - AppDelegate(AppController)에서 window 속성을 구현하지 않으면 공지 호출할 때 crash 발생：	
+	[AppController window]: unrecognized selector sent to instance 0x17fa7130
+	해결 방법：AppDelegate(AppController)에서 한 window의 property를 추가하여 구현한 keywindow를 지향한다.
+## 부록
+  - 공지plist설정 설명
+    공지 디스플레이 페이지는 plist를 통해 맞춤 제작하는 것이다.현재 팝업 알림 공지는 “흰색 바탕,파란 바탕, 검은 바탕,자체정의 바탕 ”4가지 포맷이 있다. 해당 포맷 대응하는 리소스 파일은 framework/Resources/AnnouncementResources에 대응 서브디렉터리에서 넣는다.각 포맷의 정의 원소는 아래와 같다：
+    ![Alt text](./Announcement_config.png)
+    그 중에 AlertView 노드는 팝업 알림 공지 화면을 구축하며 BannerView노드는 롤링 공지 화면을 구축한다.
+    팝업 공지와 AlertView노드의 대응 관계는 아래와 같다. 현재는 한가지 block만 설정할 것이고 해서 “닫기”버튼만 있다：
+    ![Alt text](./Announcement_config2.png)
+    롤링 공지와 BannerView노드의 대응 관계는 아래와 같다.Icon는 선택 가능한 것이다.
+    ![Alt text](./Announcement_config3.png)
+    각 노드는 Font,view,icon원소로 구성되는 것이고 설명은 아래와 같다：
+Font노드 맞춤 제작 투시도 텍스트의 속성:
+
+| 항목	| 타입	| 설명	| 예시| 
+| ------------- |:-------------:|:----:|
+| font	| Number	| 글자체 크기	| 20| 
+| fontColor	| string	| 글자체 색깔	| #ffffff| 
+| fontShadow	| number	| 글자체 그림자	| 0| 
+| fontShadowColor	| string	| 그림자 색깔	| #ffffff| 
+| labelWidth	| Number	| 텍스트 너비	| 280| 
+| labelLeft	| Number	| 텍스트의 X좌표	| 10| 
+| labelTop	| Number	| 텍스트의 y좌표	| 10| 
+| labelHeight	| Number	| 텍스트 높이	| 30| 
+| textAlign	Number	| 텍스트 맞춤방식	| 0-왼쪽으로 정열 1-가운데로 정열 2-오른쪽으로 정열| |
+
+View 노드 맞춤 제작 투시도 배경 등의 속성:
+
+| 항목	| 타입	| 설명	| 예시| 
+| ------------- |:-------------:|:----:|
+| backgroudColor	| string	| 배경 색상	| #ffffff| 
+| backgroudColorAlpha	| number	| 배경색 투명도	| 0.5(0.0-1.0)| 
+| backgroundLeftImage	| string	| 배경도 좌측	| 비워둘 수 있음| 
+| backgroundMidImage	| string	| 배경도 스트레칭 파트 | 파일은 plist와 같은 디렉터리에서 저장| 
+| backgroundRightImage	| string	| 배경도 우측	| 비워둘 수 있음| 
+| viewHeight	| number	| 투시도 높이	| 40| 
+| viewWidth	| number	| 투시도 너비	| 200| 
+| viewTop	| number	| 투시도의 y좌표（bottom투시도에서 설정하지 않으면 content투시도로 적용）	| 10| 
+| viewLeft	| number	| 투시도의 x좌표	| 10| 
+
+
+
+Icon노드 맞춤 제작 투시도 icon의 속성：
+	
+| 항목	| 타입	| 설명	| 예시| 
+| ------------- |:-------------:|:----:|
+| iconPath	| string	| 이미지 파일명，plist와 같은 디렉터리	| icon.png| 
+| backgroudColor	| string	| 배경 색상	| #ffffff
+| backgroudColorAlpha	| number	| 배경색 투명도	| 0.5(0.0-1.0)| 
+| viewHeight	| number	| 투시도 높이	| 30| 
+| viewWidth	| number	| 투시도 너비	| 30| 
+| viewTop	| number	| 투시도의 y좌표	| 10| 
+| viewLeft	| number	| 투시도의 x좌표 | 10| 
+
+
+cancelButton노드 맞춤 제작 투시도에 버튼의 속성：
+	
+| 항목	| 타입	| 설명	| 예시| 
+| ------------- |:-------------:|:----:|
+| titleColor	| string	| 버튼 타이틀 색상	| #ffffff| 
+| backgroudColor	| string	| 버튼 배경 색상	| #ffffff| 
+| backgroudColorAlpha	| number	| 버튼 배경 색상 투명도	| 1| 
+| btnImage	| string	| 버튼 배경도	| icon.png| 
+| selectedBtnImage	| string	| 버튼 선정 이미지	| selIcon.png| 
+| buttonLeft	| number	| 버튼의 x좌표	| 10| 
+| buttonWidth	| number	| 버튼 투시도 높이	| 80| 
+| buttonHeight	| number	| 버튼 투시도 너비	| 30| 
+| buttonTop	| number	| 버튼의 y좌표（설정하지 않거나 0일 경우, 바탕으로 적용）	| 10| 
+| buttonTitle	| string	| 버튼 타이틀 색상	| #ffffff| 

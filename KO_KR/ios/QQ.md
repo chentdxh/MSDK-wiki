@@ -22,8 +22,10 @@
 | QQ  | 형식:QQ+게임QQAppID의 16진수 |QQ06009C93 | 모바일QQ 액세스시 필수 입력, 중간에 공백이 없음  |
 | QQLaunch  | 형식: tencentlaunch+게임QQAppID |tencentlaunch100703379|  모바일QQ 액세스시 필수 입력, 중간에 공백이 없음  |
 
-   > **주: 게임별로 설정이 다르기에 구체적인 내용은 각 게임과 MSDK 연락 담당자 또는 RTX를 통해 “MSDK연결”에 연락하면 된다.**
- 
+   > **비고：
+  1. 게임별로 설정이 다르기에 구체적인 내용은 각 게임과 MSDK 연락 담당자 또는 RTX를 통해 “MSDK연결”에 연락하면 된다. 
+  2. Xcode6.0 공정을 만들 때, Bundle Display Name를 설정하지 않았을 가능성이 있어 OpenSDK 해당 이 성정이 있어야 잘 가동할 수 있기 때문에 해당 이 속성이 있는 것을 반드시 확보해야 한다. 없으면 설정하시기 바란다.**
+  ![Alt text](./QQ_config.png) 
  ---
 ## 인증 로그인
  ### 개요
@@ -49,7 +51,6 @@ eFlag_Succ                     //성공
     eFlag_QQ_UserCancel            //유저가 모바일QQ 인증 취소
     eFlag_QQ_LoginFail             //인증 실패
     eFlag_QQ_NetworkErr           //네트워크 오류
-
 
 
 #### 예시 코드
@@ -98,6 +99,21 @@ else
 }
 }
 ```
+- 2.4.0i 및 이후 버전에는 delegate방식을 사용할 수 있으며 코드는 아래와 같다：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKAuthService *authService = [[MSDKAuthService alloc] init];
+[authService setPermission:eOPEN_ALL];
+[authService login:ePlatform_QQ];
+```
+- 콜백 코드는 아래와 같다：
+```
+-(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
+{
+    //내부 실현 로직은 void MyObserver::OnLoginNotify(LoginRet& loginRet)와 일치
+}
+```
+
 
 ####주의사항
 - 모바일QQ 버전4.0 및 이상만 클라이언트 인증을 지원한다
@@ -267,6 +283,20 @@ OnRelationNotify(RelationRet &relationRet)
 }
 ```
 
+- 2.4.0i 및 이후 버전에는 delegate방식을 사용 가능하며 코드는 아래와 같다：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service queryMyInfo];
+```
+- 콜백 코드 예시：
+```
+-(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
+{
+    //내부 살현 로직은 OnRelationNotify(RelationRet &relationRet)와 일치한다
+}
+```
+
  ###게임친구 정보 조회
 ####개요
 - 게임은 인증 후 WGQueryQQGameFriendsInfo를 호출하여 게임에 필요한 유저 게임친구의 닉네임, 성별, 아바타, openid 등 정보를 획득할 수 있다.
@@ -297,6 +327,20 @@ OnRelationNotify(RelationRet &relationRet)
     }
 }
 ```
+- 2.4.0i 및 이후 버전에는 delegate방식을 사용할 수 있으며 코드는 아래와 같다：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service queryMyGameFriendsInfo];
+```
+- 콜백 코드 예시：
+```
+-(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
+{
+    //내부 실현 로직은 OnRelationNotify(RelationRet &relationRet)와 일치한다
+}
+```
+
 ####주의사항
 - 모바일QQ 인증 성공
 ---
@@ -359,6 +403,26 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
     }
 }
 ```
+
+- 2.4.0i 및 이후 버전에는 delegate방식을 사용할 수 있으며 코드는 아래와 같다：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToQQ:QQScene_QZone
+title:(unsigned char*)[gameid UTF8String]
+desc:(unsigned char*)[revStr UTF8String]
+url:(unsigned char*)"XXXX"
+imgData:NULL
+imgDataLen:0];
+```
+- 콜백 코드 예시：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //내부 실현 로직은 void MyObserver::OnShareNotify(ShareRet& shareRet)와 일치한다
+}
+```
+
 ###직접 친구에게 공유(모바일QQ 클라이언트를 불러올 필요가 없음)
 ####개요
 - 모바일QQ 클라이언트를 불러오지 않고 지정된 게임친구에게 직접 발송. 게임친구의 openId는 WGQueryQQGameFriendsInfo 인터페이스를 통해 획득할 수 있다. 이 공유 메시지는 pc QQ에서 출력되지 않는다.
@@ -426,6 +490,28 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
     }
 }
 ```
+
+- 2.4.0i 및 이후 버전에는 delegate방식을 사용할 수 있으며 코드는 아래와 같다：
+```
+[MSDKService setMSDKDelegate:self];
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[service WGSendToQQGameFriend:0
+fopenid:(unsigned char *)"E7B0E64C39A09127A698326F4941A9B6"
+title:(unsigned char *)"WGShare_WGSendToQQGameFriend_LONG_URL"
+summary:(unsigned char *)"WGShare_WGSendToQQGameFriend_LONG_URL_Summary"
+targetUrl:(unsigned char *)"http://bbs.oa.com"
+imgUrl:(unsigned char *)"http://bbs.oa.com"
+previewText:(unsigned char *)"WGShare_WGSendToQQGameFriend_LONG_URL_PreviewText"
+gameTag:(unsigned char *)"MSG_INVITE"];
+```
+- 콜백 코드 예시：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //내부 실현 로직은 void MyObserver::OnShareNotify(ShareRet& shareRet)와 일치한다
+}
+```
+
 ####주의사항
  - 모바일QQ 버전 4.0 및 이상 필요
  - 직접 공유는 우선 모바일QQ 인증에 성공해야 한다
@@ -478,6 +564,25 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
     }
 }
 ```
+
+- 2.4.0i 및 이후 버전에는 delegate방식을 사용할 수 있으며 코드는 아래와 같다：
+```
+UIImage *image = [UIImage imageNamed:@"422.png"];
+NSData *data = UIImageJPEGRepresentation(image, 1.0);
+[MSDKService setMSDKDelegate:self];
+MSDKShareService *service = [[MSDKShareService alloc] init];
+[shareService WGSendToQQWithPhoto:QQScene_QZone
+imgData:(unsigned char*)[data bytes]
+imgDataLen:(int)[data length]];
+```
+- 콜백 코드 예시：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //내부 실현 로직은 void MyObserver::OnShareNotify(ShareRet& shareRet)와 일치한다
+}
+```
+
 ###주의사항
  - 모바일QQ 4.2 및 이상 버전
  - 모바일QQ를 깨워 Qzone에 공유하는 팝업창은 모바일QQ 4.5 및 이상 버전 필요
@@ -489,6 +594,7 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
 ```ruby
 int WGGetIphoneQQVersion();
 ```
+[MSDKInfoService getIphoneQQVersion];//2.4.0i및 이후 버전
 >설명: 유저 QQ 계정 기본정보 획득
     모바일QQ 버전 열거:
         typedef enum QQVersion
@@ -582,9 +688,43 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
     }
 }
 ```
+
+- 2.4.0i 및 이후버전에는 delegate방식을 사용할 수 있으며 코드는 아래와 같다：
+```
+//친구 추가
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service addFriend:@"C1BF66286792F24E166C9A5D27CFB519"
+remark:@"친구 추가 테스트"
+description:@"안녕하세요～"
+subId:nil];
+//그룹 바인딩
+NSString *uinionId = @"33";
+NSString *zoneId = @"1";
+NSString *openId = [NSString stringWithCString:ret.open_id.c_str() encoding:NSUTF8StringEncoding];
+NSString *appId = @"100703379";
+NSString *appKey = @"4578e54fb3a1bd18e0681bc1c734514e";
+NSString *orgSigStr = [NSString stringWithFormat:@"%@_%@_%@_%@_%@",openId,appId,appKey,uinionId,zoneId];
+NSString *md5Str = [self md5HexDigest:orgSigStr];
+MSDKRelationService *service = [[MSDKRelationService alloc] init];
+[service bindGroup:md5Str
+unionId:uinionId
+zoneId:zoneId
+appDisplayName:@"MSDKSampleTest"];
+```
+- 콜백 코드 예시：
+```
+-(void)OnShareWithShareRet:(MSDKShareRet *)ret
+{
+    //내부 실현 로직은 void MyObserver::OnShareNotify(ShareRet& shareRet)와 일치한다
+}
+```
+
 ###주의사항
  - 모바일QQ 5.1 및 이상 버전
  - 하나의 길드는 1개 그룹만 바인딩 가능. 바인딩을 해제하려면 QQ API 문서(다음)를 참조. 다른 질문이 있으면 rtx를 통해 OpenAPIHelper(OpenAPI 기술지원) 연락.
 http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup
  - 인게임 친구/그룹 바인딩 인터페이스를 사용하려면 액세스한 App id가 모바일QQ 백그라운드에서 심사를 통과하고 출시되어야 한다
  ---
+
+ ## FAQ
+ ###주의 사항

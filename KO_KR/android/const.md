@@ -76,7 +76,7 @@
 |플랫폼|token유형|token역할|type|유효시간|
 |: ------- :|: ------- :|: ------- :|: ------- :|: ------- :|: ------- :|
 |모바일QQ	|accesstoken|모바일QQ 개인, 친구, 관계사슬, 공유 등 기능 조회|eToken_QQ_Access|	90일|
-|모바일QQ	|paytoken	|결제 관련|eToken_QQ_Pay|	2일|
+|모바일QQ	|paytoken	|결제 관련|eToken_QQ_Pay|	6일|
 |위챗|	accesstoken|위챗 개인, 친구, 관계사슬, 공유, 결제 등 조회|	eToken_WX_Access|	2시간|
 |위챗|refreshtoken|	accesstoken 갱신|	eToken_WX_Refresh|	30일|
 

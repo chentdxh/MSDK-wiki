@@ -67,25 +67,21 @@
 
 #### 공지 AndroidMainfest 설정:
 
-이부분 내용은 주로 MSDK 공지 화면에 관련된 권한 설정이다. **게임이 자체정의 UI를 사용하면 이부분 내용은 설정하지 않아도 된다.**
+이부분 내용은 주로 MSDK 공지 화면에 관련된 권한 설정이다.
 
-- 게임은 자체정의 공지 화면 사용
-
-	없음
-- 게임은 MSDK가 제공한 공지 화면 사용
-
-		<!-- TODO Notice 공지 설정 START -->
-        <!--  MSDK팝업 공지 관련 설정 -->
-       	<activity
-           	android:name="com.tencent.msdk.notice.AlertMsgActivity"
-           	android:configChanges="orientation|screenSize|keyboardHidden"
-           	android:screenOrientation="sensor"
-           	android:theme="@style/NoticeAlertTheme" >
-        </activity>
-		<!--  MSDK 롤링 공지 관련 설정 -->
-        <service android:name="com.tencent.msdk.notice.RollFloatService" >
-        </service>
-        <!-- TODO Notice 공지 설정  END -->
+	<!-- TODO Notice 공지 설정 START -->
+    <!--  MSDK팝업 공지 관련 설정 -->
+   	<activity
+       	android:name="com.tencent.msdk.notice.AlertMsgActivity"
+       	android:configChanges="orientation|screenSize|keyboardHidden"
+       	android:screenOrientation="sensor"
+       	android:theme="@style/NoticeAlertTheme" >
+    </activity>
+	<!--  MSDK롤링 공지 관련 설정 -->
+    <service android:name="com.tencent.msdk.notice.RollFloatService" >
+    </service>
+    <!-- TODO Notice 공지 설정  END -->
+	
 **비고: 게임은 스크린 방향에 따라 공지 activity의 스크린 방향을 설정할 수 있다 (android:screenOrientation 값).**
 
 스위치 설정

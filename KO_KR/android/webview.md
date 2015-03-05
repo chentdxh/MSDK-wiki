@@ -72,13 +72,32 @@ WGOpenUrl 인터페이스를 호출하여 URL을 전송하면 SDK가 제공한 W
 ![webview](./webview_res/webview_3.png)
 
 ###2. 암호화된 데이터
-암호화할 로그인 상태 파라미터는 아래 표와 같다
+암호화할 로그인 상태 파라미터는 아래 표와 같다：
 
-![webview](./webview_extend_1.png)
+| 파라미터명  | 파라미터 설명  |
+| ------------- |:-------------:|
+| acctype| 계정 타입，값은qq혹wx로 한다|
+| appid| 게임ID |  
+| openId | 유저 인증 후 플랫폼이 리턴한 유일한 표지|  
+| access_token| 유저 인증 토큰 | 
+| platid| 단말 타입，0은 ios，1은 android |
+
+
+
 
 MSDK는 URL 뒤에 다음과 같은 파라미터를 추가한다__중복된 파라미터를 전송하면 디코딩 실패를 초래할 수 있음.
 
-![webview](./webview_extend_2.png)
+| 파라미터명  |         파라미터 설명  |  
+| ------------- |:-------------:|
+| timestamp| 요청하는 타임 스탬프 |
+| appid| 게임ID |
+| algorithm | 암호화 알고리즘 표지 값은 v1혹 v2 | 
+| msdkEncodeParam | 함호문 |
+| version | MSDK버전번호，예를 들어：1.6.2a |
+| sig | 요청 자체 사인 |
+| encode | 코드 파라미터，예를 들어,1 |
+| openid | 유저 인증 후 플랫폼에서 리턴하는 유일한 표지 |
+
 
 ###3. 예로 설명
 브라우저가 URL：http://apps.game.qq.com/ams/gac/index.html을 방문한다고 가정하면 실제 패킷 스니핑시 다음과 같은 URL을 보게 된다
@@ -119,151 +138,153 @@ msdkEncodeParam 의 암호문 URL Decode를 body에 넣어 Post 방식으로 전
 ###3. 암호문 디코딩 코드 샘플(C 코드)
 1. 아래 파일 UrlCoding.h 도입:
 
-		#ifndef URL_H
-		#define URL_H
+    #ifndef URL_H
+    #define URL_H
 
-		#ifdef __cplusplus
-		   extern "C" {
-			  #endif
-		
-			  int php_url_decode(const char *str, int len, char *out, int *outLen);
-			  char *php_url_encode(char const *s, int len, int *new_length);
-			  int php_url_decode_special(const char *str, int len, char *out, int *outLen);
-		
-			  #ifdef __cplusplus
-		   }
-		#endif
+    #ifdef __cplusplus
+       extern "C" {
+          #endif
+    
+          int php_url_decode(const char *str, int len, char *out, int *outLen);
+          char *php_url_encode(char const *s, int len, int *new_length);
+          int php_url_decode_special(const char *str, int len, char *out, int *outLen);
+    
+          #ifdef __cplusplus
+       }
+    #endif
 
-		#endif /* URL_H */
+    #endif /* URL_H */
 
 2. 아래 파일 UrlCoding.c 도입:
 
-		#include <stdlib.h>
-		#include <string.h>
-		#include <ctype.h>
-		#include <sys/types.h>
-		#include <stdio.h>
-		#include "UrlCoding.h"
-		
-		static unsigned char hexchars[] = "0123456789ABCDEF";
-		
-		static int php_htoi(const char *s)
-		{
-			int value;
-			int c;
-			
-			c = ((unsigned char *)s)[0];
-			if (isupper(c))
-				c = tolower(c);
-			value = (c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10) * 16;
-			
-			c = ((unsigned char *)s)[1];
-			if (isupper(c))
-				c = tolower(c);
-			value += c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10;
-			
-			return (value);
-		}
-		
-		char *php_url_encode(char const *s, int len, int *new_length)
-		{
-			register unsigned char c;
-			unsigned char *to, *start;
-			unsigned char const *from, *end;
-			
-			from = (unsigned char *)s;
-			end  = (unsigned char *)s + len;
-			start = to = (unsigned char *) calloc(1, 3*len+1);
-			
-			while (from < end)
-			{
-				c = *from++;
-				
-				if (c == ' ')
-				{
-					*to++ = '+';
-				}
-				else if ((c < '0' && c != '-' && c != '.') ||
-						 (c < 'A' && c > '9') ||
-						 (c > 'Z' && c < 'a' && c != '_') ||
-						 (c > 'z'))
-				{
-					to[0] = '%';
-					to[1] = hexchars[c >> 4];
-					to[2] = hexchars[c & 15];
-					to += 3;
-				}
-				else
-				{
-					*to++ = c;
-				}
-			}
-			*to = 0;
-			if (new_length)
-			{
-				*new_length = to - start;
-			}
-			return (char *) start;
-		}
-		
-		int php_url_decode(const char *str, int len, char *out, int *outLen)
-		{
-			const char *data = str;
-			char *orgOut = out;
-			while (len--)
-			{
-				if (*data == '+')
-				{
-					*out = ' ';
-				}
-				else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
-				{
-					*out = (char) php_htoi(data + 1);
-					data += 2;
-					len -= 2;
-				}
-				else
-				{
-					*out = *data;
-				}
-				data++;
-				out++;
-			}
-		//  *out = '/0';
-			*outLen = out - orgOut;
-			return *outLen;
-		}
-		
-		//WGCommonMethods.h의 encodeForURL을 위해 특별히 구현한 디코딩 방법 haywoodfu 2014-04-23
-		int php_url_decode_special(const char *str, int len, char *out, int *outLen)
-		{
-			const char *data = str;
-			char *orgOut = out;
-			while (len--)
-			{
-				if (*data == '+')
-				{
-					*out = ' ';
-				}
-				else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
-				{
-					int value = 0;
-					sscanf((data+1), "%2x", &value);
-					*out = (char) value;
-					data += 2;
-					len -= 2;
-				}
-				else
-				{
-					*out = *data;
-				}
-				data++;
-				out++;
-			}
-		//  *out = '/0';
-			*outLen = out - orgOut;
-			return *outLen;
-		}
+    #include <stdlib.h>
+    #include <string.h>
+    #include <ctype.h>
+    #include <sys/types.h>
+    #include <stdio.h>
+    #include "UrlCoding.h"
+    
+    static unsigned char hexchars[] = "0123456789ABCDEF";
+    
+    static int php_htoi(const char *s)
+    {
+        int value;
+        int c;
+        
+        c = ((unsigned char *)s)[0];
+        if (isupper(c))
+            c = tolower(c);
+        value = (c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10) * 16;
+        
+        c = ((unsigned char *)s)[1];
+        if (isupper(c))
+            c = tolower(c);
+        value += c >= '0' && c <= '9' ? c - '0' : c - 'a' + 10;
+        
+        return (value);
+    }
+    
+    
+    char *php_url_encode(char const *s, int len, int *new_length)
+    {
+        register unsigned char c;
+        unsigned char *to, *start;
+        unsigned char const *from, *end;
+        
+        from = (unsigned char *)s;
+        end  = (unsigned char *)s + len;
+        start = to = (unsigned char *) calloc(1, 3*len+1);
+        
+        while (from < end)
+        {
+            c = *from++;
+            
+            if (c == ' ')
+            {
+                *to++ = '+';
+            }
+            else if ((c < '0' && c != '-' && c != '.') ||
+                     (c < 'A' && c > '9') ||
+                     (c > 'Z' && c < 'a' && c != '_') ||
+                     (c > 'z'))
+            {
+                to[0] = '%';
+                to[1] = hexchars[c >> 4];
+                to[2] = hexchars[c & 15];
+                to += 3;
+            }
+            else
+            {
+                *to++ = c;
+            }
+        }
+        *to = 0;
+        if (new_length)
+        {
+            *new_length = to - start;
+        }
+        return (char *) start;
+    }
+    
+    
+    int php_url_decode(const char *str, int len, char *out, int *outLen)
+    {
+        const char *data = str;
+        char *orgOut = out;
+        while (len--)
+        {
+            if (*data == '+')
+            {
+                *out = ' ';
+            }
+            else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
+            {
+                *out = (char) php_htoi(data + 1);
+                data += 2;
+                len -= 2;
+            }
+            else
+            {
+                *out = *data;
+            }
+            data++;
+            out++;
+        }
+    //  *out = '/0';
+        *outLen = out - orgOut;
+        return *outLen;
+    }
+    
+    //WGCommonMethods.h의 encodeForURL을 위해 특별히 구현한 디코딩 방법 haywoodfu 2014-04-23
+    int php_url_decode_special(const char *str, int len, char *out, int *outLen)
+    {
+        const char *data = str;
+        char *orgOut = out;
+        while (len--)
+        {
+            if (*data == '+')
+            {
+                *out = ' ';
+            }
+            else if (*data == '%' && len >= 2 && isxdigit((int) *(data + 1)) && isxdigit((int) *(data + 2)))
+            {
+                int value = 0;
+                sscanf((data+1), "%2x", &value);
+                *out = (char) value;
+                data += 2;
+                len -= 2;
+            }
+            else
+            {
+                *out = *data;
+            }
+            data++;
+            out++;
+        }
+    //  *out = '/0';
+        *outLen = out - orgOut;
+        return *outLen;
+    }
 
 3. 전송된 문자열 encodeParam을 php_url_decode와 php_url_decode_special을 이용하여 차례로 디코딩하여 얻은 것이 암호문이다
 

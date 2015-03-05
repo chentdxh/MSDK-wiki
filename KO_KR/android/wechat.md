@@ -38,7 +38,9 @@ MSDK 위챗 관련 모듈
 
 
 #### Appid 설정:
- - 이 부분 내용은 Java 계층 초기화 부분에서 이미 완료되었다. **MSDKSample의 appId와 appKey로 연동 테스트를 진행할 수 없으며 게임은 자체 appId와 appKey를 사용해야 한다.**
+
+이 부분 내용은 Java 계층 초기화 부분에서 이미 완료되었다. **MSDKSample의 appId와 appKey로 연동 테스트를 진행할 수 없으며 게임은 자체 appId와 appKey를 사용해야 한다.**
+
 ```
 public void onCreate(Bundle savedInstanceState) {
 	...
@@ -59,120 +61,42 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ```
 
-인증 로그인
-------
+#### 반드시 콜해야 하는 방법:
 
-위챗 클라이언트를 실행시켜 인증을 진행하고 게임에 openId, accessToken, refreshToken, pf, pfKey 토큰 반환. 이 기능을 구현하려면 WGLogin 인터페이스를 호출해야 한다. 인터페이스의 자세한 설명은 다음과 같다.
+게임은 자신의 `launchActivity`(게임 시작할 때의 첫번째 Activity)의`onCreat()`및`onNewIntent()`에서 `handleCallback`를 호출해야 한다. 그렇지 않으면 로그인에 콜백이 없음을 초래할 수 있다.
 
-#### 인터페이스 선언:
-	
-	/**
- 	 * @param platform 게임이 전송한 플랫폼 유형, 가능한 값:ePlatform_QQ, ePlatform_Weixin
- 	 * @return void
-	 *   게임이 설정한 전역 콜백의 OnLoginNotify(LoginRet& loginRet) 방법을 통해 데이터를 게임에 반환
-	 *     loginRet.platform은 현재 인증 플랫폼 표시, 값 유형은 ePlatform, 가능한 값은 ePlatform_QQ, ePlatform_Weixin
-	 *     loginRet.flag 값은 반환 상태 표시, 가능한 값(eFlag 열거)은 다음과 같다 
- 	 *       eFlag_Succ: 반환 성공. 게임은 이 flag를 수신한 후 직접 LoginRet 구조체 중 토큰을 획득하여 게임 인증 절차 진행.
- 	 *       eFlag_QQ_NoAcessToken: 모바일QQ 인증 실패. 게임이 이 flag를 수신하면 유저를 안내하여 다시 인증(재시도)하게 하면 된다
-	 *       eFlag_QQ_UserCancel: 유저가 인증 과정 중
-	 *       eFlag_QQ_LoginFail: 모바일QQ 인증 실패. 게임이 이 flag를 수신하면 유저를 안내하여 다시 인증(재시도)하게 하면 된다
-	 *       eFlag_QQ_NetworkErr: 모바일QQ 인증 과정에서 네트워크 오류 발생. 게임이 이 flag를 수신하면 유저를 안내하여 다시 인증(재시도)하게 하면 된다
-	 *     loginRet.token은 하나의 Vector<TokenRet>이며 그곳에 저장된 TokenRet는 type와 value를 포함한다. Vector를 순회하고 type를 판단하여 필요한 토큰을 획득한다. type(TokenType) 유형 정의는 다음과 같다.
-	 *       eToken_QQ_Access,
-	 *       eToken_QQ_Pay,
-	 *       eToken_WX_Access,
-	 *       eToken_WX_Refresh
-	 */
-	void WGLogin(ePlatform platform);
+- **onCreate**:
 
-#### 인터페이스 호출:
-
-인터페이스 호출 예시:
-
-	WGPlatform.WGLogin(ePlatform_Weixin);	//위챗 클라이언트 또는 web 인증 호출
-호출 접수 사례:
-
-	virtual void OnLoginNotify(LoginRet& loginRet) {
-	 LOGD("OnLoginNotify: flag:%d platform:%d OpenId:%s, Token Size: %d",
-            loginRet.flag, loginRet.platform, loginRet.open_id.c_str(), loginRet.token.size());
-
-    if (loginRet.platform == ePlatform_QQ) {
-        ...
-    } else if (loginRet.platform == ePlatform_Weixin) {
-        // 위챗 로그인 토큰 획득
-        switch (loginRet.flag) {
-        case eFlag_Succ: {
-            // 정상적인 게임 로그인 로직 진행
-            std::string accessToken = "";
-            std::string refreshToken = "";
-            for (int i = 0; i < loginRet.token.size(); i++) {
-                if (loginRet.token.at(i).type == eToken_WX_Access) {
-                    accessToken.assign(loginRet.token.at(i).value);
-                } else if (loginRet.token.at(i).type == eToken_WX_Refresh) {
-                    refreshToken.assign(loginRet.token.at(i).value);
-                }
-            }
-            LOGD("accessToken : %s", accessToken.c_str());
-            LOGD("payToken : %s", refreshToken.c_str());
-            break;
-        }
-        case eFlag_WX_NotSupportApi:
-            // 설치되지 않았거나 버전이 너무 낮음. 유저가 위챗 최신 버전을 내려받도록 안내
-            break;
-
-        case eFlag_WX_UserCancel:
-        case eFlag_WX_UserDeny:
-            // 유저 취소. 유저에게 다시 인증할 것을 제시
-            break;
-        case eFlag_WX_AccessTokenExpired:
-            // WGRefreshWxToken 호출, accessToken 새로고침
-            break;
-        case eFlag_WX_RefreshTokenExpired:
-            // refreshToken 기한만료. 유저에게 다시 인증할 것을 제시
-            break;
-        case eFlag_WX_LoginFail:
-        case eFlag_Error:
-            // 로그인 과정에서 네트워크 실패 또는 기타 오류. 유저가 다시 인증하도록 안내하면 된다
-            break;
-        case eFlag_WX_RefreshTokenSucc:
-            // WGRefreshWXToken 호출 성공. 현재 refreshToken으로 새로운 accessToken 교환
-            break;
-        case eFlag_WX_RefreshTokenFail:
-            // WGRefreshWXToken 호출 실패. 게임이 스스로 WGRefreshWXToken 재시도 여부 결정
-            break;
-        }
+```	
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	......
+    if (WGPlatform.wakeUpFromHall(this.getIntent())) {
+    	// 호출한 플랫폼은 게임 로비이다 
+    	Logger.d("LoginPlatform is Hall");
+    } else {  
+    	// 호출한 플랫폼은 게임 로비가 이니다
+        Logger.d("LoginPlatform is not Hall");
+        WGPlatform.handleCallback(this.getIntent());
     }
+}
+```
+
+- **onNewIntent**
+
+```
+@Override
+protected void onNewIntent(Intent intent) {
+	super.onNewIntent(intent);
+	if (WGPlatform.wakeUpFromHall(intent)) {
+	    Logger.d("LoginPlatform is Hall");
+	} else {
+	    Logger.d("LoginPlatform is not Hall");
+	    WGPlatform.handleCallback(intent);
 	}
-
-#### 주의사항: 
-
-1.	위챗 인증은 위챗 버전이 반드시 4.0보다 높아야 한다
-
-- 위챗 실행 시, 위챗은 앱 서명과 위챗 백그라운드에 설정된 서명의 일치성을 검사한다(이 서명은 위챗appId 신청시 제출). 일치하지 않으면 인증된 위챗 클라이언트를 실행하지 못한다.
-- 위챗 인증 과정에서 좌측 상단의 돌아가기 버튼을 클릭하면 인증 콜백이 없는 문제를 초래할 수 있다. 게임은 스스로 카운트다운하여 시간을 초과하면 유저가 인증을 취소한 것으로 간주한다.
-- WXEntryActivity.java 위치가 틀리면(반드시 패키지명/wxapi 디렉토리에 위치) 콜백을 받을 수 없다.
-- **위챗에 로그인하지 않은 상태에서 게임이 위챗을 실행시켜 유저 이름과 비밀번호를 입력하고 로그인하면 로그인 콜백이 없는 경우가 발생할 수 있다. 이는 위챗 클라이언트의 이미 알려진 BUG이다. 게임은 WGLogin를 호출하여 로그인 하기 전에 카운트다운을 진행하여 시간이 끝날 때까지 콜백을 받지 못하면 타임아웃으로 간주하고 유저를 로그인 화면에 돌아가게 할 수 있다. **
-
-자동 인증과 Token 만료 처리
-------
-MSDK 2.0.0부터 sdk는 게임 자동 로그인에 새로운 인터페이스 WGLoginWithLocalInfo를 제공한다. 이 인터페이스를 사용하는 게임은 자동 로그인할 때 위챗 토큰 갱신, 모바일QQ/위챗 AccessToken 검증 등 작업을 처리하지 않아도 되고 게임을 시작할 때 이 인터페이스를 호출하기만 하면 된다. 이 인터페이스는 OnLoginNotify를 통해 로컬 토큰 검증 결과를 게임에 반환하며 게임은 반환된 결과에 따라 후속 절차를 진행하면 된다. 자세한 인터페이스 설명은 다음과 같다.
-
-
-	/**
- 	 *  @since 2.0.0
- 	 *  이 인터페이스는 로그인했던 게임에 사용되며 유저가 게임에 재차 입장시 사용한다. 게임 시작시 이 인터페이스를 먼저 호출하고 이 인터페이스는 백그라운드에서 토큰 검증을 시도한다
-  	 *  이 인터페이스는 OnLoginNotify를 통해 결과를 게임에 콜백하며 2가지 flag, 즉 eFlag_Local_Invalid와 eFlag_Succ만 반환한다.
- 	 *  로컬에 토큰이 없거나 로컬 토큰 검증 실패시 반환하는 flag는 eFlag_Local_Invalid이다. 게임이 이 flag를 수신하면 유저를 인증 페이지에서 인증하도록 안내하면 된다.
- 	 *  로컬에 토큰이 있고 검증에 성공하면 flag는 eFlag_Succ이다. 게임이 이 flag를 수신하면 sdk가 제공한 토큰을 직접 사용할 수 있으며 재검증을 진행하지 않는다.
- 	 *  @return void
- 	 *   Callback: 검증 결과는 OnLoginNotify를 통해 반환
- 	 */
-	 void WGLoginWithLocalInfo();
-
-
-**주의: MSDK2.0.0부터 게임 운행 도중에 일정한 시간마다 위챗 토큰을 검증하고 갱신한다. 갱신이 필요하면 sdk가 자동으로 갱신을 진행하고 OnLoginNotify를 통해 게임에 통지하며 flag는 eFlag_WX_RefreshTokenSucc와 eFlag_WX_RefreshTokenFail이다. 게임은 새로운 토큰을 받은 후 게임 클라이언트에 저장된 토큰과 서버 토큰을 동시에 갱신하여 새로운 토큰으로 후속 절차를 진행할 수 있도록 한다. **
-
-**로그인 데이터를 정확히 리포팅하기 위해 게임은 액세스시 반드시 onResume에서 WGPlatform.onResume을 호출하고 onPause에서 WGPlatform.onPause를 호출해야 한다. 게임은 백그라운드를 전환할 때마다 WGLoginWithLocalInfo를 호출하여 msdk를 통해 로컬 토큰 유효성을 검증해야 한다. 자세한 내용은 MSDKSample 중 MainActivity의 구현 참조.**
+}
+```
 
 개인 정보 조회
 ------
@@ -325,10 +249,11 @@ MSDK 2.0.0부터 sdk는 게임 자동 로그인에 새로운 인터페이스 WGL
 		}
 		}
 	}
+	
 #### 주의사항
 
 1. 위챗 공유는 위챗 버전이 반드시 4.0보다 높아야 한다
-2. 썸네일 용량은 32k를 초과하지 못하고 길이와 너비 비율은 제한하지 않는다. 용량을 초과하면 위챗을 실행하지 못한다
+2. `썸네일 용량은 32k를 초과하지 못하고` 길이와 너비 비율은 제한하지 않는다. 용량을 초과하면 위챗을 실행하지 못한다
 3. 공유는 sd카드를 사용해야 한다. sd카드가 없거나 sd카드가 점용되면 공유 실패를 초래하게 된다
 
 
@@ -411,7 +336,7 @@ MSDK 2.0.0부터 sdk는 게임 자동 로그인에 새로운 인터페이스 WGL
 
 #### 주의사항:
 - **모멘트 버튼에 네트워크 지연이 표시되고 반드시 위챗 5.1 및 이상 버전이어야 한다**
-
+- `빅 이미지 공유시 이미지 사이즈는 10M초과 하면 안 되고`，그렇지 않으면 공유 실패할 것이다
 
 음악 메시지 공유
 ------
@@ -561,16 +486,76 @@ public static boolean WGSendToWXGameFriend(
 		}
 	}
 
+링크 공유
+------
+
+링크 메시지는 구조화 메시지의 하나로서 위챗 구조화 메시지가 구조체 클릭하여 이동하는 기능을 지원 못하기 때문에 링크 메시지를 추가한다.링크 메시지는 임의 친구에게 전송할 수 있고 구조체를 클릭하면 링크 열 수 있다.때문에 링크 메시지는 초대, 자랑하기, 이벤트 페이지 공유에 자주 사용한다.
+
+#### 인터페이스 선언
+
+```
+/**
+ * @param title 링크 메시지의 타이틀
+ * @param desc 링크 메시지 개요
+ * @param url 공유 URL
+ * @param mediaTagName 실제 상황에 따라 아래 값중 하나 선택해서 작성.해당 값은 위챗으로 전송되어 통계하는 데 사용한다. 공유 리턴할 때 공유의 출처를 구분하기 위해해당 값을 가지고 리턴할 것이다
+ "MSG_INVITE";                   // 초대
+ "MSG_SHARE_MOMENT_HIGH_SCORE";    //금주 최고점을 모멘트로 공유
+ "MSG_SHARE_MOMENT_BEST_SCORE";    //역대 최고점을 모멘트로 공유
+ "MSG_SHARE_MOMENT_CROWN";         //금크라운를 모멘트로 공유
+ "MSG_SHARE_FRIEND_HIGH_SCORE";     //금주 최고점을 친구에게 공유
+ "MSG_SHARE_FRIEND_BEST_SCORE";     //역대 최고점을 친구에게 공유
+ "MSG_SHARE_FRIEND_CROWN";          //금크라운을 친구에게 공유
+ "MSG_friend_exceed"         // 초월 저랑하기
+ "MSG_heart_send"            // 하트 보내기
+ * @param thumbImgData 구조화 메시지 약도
+ * @param thumbImgDataLen 구조화 메시지 약도 데이터 길이
+ * @param messageExt 게임 공유는 스트링을 전송하는 것이고 해당 메시지로 게임 호출하여 OnWakeUpNotify(WakeupRet ret)에 있는 ret.messageExt를 통해 게임에 리턴한다.
+ * @return void
+ *   게임 설정하는 전역 콜백의 OnShareNotify(ShareRet& shareRet)를 통해 콜백하여 데이터를 게임에 리턴한다. shareRet.flag값은 리턴 상태를 표시하며, 가능한 값 및 설명은 아래와 같다:
+ *     eFlag_Succ: 공유 성공
+ *     eFlag_Error: 공유 실패
+ */
+void WGSendToWeixinWithUrl(
+        const eWechatScene& scene,
+        unsigned char* title,
+        unsigned char* desc,
+        unsigned char* url,
+        unsigned char* mediaTagName,
+        unsigned char* thumbImgData,
+        const int& thumbImgDataLen,
+        unsigned char* messageExt
+        );
+```
+
+#### 호출 예시
+
+```
+String title = "title";
+String desc = "desc";
+String mediaTagName = "MSG_INVITE";
+String messageExt = "message Ext";
+Bitmap thumb = BitmapFactory.decodeResource(mMainActivity.getResources(),
+		R.drawable.ic_launcher);
+byte[] imgData = CommonUtil.bitmap2Bytes(thumb);
+String url = "www.qq.com";
+if ("cpp".equals(ModuleManager.LANG)) { // C++를 사용하여 MSDK 호출, 게임은 한 가지 방법이 있으면 된다
+	PlatformTest.WGSendToWeixinWithUrl(scene, title, desc, url,
+			mediaTagName, imgData, imgData.length, messageExt);
+} else if ("java".equals(ModuleManager.LANG)) { // Java를 사용하여 MSDK호출
+	WGPlatform.WGSendToWeixinWithUrl(scene, title, desc, url, 
+			mediaTagName, imgData, imgData.length, messageExt);
+}
+```
+	
 Android 위챗 로그인 실패시 검사 절차
 ------
 
 ### 1단계: Log에
 
-	lauchWXPlatForm wx SendReqRet: true
+	lauchWXPlatForm wx SendReqRet: true 가 있는 지 검사.
 
-가 있는 지 검사
-
-이것이 있으면 성공적으로 위챗에 요청을 보냈음을 표시
+있으면 성공적으로 위챗에 요청을 보냈음을 표시
 
 위챗 클라이언트를 실행하지 못하면 2단계 참조
 위챗 클라이언트가 실행되었지만 콜백이 없으면 3단계 참조
@@ -603,3 +588,4 @@ Android 위챗 로그인 실패시 검사 절차
 ### 5단계: 게임의 전역 Observer 설정 여부 검사
 
 게임이 WGSetObserver(C++계층과 Java 계층)를 정확히 호출했는 지 검사
+

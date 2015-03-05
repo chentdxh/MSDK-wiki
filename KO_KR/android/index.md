@@ -1,7 +1,5 @@
-﻿
-MSDK Android 소개
+﻿MSDK Android 소개
 =======
-
 
 모듈 소개
 ---

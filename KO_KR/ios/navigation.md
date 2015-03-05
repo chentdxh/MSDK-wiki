@@ -34,10 +34,7 @@
   * [위챗 accesstoken 갱신](WX.md#위챗 accesstoken 갱신)
   * [위챗 각 버전이 지원하는 기능:](WX.md#위챗 각 버전이 지원하는 기능:)  
   
-[자동 인증 및 token 검증]()
-
-  * [개요](AutoAuth.md#개요)
-  * [주의사항](AutoAuth.md#주의사항)  
+[로그인 관련](login.md)  
 
 [Guest 모드]()
 
@@ -46,7 +43,12 @@
   * [프로세스 비교](Guest.md#프로세스 비교)
   * [필요한 변동](Guest.md#필요한 변동)
   
-[내장 브라우저]()
+[자동 인증 및 token검증]()
+
+  * [개요](AutoAuth.md#개요)
+  * [주의 사항](AutoAuth.md#주의 사항)  
+  
+  [내장 브라우저]()
 
   * [개요](InnerBrowser.md#개요)
   * [사용시 주의사항](InnerBrowser.md#사용시 주의사항)
@@ -62,7 +64,10 @@
   * [MSDK에서 화면을 표시하는 공지 인터페이스](Announcement.md#MSDK에서 화면을 표시하는 공지 인터페이스)
   * [공지 데이터 리스트 인터페이스](Announcement.md#공지 데이터 리스트 인터페이스)  
   * [예시 코드](Announcement.md#예시 코드)  
- 
+  * [FAQ](Announcement.md#FAQ)  
+  * [부록](Announcement.md#부록)
+  * [부록](Announcement.md#부록)  
+  
 [광고]()
 
   * [개요](Advertisement.md#개요)
@@ -72,8 +77,9 @@
 [LBS]()
 
   * [개요](lbs.md#개요)
-  * [인터페이스 설명](lbs.md#인터페이스 설명)  
-  * [예시 코드](lbs.md#예시 코드)  
+  * [인근 유저 조회](lbs.md#인근 유저 조회)  
+  * [위치 정보 제거](lbs.md#위치 정보 제거)  
+  * [유저 위치 정보 획득](lbs.md#유저 위치 정보 획득) 
   
 [메시지 푸시]()
 

@@ -16,7 +16,6 @@
   * [공유](qq.md#2.2 Share서비스)
   - - - -
   * # 
-  
 * [관계 링크](qq.md#2.3 Relation서비스)
   - - - -
   * # 
@@ -53,9 +52,3 @@
   * # 
   * [오류 코드](errorCode.md#1.MSDK백그라운드 오류 코드)
   
-  
-[MSDK 클라이언트 접속]()
-
-  * # 
-  * [Android 접속](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html#!index.md)
-

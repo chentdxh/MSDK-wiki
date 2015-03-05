@@ -17,6 +17,10 @@
   * [설정 설명](android.md)
   * [MSDK 초기화](android.md)
   * [전역 콜백 설정](android.md)
+    - - - - 
+  * # 핵심 모듈
+  * [**로그인 모듈(강렬 추천)**](login.md)
+  * [**공유 모듈(강렬 추천)**](share.md)
   - - - - 
   * # 버전 업데이트
   * [Android Library Project 유형 게임 업데이트](update.md#Android Library Project 유형 게임 업데이트)
@@ -35,8 +39,8 @@
   * [액세스 설정](qq.md#액세스 설정)
   - - - -
   * # 로그인 모듈
-  * [인증 로그인](qq.md#인증 로그인)
-  * [자동 로그인](qq.md#자동 로그인)
+  * [로그인 연동](login.md)
+  * [퀵 로그인](qq.md#퀵 로그인)
   * [다른 계정](diff-account.md)
   - - - -
   * # 관계사슬
@@ -65,8 +69,7 @@
   * [액세스 설정](wechat.md#액세스 설정)
   - - - -
   * # 로그인 모듈
-  * [인증 로그인](wechat.md#인증 로그인)
-  * [권한 설정](wechat.md#권한 설정)
+  * [로그인 연동](login.md)
   * [다른 계정](diff-account.md)
   - - - -
   * # SNS(친구 정보)
@@ -78,6 +81,7 @@
   * [빅이미지 메시지 공유](wechat.md#빅이미지 메시지 공유)
   * [음악 메시지 공유](wechat.md#음악 메시지 공유)
   * [백그라운드 공유](wechat.md#백그라운드 공유)
+  * [링크 공유](wechat.md#링크 공유)  
   - - - -
   * # 기타 설명
   * [위챗 인증 실패](wechat.md#Android위챗 로그인 실패 검사 절차)
@@ -152,6 +156,8 @@
  * [Mobgame](qmi.md)
  - - - -
  * [미다스](midas.md)
+ - - - -
+  * [JG 심의 검사](jg.md)
  - - - -
  * # 게임로비
  * [비로그인 상태에서 게임 실행](qqgame.md)

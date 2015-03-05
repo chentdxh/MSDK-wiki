@@ -9,7 +9,7 @@ MSDK iOS 소개
 #### MSDK는 텐센트 IEG가 자체 개발 및 제3자 모바일 게임 개발팀에 제공하여 텐센트 각 주요 플랫폼에 빠르게 액세스하고 출시 및 운영할 수 있도록 도와주는 공통 컴포넌트 및 서비스 라이브러리이다.
 
 ## 설치 패키지 구조
-* 2.3.0i 및 이전 버전:
+* 2.3.4i 및 이전 버전:
 
 	압축파일에 demo 프로젝트가 포함되고, 그중에 WGPlatform.embeddedframework/WGPlatform_C11.embeddedframework가 포함된다.
 	전자는 “Build Setting->C++ Language Dialect”가 GNU++98, “Build Setting->C++ Standard Library”가 “libstdc++(GNU C++ standard library)”인 프로젝트에 적용된다;
@@ -24,10 +24,33 @@ MSDK iOS 소개
 WGPlatform.embeddedframework 부합 두 embeddedframework 파일 구조는, 예를 들어, 섹션 [콘텐츠가 포함] 참조 폴더를 사용한다. 업그레이드 원본 파일을 삭제, 새 파일을 가져올 수 있습니다.
 
 
+* 2.4.0i 및 이후 버전:
+
+
+    압축 파일에 demo공정을 포함한다. 그중에 아래 내용을 포함：
+    1.MSDKFoundation.framework，기초 의뢰 라이브러리.
+    2.MSDK.framework，기본적인 로그인 공유 기능 제공.
+    3.MSDKMarketing.framework 크로스 마케팅,내장 브라우저 기능 제공.
+    4.MSDKXG.framework 푸시 기능 제공.
+    그 중에 MSDKFoundation.framework는 기초 의뢰 라이브러리이며 반드시 도입해야 하고 나머지 3개는 선택 가능한 라이브러리며 수요에 따라 도입하면 된다.
+    MSDK.framework,MSDKFoundation.framework,MSDKMarketing.framework,MSDKXG.framework는 “Build Setting->C++ Language Dialect”설정이 GNU++98，그리고 “Build Setting->C++ Standard Library”가 “libstdc++(GNU C++ standard library)”인 공정에 적용한다；
+    해당 _C11가 있는 framework는 이 두가지 설정이 각각 “GNU++11”와“libc++(LLVM C++ standard library with C++11 support)”가 된 공정에 적용한다.
+
+
+![linkBundle](./파일 구조_2.4.0_1.PNG)
+
+
+    업데이트 방식은 2.3.4i버전과 일치하며 원래 있는 파일을 삭제하고 새로운 파일을 도입하면 된다.
+
 ## 포함한 내용
 
-####　헤더 파일과 정적 라이브러리 파일은 ‘WGPlatform.framework’에 위치; 리소스 파일은 ‘WGPlatformResources.bundle에 위치(2.3.0i 이전 버전은 폴더 “MsdkResources”)
+* 2.3.4i 및 이전 버전:
+####　헤더 파일과 정적 라이브러리 파일은 ‘WGPlatform.framework’에 위치; 리소스 파일은 ‘WGPlatformResources.bundle에 위치(2.3.4i 이전 버전은 폴더 “MsdkResources”)
 ####　주요 인터페이스는 ‘WGPlatform.h’ 파일에 있고 MSDK 관련 구조체는 ‘WGCommon.h’ 파일에 있고 열거값은 ‘WGPublicDefine.h’에서 정의하고 푸시 인터페이스는 ‘WGApnInterface.h’ 파일에 있다. 메인 콜백 객체는 ‘WGObserver.h’ 파일에 있고 광고 콜백 객체는 ‘WGADObserver.h’ 파일에 있다.
+
+* 2.4.0i 및 이후 버전:
+#### 헤더 파일과 정적 라이브러리 파일은 각 framework에 있고；리소스 파일은 `/MSDKMarketing/WGPlatformResources.bundle`에 있다.
+#### 주요 인터페이스는 `MSDK.framework/WGPlatform.h`파일에 있고 MSDK 관련 구조체는 `MSDKFoundation.framework/MSDKStructs.h`파일에 있다. 열거값은 `MSDKFoundation.framework/MSDKEnums.h`에서 자체정의하고 푸시 인터페이스는 `MSDKXG.framework/MSDKXG.h`파일에 있고 주요 콜백 객체는 `MSDK.framework/WGPlatformObserver.h`파일에 있고 광고 콜백 객체는 `MSDK.framework/WGADObserver.h`파일에 있다.
 
 ## 모듈 소개
  
@@ -64,7 +87,7 @@ WGPlatform.embeddedframework 부합 두 embeddedframework 파일 구조는, 예�
 |플랫폼 실행|플랫폼 또는 채널(모바일QQ/위챗/게임로비/마이앱 등)을 통해 게임 시작|
 |관계사슬|유저가 플랫폼에서 보유한 친구 관계|
 |대화|모바일QQ 또는 위챗 채닝 메시지|
-|설치 채널|게임은 출시 전 패키징할 때 채널 별로(마이앱, wandoujia, 91 등) 부동한 채널 번호 apk 패키지를 생성한다. 설치 패키지에 있는 채널 번호를 설치 채널이라 부른다. |
+|설치 채널|info.plist 설정한 CHANNEL_DENGTA값은 현재 디폴트로 1001（AppStore）. |
 |등록 채널|유저 최초 로그인시 게임 설치 채널은 MSDK 백그라운드에 기록되어 유저의 등록 채널로 간주된다.|
 |Pf|결제에 필요한 필드, 데이터 분석용으로 사용된다. pf 구성: 플랫폼 실행_계정 체계-등록 채널-운영체제-설치 채널-사용자정의 필드|
 |pfKey| 결제용|
