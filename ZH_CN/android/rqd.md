@@ -47,3 +47,33 @@ Bugly上报开关设置
 - 网址:[http://rdm.wsd.com/](http://rdm.wsd.com/)->用QQ账号登录->选择相应的App
 
 ![bugly](./bugly1.png)
+
+Crash上报添加额外业务日志
+---
+
+当程序Crash时，有时需要添加一些额外的业务日志，随crash日志一起上报到http://rdm.wsd.com/ 平台，这样可以更好的定位造成crash的原因。最终可以在rdm平台上查看错误详情，其中额外业务日志保存在extraMessage.txt中。bugly暂未开放查看extraMessage.txt的功能，目前正在开发中。
+
+![rqd](./rqd_extramsg.png)
+
+要完成此功能只需要在全局observer(即WGPlatformObserver)中添加回调函数OnCrashExtMessageNotify。java按如下方式调用：
+
+    @Override
+    public String OnCrashExtMessageNotify() {
+      // 此处游戏补充crash时上报的额外信息,用于帮忙分析产生crash的原因
+      // 例如，String str = "test extra crash upload!";
+      // 如果不需要，请填写为String str = ""
+      String str = "test extra crash upload!";
+      return str;
+    }
+
+cpp按如下方式调用：
+
+    virtual std::string OnCrashExtMessageNotify() {
+    	// 此处游戏补充crash时上报的额外信息,用于帮忙分析产生crash的原因
+    	// 例如，std::string str = "test extra crash upload!";
+    	// 如果不需要，请填写为std::string str = ""
+    	std::string str = "test extra crash upload!";
+    	LOGD("OnCrashExtMessageNotify test %s", str.c_str());
+    	return str;
+    }
+

@@ -475,6 +475,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 | is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
 | groupOpenid|和游戏公会ID绑定的QQ群的groupOpenid，获取群成员信息、解绑群的时候作为输入参数|
+| platCode|平台错误码,当ret非0时关注|
 
 #### 2.3.4.4 接口调用说明 ####
 
@@ -505,11 +506,20 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	//返回结果
 	{
 		"is_lost":"0",
+		"platCode":"0",
 		"groupOpenid":"xxxx",
 	    "msg": "success",
 	    "ret": 0
 	}
 
+#### 2.3.4.6 错误返（platCode）回码说明 ####
+| 错误码| 含义说明 |
+| ------------- |:-----|
+|2001 	|参数错误。|
+|2002 	|没有绑定记录，请检查传入的公会ID和分区ID是否正确。|
+|2003 	|输入的openid不是群成员，需要群成员才能查看到group_openid。|
+|2004 	|该群与appid没有绑定关系。|
+|2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
 
 
 ### 2.3.5 /relation/get_groupinfo ###
@@ -535,6 +545,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ------------- |: -----|
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| platCode|平台错误码,当ret非0时关注|
 | is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
 | groupName|群名称|
 | fingerMemo|群的相关简介|
@@ -572,6 +583,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	//返回结果
 	{
 		"is_lost":"0",
+		"platCode":"0",
 		"groupName":"xxxx",
 		"fingerMemo":"xxxx",
 		"memberNum":"1000",
@@ -610,6 +622,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 | is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+| platCode|平台错误码,当ret非0时关注|
 
 
 #### 2.3.6.4 接口调用说明 ####
@@ -639,8 +652,183 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	//返回结果
 	{
 		"is_lost":"0",
+		"platCode":"0",
 	    "msg": "success",
 	    "ret": 0
+	}
+
+#### 2.3.6.6 错误返（platCode）回码说明 ####
+| 错误码| 含义说明 |
+| ------------- |:-----|
+|2001 	|查不到该QQ群openid的绑定记录。 |
+|2002 	|验证QQ群openid和appid或者公会id的对应关系失败。 |
+|2003 	|验证登录态失败。|
+|2004 	|操作过于频繁，请稍后再解绑qq群。 |
+|2006 	|参数错误。|
+|2007-2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。|  
+
+### 2.3.7 /relation/get_group_detail(仅供联调，正式环境未发布) ###
+
+#### 2.3.7.1接口说明 ####
+ 　QQ游戏公会绑群详细信息接口
+
+#### 2.3.7.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|用户在应用中的登录凭据 |
+| opt|string|功能选项；传0或者不传（兼容之前的调用情况）：使用公会id和区id换取groupOpenid；opt为1时：即使用QQ群号换取groupOpenid|
+| unionid|string|跟groupOpenid绑定的游戏公会ID，opt不传或者opt=0时必须要|
+| zoneid|string|游戏大区值，将公会ID与QQ群绑定时，传入参数“zoneid”的值|
+| groupCode|string|QQ群的原始号码|
+
+
+***（请注意输入参数的类型，参考1.5） ***
+
+### 2.3.7.3输出参数说明 ###
+
+| 参数名称| 描述|
+| ------------- |: -----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+| platCode|平台错误码,当ret非0时关注|
+| groupName|群名称|
+| fingerMemo|群的相关简介|
+| memberNum|群成员数|
+| maxNum|该群可容纳的最多成员数|
+| ownerOpenid|群主openid|
+| unionid|与该QQ群绑定的公会ID|
+| zoneid|大区ID|
+| adminOpenids|管理员openid。如果管理员有多个的话，用“,”隔开，例如0000000000000000000000002329FBEF,0000000000000000000000002329FAFF|
+| groupOpenid|和游戏公会ID绑定的QQ群的groupOpenid|
+| joinGroupKey|加群用的group_key|
+
+
+#### 2.3.7.4 接口调用说明 ####
+
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_group_detail |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.7.5 请求示例 ####
+
+	POST /relation/get_group_detail?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+    "appid": "1000000688",
+    "openid": "ECF664F0127DAB4004821795B40797F6",
+    "accessToken": "A3296A00BA6E44EF739CC2EE52D35F52",
+    "opt": "1",
+    "unionid": "35502799",
+    "zoneid": "35",
+    "groupCode": "188959810"
+	}
+	//返回结果
+	{
+	    "adminOpenids": "",
+	    "fingerMemo": "",
+	    "groupName": "傲世西游35区绑群",
+	    "groupOpenid": "4944D5C58AF654020B010465AC945E76",
+	    "is_lost": "0",
+	    "joinGroupKey": "",
+	    "maxNum": "200",
+	    "memberNum": "1",
+	    "msg": "success",
+	    "ownerOpenid": "ECF664F0127DAB4004821795B40797F6",
+	    "platCode": "0",
+	    "ret": 0,
+	    "unionid": "35502799",
+	    "zoneid": "35"
+	}
+
+
+#### 2.3.7.6 错误返（platCode）回码说明 ####
+| 错误码| 含义说明 |
+| ------------- |:-----|
+|2001 	|参数错误。 |
+|2002 	|该群openid没有绑定记录。  |
+|2003 	|需要群成员才能查看。 |
+|2006 	|该群openid和应用验证对应关系失败。  |
+|2007 	|该群已被解散或者不存在。|
+|2100	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。|  
+
+### 2.3.8 /relation/get_vip_rich_info(仅供联调，未发布) ###
+
+#### 2.3.8.1接口说明 ####
+　　　查询手Q会员详细信息（充值时间&到期时间）
+
+#### 2.3.8.2输入参数说明 ####
+
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|第三方调用凭证，通过获取凭证接口获得 |
+
+
+***（请注意输入参数的类型，参考1.5）***
+
+#### 2.3.8.3输出参数说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+| is_qq_vip|标识是否QQ会员（0：不是； 1：是）|
+| qq_vip_start|QQ会员最后一次充值时间，标准时间戳|
+| qq_vip_end|QQ会员期限，标准时间戳|
+| qq_year_vip_start|QQ年费会员最后一次充值时间，标准时间戳|
+| qq_year_vip_end|QQ SVIP最后一次充值时间，预留字段，当前信息无效，标准时间戳|
+| qq_svip_end|QQ SVIP期限，预留字段，当前信息无效，标准时间戳|
+| is_qq_year_vip|标识是否QQ年费会员（0：不是； 1：是）|
+| is_svip|标识是否QQ超级会员（0：不是； 1：是）|
+
+
+#### 2.3.8.4 接口调用说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_vip_rich_info/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
+| 格式|JSON |
+| 请求方式|POST  |
+
+### 2.3.8.5 请求示例 ###
+
+	POST http://msdktest.qq.com/relation/get_vip_rich_info/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
+	
+	{
+	    "appid": "100703379",
+	    "accessToken": "E16A9965C446956D89303747C632C27B",
+	    "openid": "F4382318AFBBD94F856E866043C3472E"
+	}
+	
+	//返回结果
+	{
+	    "is_lost": "0",
+	    "is_qq_vip": "0",
+	    "msg": "success",
+	    "qq_svip_end": "0",
+	    "qq_svip_start": "0",
+	    "qq_vip_end": "0",
+	    "qq_vip_start": "0",
+	    "qq_year_vip_end": "0",
+	    "qq_year_vip_start": "0",
+	    "ret": 0,
+		"is_qq_year_vip":"1",
+		"is_svip":"1"
 	}
 
 
@@ -662,6 +850,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | login|login|登录类型，默认填2 |
 | uin|int|用户标识,如使用openid帐号体系则默认填0 |
 | openid|string|用户在某个应用的唯一标识|
+| accessToken|string|`用户登录态（新增参数）`|
 | vip|int|查询类型:(1会员；4蓝钻；8红钻；16超级会员;32游戏会员；64心悦；128黄钻；以上可任意组合，<br>如需同时查询会员和蓝钻则输入5，如需同时查询蓝钻和红钻则输入12，如果三种都要查询则输入13).|
 ***（请注意输入参数的类型，参考1.5） ***
 
@@ -696,7 +885,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 #### 2.4.1.4 接口调用说明 ####
 | 参数名称| 描述|
 | ------------- |:-----|
-| url|http://msdktest.qq.com/relation/load_vip/ |
+| url|http://msdktest.qq.com/profile/load_vip/ |
 | URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |
@@ -712,7 +901,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "login": 2,
 	    "uin": 0,
 	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
-	    "vip": 13
+	    "vip": 13,
+		"accessToken":"A3284A812ECA15A3284A812ECA15269F85AE1C2D94EB37269F85AE1C2D94EB37"
 	}
 	//返回格式
 	{
@@ -882,7 +1072,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 | 参数名称| 描述|
 | ------------- |:-----|
-| url|http://msdktest.qq.com/relation/qqscore_batch/ |
+| url|http://msdktest.qq.com/profile/qqscore_batch/ |
 | URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |
@@ -894,7 +1084,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	{
 	    "appid": "100703379",
 	    "accessToken": "E16A9965C446956D89303747C632C27B",
-	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
+	    "openid": "F4382318AFBBD94F856E866043C3472E",
 	    "param": [
 	        {
 	            "type": 3,
@@ -913,6 +1103,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	
 	//返回结果
 	{"msg":"success","ret":0,"type":0}
+
 
 #### 2.4.4.6上报数据类型说明 ####
 | type(上报数据类型，int)| data(成就值，string)| expires(过期时间，string)| bcover(是否覆盖上报，int)| 备注`(非常重要，请关注)`|
@@ -961,11 +1152,3 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |311|公会人员身份变更（1-会长，2-副会长，3-成员）                   |  "0"|1|加入、变化时上报                                                             |
 |312|公会绑定的QQ群                                    |  "0"|1|绑定、变化时上报                                                             |
 |313|QQ群的绑定时间                                    |  "0"|1|绑定、变化时上报                                                             |
-
-
-
-
-
-
-
-

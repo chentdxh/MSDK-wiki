@@ -89,13 +89,13 @@ MSDK iOS 介绍
 |会话|手Q或微信的聊天信息|
 |安装渠道|info.plist配置的CHANNEL_DENGTA值，目前默认是1001（AppStore）.|
 |注册渠道|用户首次登陆时, 游戏的安装渠道, 会在MSDK后台记录, 算作用户注册渠道.|
-|Pf|支付需要使用到的字段, 用于数据分析使用, pf的组成为: 唤起平台_账号体系-注册渠道-操作系统-安装渠道-自定义字段.|
+|Pf|支付需要使用到的字段, 用于数据分析使用, pf的组成为: 唤起平台_账号体系-注册渠道-操作系统-安装渠道-账号体系-appid-openid.例如：desktop_m_qq-73213123-android-73213123-qq-100703379-A65A1614A2F930A0CD4C2FB2C4C5DBE1|
 |pfKey| 支付使用|
 |AMS|	互娱高级营销系统，负责游戏营销活动策划和开发|
 |快速登录|	可以在手Q游戏列表，或分享链接中直接将手Q已登录的帐号信息传到游戏实现登录，不需要游戏再次授权。依赖：MSDK 1.8.0i以上、手Q4.6.2以上。|
 |Guest模式|	Apple要求iOS手游提供手Q/微信平台以外的登录方式，直接进入游戏体验完整游戏内容，并可以在这个方式下完成支付。|
-|GuestID|	通过设备信息，向MSDK注册生成的游客身份标识，格式为"G_数字/字母/_/@"组成的34位长的字符串。|
-|Guest AppID|	为了辨识游客模式，Guest模式下的AppID使用“G_手QAppID”的格式，如果游戏没有手Q AppID，则使用"G_微信AppID"。|
+|GuestID|	通过设备信息，向MSDK注册生成的游客身份标识，格式为 _ "G_数字/字母/_/@"组成的34位长的字符串。|
+|Guest AppID|	为了辨识游客模式，Guest模式下的AppID使用 "G\_手Q AppId" 的格式。如果游戏没有手Q AppID，则使用"G\_微信AppID" 。例如G_12345.|
 |Guest AppKey|	与Guest AppID配对,使用对应手Q/微信的AppKey。|
 |支付id|	别称OfferId，配置在info.plist的MSDK_OfferId项。<br>内部自研游戏：直接在米大师官网midas.qq.com注册ios应用生成offerid<br>外部代理游戏：先由游戏产品在RDM官网rdm.oa.com申请苹果信息，申请好了后将信息给到协同规划组jiaganzheng录入到dev后台，然后由开发商在管理中心添加IAP版本，添加完成后再生成offerid|
 
