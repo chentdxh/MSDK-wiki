@@ -39,16 +39,20 @@
 	
 ## WIKI链接
 
-- **Wiki 地址：**
+- **中文 Wiki 地址：**
 
 	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html)
 	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html)
 	- 后台 Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/router/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/router/index.html)
+- **한국어:**
 
-## 站点地图
+	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/android/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/android/index.html)
+	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/ios/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/ios/index.html)
+	- 后台 Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/router/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/router/index.html)
+## 站点地图（SiteMap）
 
 - 中文：http://wiki.dev.4g.qq.com/v2/site.html
-- 韩文：敬请期待
+- 한국어：http://wiki.dev.4g.qq.com/v2/KO_KR/site.html
 	
 ## MDWiki相关介绍：
 
