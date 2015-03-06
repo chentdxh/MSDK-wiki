@@ -48,7 +48,8 @@
 
 	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/android/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/android/index.html)
 	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/ios/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/ios/index.html)
-	- 后台 Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/router/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/router/index.html)
+	- Router Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/router/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/router/index.html)
+	
 ## 站点地图（SiteMap）
 
 - 中文：http://wiki.dev.4g.qq.com/v2/site.html
