@@ -119,8 +119,10 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 
 #### 效果展示：
 
+![beacon_1](./loginpage.png)
 ![login](./lg1.png)
 ![login](./lg2.png)
+
 
 ####接口声明：
 
