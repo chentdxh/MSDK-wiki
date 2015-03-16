@@ -35,12 +35,12 @@
 
 **步骤说明：**
 
-* 步骤1：启动游戏后首先初始化MSDK。
+* 步骤1：启动游戏后首先初始化MSDK，调用接口为`WGPlatform.Initialized(Activity activity, MsdkBaseInfo baseInfo)`。
 * 步骤2：调用自动登录接口`WGLoginWithLocalInfo()`，此接口会去MSDK服务端检查本地票据是否有效。
-* 步骤3：自动登录接口会通过`OnLoginNotify(LoginRet ret)`将登录结果回调给游戏。通过`ret.flag`判断登录结果，如果为`eFlag_Succ`(0)或`eFlag_WX_RefreshTokenSucc`(2005)则为登录成功，其他为失败。
+* 步骤3：自动登录接口会通过`OnLoginNotify(LoginRet ret)`将登录结果回调给游戏。通过`ret.flag`判断登录结果，如果为`CallbackFlag.eFlag_Succ`(0)则为登录成功，其他为失败。
 * 步骤4：登录授权成功，跳到步骤9
 * 步骤5：自动登录失败，调用` WGLogin(EPlatform platform)`拉起手Q或微信平台登录授权。
-* 步骤6：登录结果通过`OnLoginNotify(LoginRet ret)`回调。通过`ret.flag`判断登录结果，如果为`eFlag_Succ`(0)则为登录成功，其他为失败。
+* 步骤6：登录结果通过`OnLoginNotify(LoginRet ret)`回调。通过`ret.flag`判断登录结果，如果为`CallbackFlag.eFlag_Succ`(0)则为登录成功，其他为失败。
 * 步骤7：拉起平台登录授权失败，游戏引导用户重新登录。若用户重新登录则跳到步骤5。
 * 步骤8：登录授权成功。
 * 步骤9：同步客户端中最新的票据给游戏服务器。如果游戏服务端需要使用登录票据，**注意一定要在收到登录成功的回调后同步最新票据**，以免服务端使用失效的票据操作。 

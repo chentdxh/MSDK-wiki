@@ -8,10 +8,6 @@
   * [模块介绍](index.md)
   * [名词解释](index.md)
   * [版本历史](version.md)
-  - - - - 
-  # SDK下载
-  * [外网下载](http://wiki.mg.open.qq.com/index.php?title=%E4%B8%8B%E8%BD%BDMSDK)
-  * [内网下载](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD)
 
 [SDK接入]()
 
@@ -25,7 +21,7 @@
   * # 核心模块
   * [**登录模块(强烈推荐)**](login.md)
   * [**分享模块(强烈推荐)**](share.md)
-  - - - - 
+   - - - - 
   * # 版本更新
   * [Android Library Project类游戏更新](update.md#Android Library Project类游戏更新)
   * [非Android Library Project类游戏更新](update.md#非Android Library Project类游戏更新)
@@ -150,10 +146,10 @@
 [应用宝]()
 
   * # 抢号
-  * [应用宝抢号](myApp.md)
+  * [应用宝抢号](myApp.md#抢号开关配置)
   - - - -
   * # 更新
-  * [省流量更新](myApp.md)
+  * [省流量更新](myApp.md#省流量更新开关配置)
   
 [其他模块]()
 

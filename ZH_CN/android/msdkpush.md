@@ -35,7 +35,7 @@ assets/msdkconfig.ini中配置打开消息推送开关：
     <!-- 【必须】 信鸽通知栏 -->
     <activity
         android:name="com.tencent.android.tpush.XGPushActivity"
-        android:exported="true" >
+        android:exported="false" >
         <intent-filter>
             <action android:name="" />
         </intent-filter>
@@ -64,19 +64,6 @@ assets/msdkconfig.ini中配置打开消息推送开关：
         android:persistent="true"
         android:process=":xg_service_v2" />
     <!-- 信鸽配置END -->
-
-在MSDK2.7.0a及之后还需要添加如下配置。`注意改下包名。`
-
-        <!-- 【必须】 通知service，此选项有助于提高抵达率 -->
-        <service
-            android:name="com.tencent.android.tpush.rpc.XGRemoteService"
-            android:exported="true" >
-            <intent-filter>
-               <!-- 【必须】 请修改为当前APP包名.PUSH_ACTION-->
-               <action android:name="com.example.wegame.PUSH_ACTION" />
-           </intent-filter>
-        </service>
-        <!-- 信鸽配置END -->
 
 第三步，登陆http://dev.ied.com/在消息管理模块中进行推送消息设置，请使用 **消息（正式环境）发送消息**
 
