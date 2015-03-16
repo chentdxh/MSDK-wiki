@@ -17,7 +17,7 @@
   * [설정 설명](android.md)
   * [MSDK 초기화](android.md)
   * [전역 콜백 설정](android.md)
-    - - - - 
+  - - - - 
   * # 핵심 모듈
   * [**로그인 모듈(강렬 추천)**](login.md)
   * [**공유 모듈(강렬 추천)**](share.md)

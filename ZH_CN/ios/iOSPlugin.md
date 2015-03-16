@@ -30,7 +30,9 @@ CoreLocation.framework
 ImageIO.framework
 CoreText.framework
 QuartzCore.framework
+AdSupport.framework【MSDK2.6.0i以后要求】
 ```
+【MSDK2.6.0i以后要求提审时需要在iTC选择相应的项，详见[说明](http://km.oa.com/articles/show/234073)】
 ---	
 ##Step2:引入MSDK
 * 2.3.4i以及之前的版本:
