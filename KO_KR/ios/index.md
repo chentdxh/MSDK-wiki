@@ -16,11 +16,11 @@ MSDK iOS 소개
 	후자는 이 두개 구성 항목이 “GNU++11”과 “libc++(LLVM C++ standard library with C++11 support)”인 프로젝트에 적용된다.
 
 
-![linkBundle](./파일구조1.PNG)
+![linkBundle](./msdk_structure1.PNG)
 
 
     두개 embeddedframework 파일 구조는 일치하다. WGPlatform.embeddedframework를 예로 들면, 그중 폴더 용도는 [포함한 내용] 장절 참조. 업데이트시 기존 파일을 삭제하고 새 파일을 도입하면 된다.
-![linkBundle](./파일 구조 2.PNG) 
+![linkBundle](./msdk_structure2.PNG) 
 WGPlatform.embeddedframework 부합 두 embeddedframework 파일 구조는, 예를 들어, 섹션 [콘텐츠가 포함] 참조 폴더를 사용한다. 업그레이드 원본 파일을 삭제, 새 파일을 가져올 수 있습니다.
 
 
@@ -37,7 +37,7 @@ WGPlatform.embeddedframework 부합 두 embeddedframework 파일 구조는, 예�
     해당 _C11가 있는 framework는 이 두가지 설정이 각각 “GNU++11”와“libc++(LLVM C++ standard library with C++11 support)”가 된 공정에 적용한다.
 
 
-![linkBundle](./파일 구조_2.4.0_1.PNG)
+![linkBundle](./msdk_structure_2.4.0_1.PNG)
 
 
     업데이트 방식은 2.3.4i버전과 일치하며 원래 있는 파일을 삭제하고 새로운 파일을 도입하면 된다.
