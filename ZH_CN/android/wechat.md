@@ -391,7 +391,7 @@ protected void onNewIntent(Intent intent) {
 	 * @param fOpenId 好友的openid
 	 * @param title 分享标题
 	 * @param description 分享描述
-	 * @param mediaId 图片的id 通过后台接口/share/upload_wx获取
+	 * @param mediaId 图片的id 通过后台接口/share/upload_wx获取（注：Android微信5.4-6.1版本该参数不生效，使用的是默认icon）
 	 * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
 	 * @param mediaTagName 请根据实际情况填入下列值的一个, 此值会传到微信供统计用, 在分享返回时也会带回此值, 可以用于区分分享来源
 		 "MSG_INVITE";                   // 邀请
@@ -435,7 +435,7 @@ protected void onNewIntent(Intent intent) {
 	 "MSG_SHARE_FRIEND_CROWN";          //分享金冠给好友
 	 "MSG_friend_exceed"         // 超越炫耀
 	 "MSG_heart_send"            // 送心
- * @param thumbMediaId 图片的id 通过后台接口/share/upload_wx获取
+ * @param thumbMediaId 图片的id 通过后台接口/share/upload_wx获取（注：Android微信5.4-6.1版本该参数不生效，使用的是默认icon）
  * @param extMsdkInfo 游戏自定义透传字段，通过分享结果shareRet.extInfo返回给游戏，游戏可以用extInfo区分request
 */
 public static boolean WGSendToWXGameFriend(
