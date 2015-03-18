@@ -34,7 +34,12 @@
   * [微信刷新accesstoken](WX.md#微信刷新accesstoken)
   * [微信各版本支持功能情况如下：](WX.md#微信各版本支持功能情况如下：)  
   
-[关于登录](login.md)
+[关于登录]()
+
+  * [概述 ](login.md#概述 )
+  * [名词解释、接口说明 ](login.md#名词解释、接口说明 )
+  * [MSDK2.6.0i之前票据处理流程 ](login.md#推荐登录流程（2.6.0i之前版本） )
+  * [MSDK2.6.0i及以后的票据自动刷新流程](login.md#MSDK2.6.0i以后的票据自动刷新流程)
   
 [Guest模式]()
 
@@ -57,6 +62,14 @@
   * [应用内打开App Store详情页](InnerBrowser.md#应用内打开App Store详情页)
   * [分享](InnerBrowser.md#分享)
   * [打开AMS营销活动中心](InnerBrowser.md#打开AMS营销活动中心) 
+  
+[数据上报]()
+
+  * [灯塔接入配置](beacon.md#灯塔接入配置)
+  * [自定义数据上报](beacon.md#自定义数据上报)
+  * [RQD接入配置](rqd.md#RQD接入配置)
+  * [Crash数据上报](rqd.md#Crash数据上报)
+  * [用户反馈](feedback.md)
   
 [公告]()
 

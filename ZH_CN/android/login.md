@@ -4,6 +4,33 @@
 
 该模块将会对MSDK所有授权相关的模块做一次梳理，包括授权登录、自动登录、快速登录、票据刷新、读取等模块的详细说明。游戏可以先参照该模块熟悉MSDK所有授权相关的模块，然后再根据游戏自己的需求使用对应接口完成授权等功能。
 
+## 接入登录具体工作（开发必看）
+
+**`游戏开发可以按照下面提供的步骤完成MSDK登录模块的接入，降低接入成本和遗漏的处理逻辑。强烈推荐认真了解，并且所有逻辑都要处理到！！！`**
+
+1. 设置需要用户授权的权限：
+	- 游戏在MSDK初始化以后要调用手Q权限设置的接口设置需要用户授权给游戏的平台权限。具体方法[点击查看](#设置需要用户授权的权限WGSetPermission)。
+- **处理授权登录**：
+	1. 在登录按钮的点击事件的处理函数中调用`WGLogin`完成授权登录。具体方法[点击查看](#处理授权登录WGLogin)。
+- **处理自动登录**：
+	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
+	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
+		- 对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差
+- **处理用户注销**：
+	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登录。具体方法[点击查看](#处理用户注销WGLogout)
+- **处理MSDK的登录回调**：
+	- 在游戏对MSDK回调处理的逻辑中增加对于对onLoginNotify的处理。具体方法[点击查看](#处理MSDK的登录回调)
+- **处理平台的拉起**：
+	- 在游戏的主activity的onCreate和onNewIntent里调用handleCallback完成对平台拉起的处理。具体方法[点击查看](#处理平台唤起handleCallback)
+- **处理MSDK的拉起回调**：
+	- 在游戏对MSDK回调处理的onWakeUpNotify中增加对平台拉起的处理。具体方法[点击查看](#处理MSDK的拉起回调)
+- **处理异帐号逻辑**：
+	- 游戏对于异帐号的处理逻辑，具体内容参照[MSDK异帐号接入](diff-account.md#异帐号处理逻辑（开发关注）)
+- **其余特殊逻辑处理**：
+	- 低内存机器授权过程游戏被杀后的登录方案。具体方法[点击查看](#手Q授权在低内存机器授权过程游戏被杀后的登录方案)
+	- **`MSDK微信票据过期自动刷新机制。`**具体方法[点击查看](#微信票据自动刷新)
+	- 登录数据上报接口调用要求。具体方法[点击查看](#登录数据上报)
+	
 ##名词解释、接口说明
 	
 ###登录相关名词解释：
@@ -33,18 +60,6 @@
 
 ![login](./recommend_login.png)
 
-**步骤说明：**
-
-* 步骤1：启动游戏后首先初始化MSDK，调用接口为`WGPlatform.Initialized(Activity activity, MsdkBaseInfo baseInfo)`。
-* 步骤2：调用自动登录接口`WGLoginWithLocalInfo()`，此接口会去MSDK服务端检查本地票据是否有效。
-* 步骤3：自动登录接口会通过`OnLoginNotify(LoginRet ret)`将登录结果回调给游戏。通过`ret.flag`判断登录结果，如果为`CallbackFlag.eFlag_Succ`(0)则为登录成功，其他为失败。
-* 步骤4：登录授权成功，跳到步骤9
-* 步骤5：自动登录失败，调用` WGLogin(EPlatform platform)`拉起手Q或微信平台登录授权。
-* 步骤6：登录结果通过`OnLoginNotify(LoginRet ret)`回调。通过`ret.flag`判断登录结果，如果为`CallbackFlag.eFlag_Succ`(0)则为登录成功，其他为失败。
-* 步骤7：拉起平台登录授权失败，游戏引导用户重新登录。若用户重新登录则跳到步骤5。
-* 步骤8：登录授权成功。
-* 步骤9：同步客户端中最新的票据给游戏服务器。如果游戏服务端需要使用登录票据，**注意一定要在收到登录成功的回调后同步最新票据**，以免服务端使用失效的票据操作。 
-
 ### 登录相关接口推荐用法
 
 1. 授权登录：直接调用`WGLogin`拉起对应平台的授权
@@ -58,34 +73,6 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 ![login](./login_new1.png)
 
 存在部分游戏在刚启动游戏时通过调用WGGetLoginRecord来判断本地票据是否有效，如果本地票据有效，直接将票据与Game服务器进行交互。`请不要如此使用！！！请使用自动登录接口WGLoginWithLocalinfo`
-
-
-## 接入登录具体工作（开发必看）
-
-**游戏开发可以按照下面提供的步骤完成MSDK登录模块的接入，降低接入成本和遗漏的处理逻辑。强烈推荐认真了解！！！**
-
-1. 设置需要用户授权的权限：
-	- 游戏在MSDK初始化以后要调用手Q权限设置的接口设置需要用户授权给游戏的平台权限。具体方法[点击查看](#设置需要用户授权的权限WGSetPermission)。
-- **处理授权登录**：
-	1. 在登录按钮的点击事件的处理函数中调用`WGLogin`完成授权登录。具体方法[点击查看](#处理授权登录WGLogin)。
-- **处理自动登录**：
-	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
-	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
-		- 对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差
-- **处理用户注销**：
-	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登录。具体方法[点击查看](#处理用户注销WGLogout)
-- **处理MSDK的登录回调**：
-	- 在游戏对MSDK回调处理的逻辑中增加对于对onLoginNotify的处理。具体方法[点击查看](#处理MSDK的登录回调)
-- **处理平台的拉起**：
-	- 在游戏的主activity的onCreate和onNewIntent里调用handleCallback完成对平台拉起的处理。具体方法[点击查看](#处理平台唤起handleCallback)
-- **处理MSDK的拉起回调**：
-	- 在游戏对MSDK回调处理的onWakeUpNotify中增加对平台拉起的处理。具体方法[点击查看](#处理MSDK的拉起回调)
-- **处理异帐号逻辑**：
-	- 游戏对于异帐号的处理逻辑，具体内容参照[MSDK异帐号接入](diff-account.md#异帐号处理逻辑（开发关注）)
-- **其余特殊逻辑处理**：
-	- 低内存机器授权过程游戏被杀后的登录方案。具体方法[点击查看](#手Q授权在低内存机器授权过程游戏被杀后的登录方案)
-	- MSDK微信票据过期自动刷新机制。具体方法[点击查看](#微信票据自动刷新)
-	- 登录数据上报接口调用要求。具体方法[点击查看](#登录数据上报)
 
 ##设置需要用户授权的权限WGSetPermission
 
@@ -336,11 +323,39 @@ MSDK的登录回调来自以下几个场景：
 
 1. MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新,MSDK会自动刷新完成, 并通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail（已经包含在onLoginNotify的回调中）。
 - **游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程。**
-- 如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。
+- **如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。此时游戏需要自行处理微信票据过期的逻辑。具体可以参考：**[微信票据刷新接口](login.md#微信票据刷新：WGRefreshWXToken)
 
-## 其余接口列表
+##微信票据刷新：WGRefreshWXToken
 
-###WGGetLoginRecord
+#### 概述：
+
+- 微信accessToken只有两个小时的有效期，refreshToken的有效期为30天。只要refreshToken不过期就可以通过refreshToken刷新accessToken。刷新后会得到新的accessToken和refreshToken。如果游戏没有使用MSDK提供的票据自动刷新接口，需要使用WGRefreshWXToken()接口来进行accessToken续期。
+- 当游戏调用`WGGetLoginRecord`收到的flag为`eFlag_WX_AccessTokenExpired`时调用此接口刷新微信票据。刷新结果通过`OnLoginNotify`回调给游戏。`eFlag_WX_RefreshTokenSucc` 刷新token成功。`eFlag_WX_RefreshTokenFail` 刷新token失败。
+
+####接口声明：
+
+	/**
+	 * 此接口用于刷新微信的accessToken
+	 * refreshToken的用途就是刷新accessToken, 只要refreshToken不过期就可以通过refreshToken刷新accessToken。
+	 * 有两种情况需要刷新accessToken,
+	 * @return void
+	 *   通过游戏设置的全局回调的OnLoginNotify(LoginRet& loginRet)方法返回数据给游戏
+	 *     因为只有微信平台有refreshToken, loginRet.platform的值只会是ePlatform_Weixin
+	 *     loginRet.flag值表示返回状态, 可能值(eFlag枚举)如下：
+	 *       eFlag_WX_RefreshTokenSucc: 刷新票据成功, 游戏接收到此flag以后直接读取LoginRet结构体中的票据进行游戏授权流程.
+	 *       eFlag_WX_RefreshTokenFail: WGRefreshWXToken调用过程中网络出错, 刷新失败, 游戏自己决定是否需要重试 WGRefreshWXToken
+	 */
+	void WGRefreshWXToken();
+
+####调用示例：
+
+	WGPlatform::GetInstance()->WGRefreshWXToken()
+
+#### 注意事项：
+
+1. 每个refreshToken只能用一次，刷新时会获得新的refresh。
+
+##读取本地票据：WGGetLoginRecord
 
 #### 概述：
 

@@ -3,7 +3,7 @@ MSDK 内置浏览器相关模块
 MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各方面优于系统内置Webview, 此Webview中提供了分享到QQ和微信的功能. 游戏需要在游戏内拉起Web页面时, 例如拉起营销活动页面, 论坛, 攻略等页面时. 接入内置浏览器需要完成两步。
 接入配置
 ------
-MSDK2.0.0a以前按如下方式配置。
+**MSDK2.0.0a以前按如下方式配置:**
 
     <activity
        android:name="com.tencent.mtt.spcialcall.SpecialCallActivity"
@@ -21,7 +21,7 @@ MSDK2.0.0a以前按如下方式配置。
        <data android:scheme="file" />
     </intent-filter>
     </activity>
-MSDK2.0.0a及以后按如下方式配置。
+**MSDK2.0.0a及以后按如下方式配置:**
 
     <activity
        android:name="com.tencent.msdk.webview.WebViewActivity"
@@ -38,6 +38,25 @@ MSDK2.0.0a及以后按如下方式配置。
 `android:screenOrientation="portrait"`
 
 如果是升级到1.9.0版本的，可删除1.9.0以前的配置再添加新的配置。
+
+**MSDK2.7.0a及以后按如下配置:**
+
+`如果手机安装了QQ浏览器则使用的是QQ内置浏览器内核，而未安装的话则使用的是系统默认内置浏览器，存在内存泄露的可能，因此改为独立进程，需要添加android:process=":msdk_inner_webview"。`
+
+        <!-- TODO 浏览器相关 START -->
+        <activity
+            android:name="com.tencent.msdk.webview.JumpShareActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        
+        <activity
+            android:name="com.tencent.msdk.webview.WebViewActivity"
+            android:process=":msdk_inner_webview" 
+            android:configChanges="orientation|screenSize|keyboardHidden|navigation|fontScale|locale"
+            android:screenOrientation="unspecified"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
 
 打开浏览器
 ------

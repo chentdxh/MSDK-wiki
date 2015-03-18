@@ -29,7 +29,7 @@
 | handleCallback | 处理各个平台唤起 |  |
 | WGRefreshWXToken | 通过微信refreshToken刷新获取accessToken |  从MSDK 2.0开始不建议游戏自己刷新微信票据 |
 
-### 推荐登录流程
+### 推荐登录流程（2.6.0i之前版本）
 
 ![login](./recommend_login.png)
 
@@ -345,3 +345,27 @@ QQ平台：
 ##常见问题
 
 1. 支付时提示paytoken过期，则需要拉起登录界面重新授权后方能支付。paytoken过期以后必须重新授权。
+
+## MSDK2.6.0i以后的票据自动刷新流程
+**概述**
+
+MSDK2.6.0i以后，在支持之前版本登录流程的基础上，优化新流程。游戏只需要关注'WGLogin' 'WGGetLoginRecord'即可完成登录和票据处理：
+
+* 游戏需要登录票据时的调用逻辑：
+  ![login_1](./login_1.jpg)
+  `如果'WGGetLoginRecord'返回非0，此时调用WGLogin() （不需要附加平台参数），然后在onLoginNotify处理票据异步刷新后的结果`
+* 在需要使用本地票据登录时，不再需要调用'WGLoginWithLocalInfo'，改为调用WGLogin() ,然后等待onLoginNotify的结果。
+* MSDK内部的票据定时刷新逻辑：
+  ![login_4](./login_4.jpg)
+
+**新的调用步骤说明：**
+
+* 步骤1：启动游戏后首先初始化MSDK。
+* 步骤2：调用自动登录接口`WGLogin() （不需要附加平台参数）`，此接口会去MSDK服务端检查本地票据是否有效。
+* 步骤3：自动登录接口会通过`OnLoginNotify(LoginRet ret)`将登录结果回调给游戏。通过`ret.flag`判断登录结果，如果为`eFlag_Succ`(0)则为登录成功，其他为失败。
+* 步骤4：登录授权成功，跳到步骤9
+* 步骤5：自动登录失败，调用` WGLogin(EPlatform platform)`拉起手Q或微信平台登录授权。
+* 步骤6：登录结果通过`OnLoginNotify(LoginRet ret)`回调。通过`ret.flag`判断登录结果，如果为`eFlag_Succ`(0)则为登录成功，其他为失败。
+* 步骤7：拉起平台登录授权失败，游戏引导用户重新登录，跳到步骤5。
+* 步骤8：登录授权成功。
+* 步骤9：同步客户端中最新的票据给游戏服务器。如果游戏服务端需要使用登录票据，**注意一定要在收到登录成功的回调后同步最新票据**，以免服务端使用失效的票据操作。 
