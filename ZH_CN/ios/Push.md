@@ -16,7 +16,7 @@
  - 游戏还需要实现UIApplicationDelegate中与推送相关的5个方法：
 >*游戏测试MSDK推送功能时，需要使用正式推送证书进行AD Hoc 方式打包进行测试，并请注意切勿使用全量推送方式进行推送！*
 
-```ruby
+```
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
@@ -28,21 +28,22 @@
  - 概述中签名文件配置正确才能成功注册推送。
 游戏需要didFinishLaunchingWithOptions方法中调用MSDK的WGRegisterAPNSPushNotification方法进行推送注册。
 代码示例：
-```ruby
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions{
+```
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     …
-    WGPlatform* plat = WGPlatform::GetInstance();
-    plat->WGRegisterAPNSPushNotification(launchOptions);
+    [WGApnsInterface WGRegisterAPNSPushNotification:launchOptions];
     …
 } 
 ```
 
 - 2.4.0i及以后版本还可使用如下方式：
 ```
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions{
-…
-[MSDKXG WGRegisterAPNSPushNotification:launchOptions];
-…
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+	…
+	[MSDKXG WGRegisterAPNSPushNotification:launchOptions];
+	…
 }
 ```
 
@@ -51,10 +52,10 @@
 ##注册成功
  - 注册成功游戏会收到didRegisterForRemoteNotificationsWithDeviceToken回调方法，游戏需要在此方法中调用WGSuccessedRegisterdAPNSWithToken方法将deviceToken上报到MSDK。
 代码示例：
-```ruby
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
-    WGPlatform *plat = WGPlatform::GetInstance();
-    plat->WGSuccessedRegisterdAPNSWithToken(deviceToken);
+```
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    [WGApnsInterface WGSuccessedRegisterdAPNSWithToken:deviceToken];
 } 
 ```
 
@@ -62,9 +63,7 @@
 ```
 -(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-…
-[MSDKXG WGSuccessedRegisterdAPNSWithToken:deviceToken];
-…
+	[MSDKXG WGSuccessedRegisterdAPNSWithToken:deviceToken];
 }
 ```
 
@@ -73,10 +72,10 @@
 ##注册失败
  - 注册失败游戏会收到didFailToRegisterForRemoteNotificationsWithError方法回调，游戏需要调用WGFailedRegisteredAPNS方法通知MSDK注册推送失败。
 示例代码：
-```ruby
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    WGPlatform *plat = WGPlatform::GetInstance();
-    plat->WGFailedRegisteredAPNS();
+```
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    [WGApnsInterface WGFailedRegisteredAPNS];
 } 
 ```
 
@@ -84,9 +83,7 @@
 ```
 -(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-…
-[MSDKXG WGFailedRegisteredAPNS];
-…
+	[MSDKXG WGFailedRegisteredAPNS];
 }
 ```
 
@@ -96,10 +93,10 @@
 ##接收消息
  - 成功注册推送后，应用收到推送消息会进入didReceiveRemoteNotification方法。游戏需要在此方法中调用WGReceivedMSGFromAPNSWithDict方法，将推送消息给MSDK做解析，解析结果通知给游戏。
 示例代码：
-```ruby
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
-    WGPlatform *plat = WGPlatform::GetInstance();
-    plat->WGReceivedMSGFromAPNSWithDict(userInfo);
+```
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [WGApnsInterface WGReceivedMSGFromAPNSWithDict:userInfo];
 } 
 ```
 
@@ -107,9 +104,7 @@
 ```
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-…
-[MSDKXG WGReceivedMSGFromAPNSWithDict:userInfo];
-…
+	[MSDKXG WGReceivedMSGFromAPNSWithDict:userInfo];
 }
 ```
 
@@ -119,10 +114,10 @@
 
  - 应用需要在applicationDidBecomeActive中调用WGCleanBadgeNumber方法将应用桌面图标右上角的推送条目清空。
 示例代码：
-```ruby
-- (void)applicationDidBecomeActive:(UIApplication *)application{
-    WGPlatform *plat = WGPlatform::GetInstance();
-    plat->WGCleanBadgeNumber();
+```
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [WGApnsInterface WGCleanBadgeNumber];
 } 
 ```
 
@@ -130,8 +125,6 @@
 ```
 -(void)applicationDidBecomeActive:(UIApplication *)application
 {
-…
-[MSDKXG WGCleanBadgeNumber];
-…
+	[MSDKXG WGCleanBadgeNumber];
 }
 ```

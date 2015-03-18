@@ -1,0 +1,6 @@
+﻿{
+    "useSideMenu": true,
+    "lineBreaks": "gfm",
+    "additionalFooterText": "ドキュメントの内容は MSDK iOS開発チームによって提供されたものです",
+    "anchorCharacter": "#"
+}

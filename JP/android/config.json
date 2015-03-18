@@ -1,0 +1,6 @@
+﻿{
+    "useSideMenu": true,
+    "lineBreaks": "gfm",
+    "additionalFooterText": "文ドキュメントの内容は MSDK Android 開発チームによって提供されたものです",
+    "anchorCharacter": "#"
+}

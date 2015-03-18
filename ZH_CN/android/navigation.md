@@ -9,7 +9,7 @@
   * [名词解释](index.md)
   * [版本历史](version.md)
   - - - - 
-  # SDK下载
+  * # SDK下载
   * [外网下载](http://wiki.mg.open.qq.com/index.php?title=%E4%B8%8B%E8%BD%BDMSDK)
   * [内网下载](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD)
 
@@ -59,9 +59,11 @@
   - - - -
   * # 游戏内加群、好友
   * [绑定QQ群](qq.md#绑定QQ群)
+  * [查询QQ群绑定信息](qq.md#查询QQ群绑定信息)
+  * [解绑QQ群](qq.md#解绑QQ群)
   * [加入QQ群](qq.md#加入QQ群)
+  * [加群绑群常见问题](qq.md#加群绑群常见问题)
   * [添加QQ好友](qq.md#添加QQ好友)
-  * [加群加好友常见问题](qq.md#加群加好友常见问题)
   - - - -
   * # 其他说明
   * [手Q功能对应支持版本](qq.md#)
