@@ -4,22 +4,15 @@
 ##概述
  - 该功能在1.6.1版本以后提供，需要XCode5.0以上版本进行编译。
 调用以下代码，打开指定的url。
-```ruby
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 plat->WGOpenUrl((unsigned char*)[url UTF8String]);
-```
-	如果需要调用AMS营销活动中心，可以调用以下代码：
-```ruby
-WGPlatform* plat = WGPlatform::GetInstance();
-plat->WGOpenAmsCenter(NULL);
 ```
 ---
 
 ##使用时的注意事项
  - 浏览器模块是通过xib定制界面的，这个xib放在WGPlatformResources.bundle/目录，xib使用的png等资源文件放在WGPlatformResources.bundle/WebViewResources目录。由于需要兼容iOS7.0，因此需要Xcode5.0及以上版本才能编辑。
  - 手Q分享限制URL长度在512字节之内，因此超长链接需要转成短链。
- - 需要调用WGOpenAmsCenter()打开AMS活动中心，需要在工程的Info.plist配置以下项（默认值是http://apps.game.qq.com/ams/ame/gac.php?returntype=html ）：
-![Alt text](./InnerBrowser1.png)
 ---
 
 ##加密传输登录态参数
@@ -73,7 +66,8 @@ http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&
 ![Alt text](./InnerBrowser2.png)
 - ###密文解码代码示例（php版本）
 - 代码示例：
-```php
+```
+php
 <?php
 //var_dump($argv);
 $getparam = urldecode($argv[1]);
@@ -101,7 +95,7 @@ print $data;
 - ###密文解码代码示例（C代码）：
 1. 引入下面两个文件：
 
-```ruby
+```
 #ifndef URL_H
 #define URL_H
 
@@ -116,8 +110,8 @@ extern "C" {
 #endif
 #endif /* URL_H */
 ```
-- 
-```ruby
+
+```
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -280,28 +274,3 @@ log("not install :腾讯新闻");
 ![Alt text](./InnerBrowser7.png)
 
 ---
-
-##打开AMS营销活动中心
- - 调用WGOpenAmsCenter接口可以打开AMS营销活动中心。活动中心的URL配置在info.plist的AMS_URL项。
-```ruby
-eFlag WGOpenAmsCenter(unsigned char* params);
-```
->描述: 打开AMS营销活动中心
-参数: 
-params可传入附加在URL后的参数，长度限制256.格式为"key1=***&key2=***",注意特殊字符需要urlencode。不能和MSDK将附加在URL的固定参数重复，列表如下：
-参数名	说明	值
-  - timestamp	请求的时间戳	
-  - appid 	游戏ID	　
-  - algorithm	加密算法标识	v1
-  - msdkEncodeParam	密文	　
-  - version	MSDK版本号	例如1.6.2i
-  - sig	请求本身的签名	
-  - encode	编码参数	1
-返回：
-  - eFlag返回值，正常返回eFlag_Succ；如果params超长返回eFlag_UrlTooLong
-
-- 调用代码示例：
-```ruby
-WGPlatform *plat = WGPlatform::GetInstance();
-plat->WGOpenAmsCenter((unsigned char*)"a=1&d=2");
-```

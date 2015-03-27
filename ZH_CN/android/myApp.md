@@ -298,10 +298,11 @@ protected void onDestroy() {
 #### 接口声明：
 
 	/**
-     * 如果手机上没有安装应用宝则此接口会自动下载应用宝, 并通过OnDownloadYYBProgressChanged和OnDownloadYYBStateChanged两个接口分别回调
-     * 如果手机上已经安装应用宝则此接口会根据参数选择是否拉起应用宝
+    
+     * 此接口会根据参数选择是否拉起应用宝更新，应用的
      * 		下载进度和状态变化会通过OnDownloadAppProgressChanged和OnDownloadAppStateChanged回调给游戏
-     * @para  isUseYYB:是否拉起应用宝更新游戏，如果选否，会直接在游戏内完成更新
+ 	 * 当isUseYYB为true时。如果手机上没有安装应用宝则此接口会自动下载应用宝, 并通过OnDownloadYYBProgressChanged和OnDownloadYYBStateChanged两个接口分别回调     
+	 * @para  isUseYYB:是否拉起应用宝更新游戏，如果选否，会直接在游戏内完成更新
      */
     void WGStartSaveUpdate(bool isUseYYB);
 

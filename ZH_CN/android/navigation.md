@@ -36,6 +36,9 @@
   - - - -
   * # 接入检查
   * [接入配置自检](env.md#接入配置自检)
+  - - - -
+  * # Android系统权限说明
+  * [Android系统权限说明](android_permission.md)
 
 [接入QQ]()
 
