@@ -87,14 +87,27 @@ MSDK初始化是使用SDK所提供功能可以执行的前提。游戏在应用�
 		...
 	}
 
+
+    protected void onResume() {
+        super.onResume();
+        WGPlatform.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        WGPlatform.onRestart();
+    }
+
     protected void onPause() {
         super.onPause();
         WGPlatform.onPause();
     }
 
-    protected void onResume() {
-        super.onResume();
-        WGPlatform.onResume();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        WGPlatform.onStop();
     }
 
     protected void onDestroy() {

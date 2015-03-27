@@ -382,7 +382,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | openid|string|用户在某个应用的唯一标识 |
 | accessToken|string|用户在应用中的登录凭据 |
 | fopenids|vector<string>|好友openid列表，每次最多可输入50个|
-| flags|string|VIP业务查询标识。目前只支持查询QQ会员信息：qq_vip。后期会支持更多业务的用户VIP信息查询。如果要查询多种VIP业务，通过“,”分隔。如果不输入该值，默认为全部查询|
+| flags|string|VIP业务查询标识。目前支持查询QQ会员信息:qq_vip,QQ超级会员：qq_svip。后期会支持更多业务的用户VIP信息查询。如果要查询多种VIP业务，通过“,”分隔。如果不输入该值，默认为全部查询,见示例。|
 | userip|string|调用方ip信息|
 | pf|string|玩家登录平台，默认openmobile，有openmobile_android/openmobile_ios/openmobile_wp等，该值来自客户端手Q登录返回|
 
@@ -402,6 +402,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    2   optional     int             is_qq_vip;       //是否为QQ会员（0：不是； 1：是）
 	    3   optional     int             qq_vip_level;    //QQ会员等级（如果是QQ会员才返回此字段）
 	    4   optional     int             is_qq_year_vip;  //是否为年费QQ会员（0：不是； 1：是）
+		5   optional     int             is_qq_svip;      //是否为QQ超级会员（0：不是； 1：是）
 	};
 
 #### 2.3.4.4 接口调用说明 ####
@@ -428,7 +429,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "fopenids": [
 	        "69FF99F3B17436F2F6621FA158B30549"
 	    ],
-	    "flags": "qq_vip",
+	    "flags": "qq_vip,qq_svip",
 	    "pf": "openmobile",
 	    "userip": "127.0.0.1"
 	}
@@ -440,7 +441,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	            "is_qq_vip": 1,
 	            "is_qq_year_vip": 1,
 	            "openid": "69FF99F3B17436F2F6621FA158B30549",
-	            "qq_vip_level": 6
+	            "qq_vip_level": 6,
+				"is_qq_svip": 1
 	        }
 	    ],
 	    "msg": "success",
@@ -534,7 +536,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 | accessToken|string|用户在应用中的登录凭据 |
-| groupOpenid|string|和游戏公会ID绑定的QQ群的groupOpenid|
+| groupOpenid|string|和游戏公会ID绑定的QQ群的groupOpenid,该参数从/relation/get_groupopenid接口输出参数获取|
 
 
 ***（请注意输入参数的类型，参考1.5） ***
@@ -771,7 +773,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
 
 
-### 2.3.8 /relation/get_vip_rich_info(仅供联调，未发布) ###
+### 2.3.8 /relation/get_vip_rich_info ###
 
 #### 2.3.8.1接口说明 ####
 　　　查询手Q会员详细信息（充值时间&到期时间）
@@ -848,7 +850,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 　　提供查询QQ账号VIP信息服务。
 
-### 2.4.1 /profile/load_vip ###
+### 2.4.1 /profile/load_vip(即将停用，请调用/profile/query_vip接口) ###
   获取QQ账号VIP信息。
 
 #### 2.4.1.2输入参数说明 ####
@@ -947,19 +949,112 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    }]
 	}
 
-### 2.4.2 /profile/get_gift ###
 
-#### 2.4.2.1接口说明 ####
-　　　领取蓝钻礼包，调用一次过后就清空了礼包。
+### 2.4.2 /profile/query_vip（可联调，未发布） ###
+  获取QQ账号VIP信息(带登录态)。
 
 #### 2.4.2.2输入参数说明 ####
+
+| 参数名称 | 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识|
+| accessToken|string|`用户登录态（新增参数）`|
+| vip|int|查询类型:<br/>会员:vip&0x01 !=0；<br/>QQ等级:vip&0x02 !=0；<br/>蓝钻:vip&0x04 != 0；<br/>红钻:vip&0x08 != 0；<br/>超级会员:vip&0x10 != 0;<br/>心悦:vip&0x40 != 0；<br/>黄钻::vip&0x80 != 0；<br/>以上可任意组合(逻辑与)，如需同时查询会员和蓝钻则(vip&0x01 !=0) && (vip&0x04 != 0) 为真,(备注：请求时请只填相关的标识位)|
+***（请注意输入参数的类型，参考1.5） ***
+
+#### 2.4.2.3输出参数说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| list|信息列表vector<VIP> 类型（见下文），获取超级会员的时候，struct VIP中，只有isvip和flag参数有效.|
+	
+	struct VIP {
+	　　VIPFlag :flag; //什么类型VIP
+	　　int isvip; //是否VIP(判断用户VIP状态的唯一标识，0否，1是)
+	　　int year; //是否年费(0否，1是)
+	　　int level; //VIP等级
+	　　int luxury; //是否豪华版(0否，1是)
+	};
+	enum VIPFlag
+	{
+	　　VIP_NORMAL(会员) = 1,
+      VIP_QQ_LEVEL(QQ等级) = 2,  //QQ等级，只需要关注level参数，其它无效
+	　　VIP_BLUE（蓝钻） = 4,
+	　　VIP_RED （红钻）= 8, //红钻没有年费会员标识返回
+	　　VIP_SUPER (超级会员)= 16,
+	　　VIP_XINYUE = 64,  //心悦俱乐部特权会员，该标志位请求时只有isvip及level有效
+	　　VIP_YELLOW = 128,
+	};
+
+#### 2.4.2.4 接口调用说明 ####
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/profile/query_vip/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.4.2.5 请求示例 ####
+
+	POST /profile/query_vip/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	{
+	    "appid": "100703379",
+	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
+	    "vip": 15,
+		"accessToken":"A3284A812ECA15A3284A812ECA15269F85AE1C2D94EB37269F85AE1C2D94EB37"
+	}
+	//返回格式
+	{
+	    "ret": 0,
+	    "msg": "",
+	    "lists": [{
+	        "flag": 1,
+	        "year": 0,
+	        "level": 0,
+	        "luxury": 0,
+	        "isvip": 0
+	    },{
+	        "flag": 2,
+	        "year": 0,  
+	        "level": 10, 
+	        "luxury": 0, 
+	        "isvip": 1  
+	    },
+	    {
+	        "flag": 4,
+	        "year": 0,
+	        "level": 0,
+	        "luxury": 0,
+	        "isvip": 0
+	    },
+	    {
+	        "flag": 8,
+	        "year": 0,
+	        "level": 0,
+	        "luxury": 0,
+	        "isvip": 0
+	    }]
+	}
+
+### 2.4.3 /profile/get_gift ###
+
+#### 2.4.3.1接口说明 ####
+　　　领取蓝钻礼包，调用一次过后就清空了礼包。
+
+#### 2.4.3.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 
-#### 2.4.2.3输出参数说明 ####
+#### 2.4.3.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -973,7 +1068,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	};
 
 
-#### 2.4.2.4 接口调用说明 ####
+#### 2.4.3.4 接口调用说明 ####
 | 参数名称| 描述|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/get_gift/ |
@@ -981,7 +1076,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.4.2.5 请求示例 ####
+#### 2.4.3.5 请求示例 ####
 
 	POST http://msdktest.qq.com/profile/get_gift/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -1002,18 +1097,18 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "ret": 0
 	}
 
-### 2.4.3 /profile/get_wifi ###
+### 2.4.4 /profile/get_wifi ###
 
-#### 2.4.3.1接口说明 ####
+#### 2.4.4.1接口说明 ####
 　　　获取随身wifi的资格。
-#### 2.4.3.2输入参数说明 ####
+#### 2.4.4.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 
-#### 2.4.3.3输出参数说明 ####
+#### 2.4.4.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -1021,7 +1116,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 | wifiVip|1:表示是wifivip资格，0:表示非wifivip资格|
 
-#### 2.4.3.4 接口调用说明 ####
+#### 2.4.4.4 接口调用说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -1030,7 +1125,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.4.3.5 请求示例 ####
+#### 2.4.4.5 请求示例 ####
 
 	POST http://msdktest.qq.com/profile/get_wifi/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -1046,12 +1141,12 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "wifiVip": 1
 	}
 
-### 2.4.4 /profile/qqscore_batch ###
+### 2.4.5 /profile/qqscore_batch ###
 
-#### 2.4.4.1接口说明 ####
+#### 2.4.5.1接口说明 ####
 　　　上报玩家成就到QQ平台，在QQ游戏中心显示好友分数排行。（实时生效）
 
-#### 2.4.4.2输入参数说明 ####
+#### 2.4.5.2输入参数说明 ####
 
 
 | 参数名称| 类型|描述|
@@ -1070,14 +1165,14 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	};
 ***（请注意输入参数的类型，参考1.5）***
 
-#### 2.4.4.3输出参数说明 ####
+#### 2.4.5.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
 | ret|返回码  0：正确，其它：失败 |
 | msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
 
-#### 2.4.4.4 接口调用说明 ####
+#### 2.4.5.4 接口调用说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -1086,7 +1181,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.4.4.5 请求示例 ####
+#### 2.4.5.5 请求示例 ####
 
 	POST http://msdktest.qq.com/profile/qqscore_batch/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -1114,7 +1209,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	{"msg":"success","ret":0,"type":0}
 
 
-#### 2.4.4.6上报数据类型说明（有疑问请联系：joceyzhou&kyleli） ####
+#### 2.4.5.6上报数据类型说明（有疑问请联系：joceyzhou&kyleli&samzou） ####
+
 | type(上报数据类型，int)| data(成就值，string)| expires(过期时间，string)| bcover(是否覆盖上报，int)| 备注`(非常重要，请关注)`|
 | ------------- |:-------------:|:-----|:-----|:-----|  
 |1  |等级                                          |  "0"|1|变化时上报                                                                |

@@ -31,6 +31,26 @@
 	- **`MSDK微信票据过期自动刷新机制。`**具体方法[点击查看](#微信票据自动刷新)
 	- 登录数据上报接口调用要求。具体方法[点击查看](#登录数据上报)
 	
+**`自MSDK2.7.0a以后对登录流程进行了改造，部分调用作了调整，特殊需要注意的地方罗列如下，强烈推荐认真了解！！！`**
+
+- **处理自动登录**：
+
+   - 1、MSDK2.7.0a及以后，调用WGLoginWithLocalInfo()地方改为WGLogin(EPlatform.ePlatform_None)，当然目前仍旧兼容WGLoginWithLocalInfo，但后续会将该接口去掉。
+
+   - 2、MSDK2.7.0a及以后，在游戏启动和回到前台会进行定时刷新票据，因此游戏可在刚启动时在onResume中进行自动登录调用即可。票据自动刷新流程[点击查看](#MSDK2.7.0a及以后的票据自动刷新流程)
+
+- **MSDK微信票据过期自动刷新机制**：
+
+   - MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流程，对票据进行定时刷新，请务必将assets/msdkconfig.ini中WXTOKEN_REFRESH按如下设置WXTOKEN_REFRESH=true或者删除不填（即默认是开启的）。
+   
+  
+- **登录数据上报接口调用要求**：
+  - 请务必调用在自己的launchActivity的onRestart调用WGPlatform.onRestart,同理依次调用onResume,onPause,onStop,onDestroy。
+  
+- **WGGetLoginRecord调用特别说明**：
+  - 自2.7.0a以后，如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果
+
+	
 ##名词解释、接口说明
 	
 ###登录相关名词解释：
@@ -165,6 +185,7 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 ####注意事项：
 
 1. 游戏在使用`WGLoginWithLocalInfo`登录以后，获得的票据在无需传到游戏后台去验证有效性，MSDK会验证以后才回调给游戏
+2. **自2.7.0a后调用WGLoginWithLocalInfo()地方改为WGLogin(EPlatform.ePlatform_None)，当然目前仍旧兼容WGLoginWithLocalInfo，但后续会将该接口去掉**。
 
 ##处理用户注销WGLogout
 
@@ -323,7 +344,8 @@ MSDK的登录回调来自以下几个场景：
 
 1. MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新,MSDK会自动刷新完成, 并通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail（已经包含在onLoginNotify的回调中）。
 - **游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程。**
-- **如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。此时游戏需要自行处理微信票据过期的逻辑。具体可以参考：**[微信票据刷新接口](login.md#微信票据刷新：WGRefreshWXToken)
+- **在MSDK2.7.0a以前，如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。此时游戏需要自行处理微信票据过期的逻辑。具体可以参考：**[微信票据刷新接口](login.md#微信票据刷新：WGRefreshWXToken)
+- **MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流程，对票据进行定时刷新，请务必将assets/msdkconfig.ini中WXTOKEN_REFRESH按如下设置WXTOKEN_REFRESH=true或者删除不填（即默认是开启的）。**
 
 ##微信票据刷新：WGRefreshWXToken
 
@@ -382,7 +404,7 @@ MSDK的登录回调来自以下几个场景：
     LoginRet ret = new LoginRet();
     WGPlatform.WGGetLoginRecord(ret);
 
-如果获取的LoginRet中的flag为eFlag_Succ则可认为登录有效，可读取有效的票据信息。其中token可以按如下方式获取：
+如果获取的LoginRet中的flag为eFlag_Succ则可认为登录有效，可读取有效的票据信息。**自MSDK2.7.0a后，如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果。** 其中token可以按如下方式获取：
 
 微信平台：
 
@@ -415,3 +437,20 @@ QQ平台：
 ##常见问题
 
 1. 支付时提示paytoken过期，则需要拉起登录界面重新授权后方能支付。paytoken过期以后必须重新授权。
+
+
+##MSDK2.7.0a及以后的票据自动刷新流程
+**概述**
+
+MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流程，对票据进行定时刷新，请务必将msdkconfig.ini中WXTOKEN_REFRESH按如下设置`WXTOKEN_REFRESH=true`或者不设置（即默认是开启的），具体可咨询msdk连线。游戏只需要关注'WGLogin' 'WGGetLoginRecord'即可完成登录和票据处理：
+
+* 游戏需要登录票据时的调用逻辑：
+  
+![login_new](./new_login_1.jpg)
+  `如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果`
+
+* 在需要使用本地票据登录时，不再需要调用'WGLoginWithLocalInfo'，改为调用WGLogin(EPlatform.ePlatform_None) ,然后等待onLoginNotify的结果。
+* MSDK内部的票据定时刷新逻辑：
+  
+  ![login_new](./new_login_2.jpg)
+
