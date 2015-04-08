@@ -47,3 +47,33 @@ bugly플랫폼에서 Crash데이터 보기
 - 사이트 주소:[http://rdm.wsd.com/](http://rdm.wsd.com/)->QQ계정으로 로그인->해당 App를 선택한다.
 
 ![bugly](./bugly1.png)
+
+Crash 보고에 별도 업무 로그 추가
+---
+
+프로그램이 Crash발생 시, 별도의 업무 로그를 추가하여 crash로그와 같이 http://rdm.wsd.com/ 플랫폼으로 보고해야 한다.이렇게 해서 더 쉽게 crash원인을 추적하기 위해서이다. 최종으로 rdm플랫폼에서 에러 상세 내역을 확인할 수 있으며 추가적 별도의 업무 로그는 extraMessage.txt파일에서 저장된다.현재 bugly는 extraMessage.txt에서 보기 기능을 실현 불가능하며 해당 기능은 개발중이다.
+
+![rqd](./rqd_extramsg.png)
+
+해당 기능을 완성하려면 전반observer(즉WGPlatformObserver)에서 콜백 함수OnCrashExtMessageNotify를 추가하면 된다.java에는 아래 방식대로 호출 진행：
+
+    @Override
+    public String OnCrashExtMessageNotify() {
+      // 여기에서 게임이 crash 시 보고의 별도 정보를 추가적으로 보충하여 crash발생 원인을 분석하는 데 사용한다.
+      // 예를 들어，String str = "test extra crash upload!";
+      // 필요 없을 경우 String str = ""를 기입
+      String str = "test extra crash upload!";
+      return str;
+    }
+
+cpp는 아래 방식으로 호출：
+
+    virtual std::string OnCrashExtMessageNotify() {
+    	// 여기에서 게임이 crash 시 보고의 별도 정보를 추가적으로 보충하여 crash발생 원인을 분석하는 데 사용한다.
+    	// 예를 들어，std::string str = "test extra crash upload!";
+    	// 필요 없을 경우std::string str = ""를 기입
+    	std::string str = "test extra crash upload!";
+    	LOGD("OnCrashExtMessageNotify test %s", str.c_str());
+    	return str;
+    }
+

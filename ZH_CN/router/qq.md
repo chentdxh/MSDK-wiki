@@ -430,7 +430,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	        "69FF99F3B17436F2F6621FA158B30549"
 	    ],
 	    "flags": "qq_vip,qq_svip",
-	    "pf": "openmobile",
+	    "pf": "openmobile_android",
 	    "userip": "127.0.0.1"
 	}
 	//返回结果
@@ -679,7 +679,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2006 	|参数错误。|
 |2007-2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。|  
 
-### 2.3.7 /relation/get_group_detail(仅供联调，正式环境未发布) ###
+### 2.3.7 /relation/get_group_detail ###
 
 #### 2.3.7.1接口说明 ####
  　QQ游戏公会绑群详细信息接口
@@ -950,7 +950,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	}
 
 
-### 2.4.2 /profile/query_vip（可联调，未发布） ###
+### 2.4.2 /profile/query_vip ###
   获取QQ账号VIP信息(带登录态)。
 
 #### 2.4.2.2输入参数说明 ####

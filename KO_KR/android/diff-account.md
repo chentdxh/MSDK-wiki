@@ -12,14 +12,14 @@
 다른계정 scene
 ---
 
-1. 게임이 메시지를 공유하려고 플랫폼을 실행할 때 계정이 일치하지 않으면 플랫폼이 팝업창으로 다른계정 제시. 현재 모든 플랫폼은 이 기능 지원
+ 1. 게임이 메시지를 공유하려고 플랫폼을 실행할 때 계정이 일치하지 않으면 플랫폼이 팝업창으로 다른계정 제시. 현재 모든 플랫폼은 이 기능 지원
 
-![game2qq](./diff-account-game2qq.png) 
-![game2wechat](./diff-account-game2wechat.png)
+	![game2qq](./diff-account-game2qq.png) 
+    ![game2wechat](./diff-account-game2wechat.png)
 
-2. 유저가 플랫폼을 통해 게임을 실행할 때 계정이 일치하지 않으면 게임이 팝업창으로 다른계정 제시
+ 2. 유저가 플랫폼을 통해 게임을 실행할 때 계정이 일치하지 않으면 게임이 팝업창으로 다른계정 제시
 
-![plat2wechat](./diff-account-plat2wechat.png) 
+	![plat2wechat](./diff-account-plat2wechat.png) 
 
 `현재 게임 런칭 시 플랫폼이 게임에 요구하는 다른계정 처리, MSDK가 구현한 다른계정은 모두 두번째 경우에 속한다.`
 

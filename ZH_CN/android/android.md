@@ -79,6 +79,8 @@ MSDK初始化是使用SDK所提供功能可以执行的前提。游戏在应用�
 		//游戏必须使用自己的支付offerId联调
 		baseInfo.offerId = "100703***";
 		WGPlatform.Initialized(this, baseInfo);
+		// 设置拉起QQ时候需要用户授权的项
+		WGPlatform.WGSetPermission(WGQZonePermissions.eOPEN_ALL); 
 
 		// 必须保证handleCallback在Initialized之后
 		// launchActivity的onCreat()和onNewIntent()中必须调用

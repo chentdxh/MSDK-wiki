@@ -35,7 +35,7 @@ assets/msdkconfig.ini에서 메시지 푸시 스위치를 연다:
     <!-- [필수] XG Push알림 표시줄 -->
     <activity
         android:name="com.tencent.android.tpush.XGPushActivity"
-        android:exported="false" >
+        android:exported="true" >
         <intent-filter>
             <action android:name="" />
         </intent-filter>
@@ -64,6 +64,19 @@ assets/msdkconfig.ini에서 메시지 푸시 스위치를 연다:
         android:persistent="true"
         android:process=":xg_service_v2" />
     <!-- XG Push 환경 설정 END -->
+
+MSDK2.7.0a 및 이후 버전에서 아래같은 설정을 추가해야 한다.`패키지명을 수정해야 할 것을 주의해야 한다.`
+
+        <!-- 【필수】 service에 통지, 해당 옵션은 푸시 효율 향상 시키는 데 도움에 된다 -->
+        <service
+            android:name="com.tencent.android.tpush.rpc.XGRemoteService"
+            android:exported="true" >
+            <intent-filter>
+               <!-- 【필수】 현재APP패키지명으로 수정하기 바란다.PUSH_ACTION-->
+               <action android:name="com.example.wegame.PUSH_ACTION" />
+           </intent-filter>
+        </service>
+        <!-- XG Push 환경 설정 END -->
 
 3단계: http://dev.ied.com/에 접속한 후 메시지 관리 모듈에서 푸시 설정을 진행한다. **메시지(공식 환경)을 사용하여 메시지를 발송**해야 한다
 

@@ -30,7 +30,9 @@ CoreLocation.framework
 ImageIO.framework
 CoreText.framework
 QuartzCore.framework
+AdSupport.framework【MSDK2.6.0i및 이후 버전 요구】
 ```
+【MSDK2.6.0i및 이후 버전 요구사항: 앞으로 심의 제출할 때, iTC에서 해당 옵션을 선태해야 한다.상세 내용은 [설명](http://km.oa.com/articles/show/234073)에서확인】
 ---	
 ##Step2:MSDK 도입
 * 2.3.4i 및 이전 버전:

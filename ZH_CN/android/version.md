@@ -3,6 +3,13 @@
 Android 2.7 版本历史
 ---
 
+### Unity版本
+
+#### 2015/4/7
+
+- 发布基于2.6.0a的Unity接口版本
+- 增加Unity版本的[`接入文档`](msdk_android_unity.md)
+
 ###Android 2.7.0变更内容
 
 #### 代码变更：
@@ -76,7 +83,7 @@ Android 2.5 版本历史
 	- 内置浏览器UI优化
 	- 在线时长上报统计
 	- MSDK增加对手Q授权过程中游戏被系统杀死的处理
-	- **rdm更换为bugly（即crash上报），配置文件中添加CLOSE_BUGLY_REPORT，如果为true，则msdk默认不初始化bugly**
+	- **rqd更换为bugly（即crash上报），配置文件中添加CLOSE_BUGLY_REPORT，如果为true，则msdk默认不初始化bugly**
 	- 添加对信鸽注册接口的成功率和失败率统计
 
 #### 文档调整：
@@ -94,7 +101,8 @@ Android 2.5 版本历史
 - 修改：
 	- 手Q，微信登陆相关模块内容迁移到登陆模块	
 	- 异帐号模块关于手Q快速登陆的模块迁移到手Q
-	
+	- rqd更换为bugly,数据上报中MSDK Crash上报模块调整[点击查看](rqd.md)。
+
 Android 2.4 版本历史
 ---
 

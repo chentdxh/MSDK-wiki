@@ -816,14 +816,13 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 		    "baseinfo": { 
 		        "gamename": "xxx",
 		        "platid": 0,
-		        "partitionid": 2,
+		        "partitionid": "9",
 		        "roleid": "hunter",
 		        "level": 2 
 		    },
 		    "battleinfo": {
-		        "score": 1,
-		        "modeid": 0,
-		        "acttime": "2014-09-24 13:10:45"
+		        "score": 4288625,
+		        "iswin": true
 		    }
 		}
 	}

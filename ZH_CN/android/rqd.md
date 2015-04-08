@@ -4,6 +4,10 @@ MSDK Crash上报模块
 ---
 Crash上报在MSDK2.5a之前（不包括MSDK2.5a)使用的是RQD上报，上报成功后具体crash详细堆栈只能在 http://rdm.wsd.com/ 上查看，必须是腾讯公司员工用RTX登录进行查看，非自研游戏查看起来非常不方便。自MSDK2.5及以后使用的bugly上报，此时可以在 http://bugly.qq.com/ 上进行查看。可使用QQ账号绑定相关应用，这样，非自研游戏可以方便的查看。当然，在 http://rdm.wsd.com/ 同样是可以查看的。游戏无需额外操作，只是关闭crash上报的开关不一致而已，具体请参照**RQD上报开关设置**和**Bugly上报开关设置**。
 
+MSDK2.5a之前版本升级到2.5a之后版本注意事项
+---
+对于不能使用Android Library Project的游戏要特别注意，需要复制MSDKLibrary下的libs到游戏工程相应的目录。在2.5a之前是将armeabi、armeabi-v7a、mips和x86目录下libNativeRQD.so拷贝到游戏工程相应的目录; 在2.5a及以后是将libBugly.so拷贝到游戏工程相应的目录，如果之前已将libNativeRQD.so已存在，可将其删除。
+
 RQD上报开关设置
 ---
 打开和关闭rdm数据上报的设置函数:
@@ -12,18 +16,9 @@ RQD上报开关设置
 
 在WGPlatform里面有这个函数，如果将bRdmEnable设为false（bMtaEnable可设为false），则关闭rdm crash上报，默认情况下crash上报是开启的，因此无需调用该函数。
 
-Bugly上报开关设置
----
-打开和关闭bugly上报的开关需要在/assets/msdkconfig.ini中设置
-
-      ;关闭bugly上报开关，默认应将其设为false，设为true即关闭了crash上报功能
-      CLOSE_BUGLY_REPORT=false
-
-
-
 在RDM平台上查看Crash数据
 ---
-####注册绑定
+####1、注册绑定
 
 如果是DEV注册的游戏会自动注册RDM，不需要手动注册; 手动注册，直接登录RDM，点击异常上报模块，配置一下产品 BoundID 即可。
 
@@ -35,18 +30,97 @@ Bugly上报开关设置
 
 具体请咨询rdm小秘书，android问题可联系spiritchen
 
-####如何查看上报数据
+####2、如何查看上报数据
 - 网址:[http://rdm.wsd.com/](http://rdm.wsd.com/)->异常上报->问题列表
 
 ![rdmwsd](./rdmwsd.png)
 ![rdmdetail](./rdmdetail.png)
 
 
-在bugly平台上查看Crash数据
+Bugly上报开关设置
+---
+打开和关闭bugly上报的开关需要在/assets/msdkconfig.ini中设置
+
+      ;关闭bugly上报开关，默认应将其设为false，设为true即关闭了crash上报功能
+      CLOSE_BUGLY_REPORT=false
+
+在Bugly平台上查看Crash数据
 ---
 - 网址:[http://rdm.wsd.com/](http://rdm.wsd.com/)->用QQ账号登录->选择相应的App
 
 ![bugly](./bugly1.png)
+
+App Proguard混淆相关处理
+---
+出于安全考虑，App发布前都会对Java代码进行混淆，混淆时需要注意避免把Bugly中的不允许混淆的类或方法给混淆了！
+
+**方案一：不混淆msdk*.jar（推荐）**
+
+bugly.jar已经集成在MSDK*.jar中，建议用户在混淆时不要对MSDK*.jar（如MSDK_Android_2.7.0a_svn53805.jar）进行混淆。
+用户可以直接通过-libraryjars把MSDK*.jar引用进去。
+
+![bugly](./bugly_proguard1.png)
+
+**方案二：混淆MSDK*.jar时添加SDK的keep信息**
+
+用户如果需要混淆MSDK*.jar，请把下面的keep信息添加到App的混淆配置中：
+
+    -keep class * extends android.app.Activity{*;}
+    -keep class * extends android.app.Service{*;}
+
+    #Bugly接口
+    -keep public class com.tencent.bugly.crashreport.crash.jni.NativeCrashHandler{public *; native <methods>;}
+    -keep public interface com.tencent.bugly.crashreport.crash.jni.NativeExceptionHandler{*;}
+
+
+App 还原符号表配置
+---
+**符号还原表配置相关推荐先查看http://www.jikexueyuan.com/course/406.html?hmsr=bugly_androidcrash 中共八章视频教程**，可以很好对符号还原表进行掌握。
+
+**1、生成Java Progurad还原符号表：**
+
+通过progurad工具混淆时，可以输出还原符号表文件mapping.txt，Bugly根据mapping.txt文件对Java堆栈进行还原。
+
+![bugly](./bugly_proguard2.png)
+
+eclipse下开启了progurad后，release编译后会在progurad目录下生成符号表文件mapping.txt。
+
+![bugly](./bugly_proguard3.png)
+
+
+**2、生成Native symbol文件：**
+
+通过SymbolTool.jar符号表工具可以提取出SO文件中的debug信息生成symbol文件，Bugly根据symbol文件对Native堆栈进行还原。
+
+**3、NDK build结果中：**
+
+libs目录->cpu架构目录->XX.so 是不带debug信息的用于发布的SO，体积小。
+obj目录->cpu架构目录->XX.so 是带debug信息(debug_info , debug_line)的用于debug的SO，体积大。
+
+![bugly](./bugly_proguard4.png)
+
+Bugly符号表工具需要在debug的SO中提取出函数的符号信息，进行堆栈还原。
+
+    <cmd>
+    java -jar AndroidSymbolTools.jar -i debugSoPath -a armeabi
+    </cmd>
+
+将会在debugSo的同目录下，生成一个buglySymbol&cpu架构&SO名.zip的符号表文件。
+
+**4、配置符号表：**
+
+在bugly平台上进入产品->设置->版本管理，根据版本直接上传符号表就可以了！
+
+![bugly](./bugly_proguard5.png)
+
+符号表配置是根据版本配置的：
+
+一个版本只有一个Java符号表（mapping.txt）
+
+一个版本+Cup架构只有一个Native符号表（bulgySymbol&cpu架构&SO名.zip）
+
+重复配置将会是覆盖操作。
+
 
 Crash上报添加额外业务日志
 ---
