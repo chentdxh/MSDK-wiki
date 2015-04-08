@@ -87,14 +87,27 @@ MSDK 초기화는 SDK가 제공하는 기능을 사용할 수 있는 전제이�
 		...
 	}
 
+	
+    protected void onResume() {
+        super.onResume();
+        WGPlatform.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        WGPlatform.onRestart();
+    }
+
     protected void onPause() {
         super.onPause();
         WGPlatform.onPause();
     }
 
-    protected void onResume() {
-        super.onResume();
-        WGPlatform.onResume();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        WGPlatform.onStop();
     }
 
     protected void onDestroy() {

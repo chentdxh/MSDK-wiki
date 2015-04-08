@@ -1,9 +1,29 @@
 ﻿MSDK 내장 브라우저 관련 모듈
 ======
 MSDK는 내장 브라우저를 제공한다. 이 내장 Webview는 보안성이나 성능 등 면에서 시스템 내장 Webview보다 뛰어나며 QQ와 위챗에 공유하는 기능도 제공한다. 게임 안에서  Web페이지를 실행하여 마케팅 이벤트창, 게시판, 공략 등 페이지를 방문할 때 내장 브라우저 액세스는 2개 절차를 진행해야 한다.
-액세스 설정
+연동 설정
 ------
-MSDK2.0.0a 이전은 다음 방식으로 설정한다.
+**MSDK2.7.0a 및 이후 버전에는 아래와 같이 설정:**
+
+핸드폰에서 QQ브라우저를 설치되었을 경우 QQ내장 브라우저 커널을 사용하며 설치되어 있지 않았을 때 시스템 디폴트 내장 브라우저를 사용한다. 이 때 메모리 누출 가능성이 있어 독립 프로세스로 수정된다. 
+**`android:process=":msdk_inner_webview"추가 필요，내장 브라우저에 퇴출할 때 해당 프로세스를 종료할 것이다.만약 이 옵션을 설정하지 않았을 경우 게임 메인 프로세스를 종료할 것이며 게임 로그아웃`**
+
+        <!-- TODO 브라우저 관련 START -->
+        <activity
+            android:name="com.tencent.msdk.webview.JumpShareActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        
+        <activity
+            android:name="com.tencent.msdk.webview.WebViewActivity"
+            android:process=":msdk_inner_webview" 
+            android:configChanges="orientation|screenSize|keyboardHidden|navigation|fontScale|locale"
+            android:screenOrientation="unspecified"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+
+**MSDK2.0.0a 이전은 다음 방식으로 설정한다.:**
 
     <activity
        android:name="com.tencent.mtt.spcialcall.SpecialCallActivity"
@@ -21,7 +41,7 @@ MSDK2.0.0a 이전은 다음 방식으로 설정한다.
        <data android:scheme="file" />
     </intent-filter>
     </activity>
-MSDK2.0.0a 및 그 이후부터는 다음 방식으로 설정한다.
+**MSDK2.0.0a 및 그 이후부터는 다음 방식으로 설정한다.:**
 
     <activity
        android:name="com.tencent.msdk.webview.WebViewActivity"
@@ -128,10 +148,29 @@ vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-r
  
 msdkEncodeParam 의 암호문 URL Decode를 body에 넣어 Post 방식으로 전송한다. 주의해야 할 점은, key“msdkEncodeParam=”。을 추가하지 말아야 한다. 패킷 스니핑은 다음과 같다
 
-![webview](./webview_res/webview_4.png)
-![webview](./webview_res/webview_8.png)
+3、Fiddler암호 해독
 
+3.1 브라우저에서 URL：www.qq.com를 호출 가정하여 실제 패키지 차단 시 방문하는 URL은 아래와 같다：
 
+    http://www.qq.com?algorithm=v2&version=2.0.6a&timestamp=1423538227203&appid=100703379&sig=427291da31b56b59739be6da61d433ec&encode=1&msdkEncodeParam=BAD8B1625CB04523B06AAF6739ACB3CEA96F54393831AF5C6890E92EE61CF1A29F493710592DD84B47D4217BA9FA9DAFB8025CEB27E45EC958689A794E8BD33CF2544CC5D00FCE03AEF7B23EE2BFCA4332F5D69547477A3E93E44F3270F19664D5499CA2990BE5BA9E232036197B184F1411B76CF95537AC07E3D6A27F054AD3F26648B18554F9C1
+
+3.2 Fiddler를 사용하여 테스트하며 연합해야 할 url는：
+
+    http://msdktest.qq.com/comm/decrypv1/?sig=427291da31b56b59739be6da61d433ec&timestamp=1423538227203&appid=100703379&algorithm=v2&version=2.0.6a&encode=1
+
+   그 중 Post body는：
+          
+    BAD8B1625CB04523B06AAF6739ACB3CEA96F54393831AF5C6890E92EE61CF1A29F493710592DD84B47D4217BA9FA9DAFB8025CEB27E45EC958689A794E8BD33CF2544CC5D00FCE03AEF7B23EE2BFCA4332F5D69547477A3E93E44F3270F19664D5499CA2990BE5BA9E232036197B184F1411B76CF95537AC07E3D6A27F054AD3F26648B18554F9C1
+
+3.3 Fiddler에서 디버깅 한다：
+
+![webview](./webview_extend_3.png)
+
+실행한 결과는：
+
+    acctype=qq&appid=100703379&openid=4FC5813635C21D7C0A64729E4E2D3041&access_token=B85D2A1D7DB1B564CADE7116BF70AD0D&platid=1
+
+PS：정식 환경에서는 http://msdk.qq.com/comm/decrypv1/사용하기 바란다.
 ###2. 암호문 디코딩 코드 샘플(php버전)
 ![webview](./webview_res/webview_5.png)
 ![webview](./webview_res/webview_6.png)

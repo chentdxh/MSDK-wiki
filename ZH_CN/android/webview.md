@@ -23,6 +23,17 @@ MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各�
             android:windowSoftInputMode="adjustPan" >
         </activity>
 
+
+**MSDK2.0.0a(含)至MSDK2.7.0a（不含）按如下方式配置:**
+
+    <activity
+       android:name="com.tencent.msdk.webview.WebViewActivity"
+       android:configChanges="orientation|screenSize|keyboardHidden|navigation|fontScale|locale"
+       android:theme="@android:style/Theme.NoTitleBar"
+       android:screenOrientation="unspecified"
+       android:windowSoftInputMode="adjustPan">
+    </activity>
+
 **MSDK2.0.0a以前按如下方式配置:**
 
     <activity
@@ -41,15 +52,6 @@ MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各�
        <data android:scheme="file" />
     </intent-filter>
     </activity>
-**MSDK2.0.0a及以后按如下方式配置:**
-
-    <activity
-       android:name="com.tencent.msdk.webview.WebViewActivity"
-       android:configChanges="orientation|screenSize|keyboardHidden|navigation|fontScale|locale"
-       android:theme="@android:style/Theme.NoTitleBar"
-       android:screenOrientation="unspecified"
-       android:windowSoftInputMode="adjustPan">
-    </activity>
 
 如果需要内置浏览器始终保持横屏，则将`android:screenOrientation="unspecified"`改成如下：
 `android:screenOrientation="landscape"`
@@ -57,7 +59,7 @@ MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各�
 如果需要内置浏览器始终保持竖屏，则将`android:screenOrientation="unspecified"`改成如下：
 `android:screenOrientation="portrait"`
 
-如果是升级到1.9.0版本的，可删除1.9.0以前的配置再添加新的配置。
+如果是升级到2.0.0a版本的，可删除2.0.0a以前的配置再添加新的配置。
 
 打开浏览器
 ------

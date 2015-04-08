@@ -5,7 +5,7 @@ MSDK 모바일QQ 관련 모듈
 액세스 설정
 ------
 
-#### AndroidMainfest 설정
+### AndroidMainfest 설정
 
 - 게임은 다음 사례에 따라 설정 정보를 입력한다.
 
@@ -35,7 +35,7 @@ MSDK 모바일QQ 관련 모듈
 
 	- **게임 Activity의 launchMode는 singleTop으로 설정해야 한다**, singleTop으로 설정한 후 플랫폼에서 게임을 실행할 때 게임 Activity가 2개 실행되는 경우가 발생할 수 있기에 게임 Activity의 onCreate에서 현재 Activity가 중복된 게임 Activity인지 검사해야 한다. 중복되었으면 현재 게임 Activity를 종료해야 한다.
 
-#### Appid 설정:
+### Appid 설정:
 
 - 이 부분 내용은 Java 계층 초기화 부분에서 이미 완료되었다.
 
@@ -60,22 +60,116 @@ MSDK 모바일QQ 관련 모듈
 
 	1. 게임에서 baseInfo 값을 틀리게 적으면 QQ, 위챗 공유, 로그인 실패를 초래하게 된다!!!
 
-#### 사용 스테이지:
+### 그룹 가입 그룹 바인딩 콜백 설정
 
-위에서 언급한 로그인 화면 실행은 아래와 같다. 유저는 QQ친구와 플레이를 클릭하여 WGLogin을 호출한다
+- MGSDK2.7.0버전부터 MSDKQQ 그룹에 가입 및 그룹 바인딩에 별도의 전반 콜백을 추가한다：`WGQQGroupObserver`.해당 전반 콜백을 통해 게임은 그룹 바인딩, 그룹 정보 조회, 그룹 바인딩 해제 시 대응한 콜백 정보를 받을 수 있다.
 
-![beacon_1](./loginpage.png)
+#### Java 층 콜백：
 
-#### 주의사항:
+- **콜백 구현 예시：**
 
-1.	모바일QQ가 설치되지 않았을 경우, 프리미엄 게임은 Web페이지 인증을 실행할 수 있다. AndroidMenifest.xml 중 AuthActivity의 선언은 intent-filter에서 <data android:scheme="***" />를 설정해야 한다. 자세한 내용은 본 장절의 모바일QQ 관련 AndeoidMainfest 설정을 참조하면 된다.  **해납(海納) 게임은 현재 페이지 인증을 지원하지 않는다** WGIsPlatformInstalled 인터페이스를 통해 모바일QQ 설치 여부를 판단할 수 있다. 모바일QQ가 설치되지 않으면 유저에게 인증할 수 없다고 제시한다.
+		//그룹에 가입, 그룹 바인딩 콜백
+		class MsdkQQGroupCallback implements WGQQGroupObserver {
 
-- **때때로 OnLoginNotify 콜백을 수신하지 못함**
+			@Override
+			public void OnQueryGroupInfoNotify(QQGroupRet groupRet) {
+				//TODO GAME 그룹 정보 조회 콜백 추가
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					//게임은 회장의 길드 화면에서 바인딩 해제 버튼을 표시하여 길드회장이 아닐 경우 QQ그룹으로 이동 버튼 표시한다.
+					MsdkCallback.sendResult("조회 성공\n그룹 닉네임："+groupRet.getGroupInfo().groupName 
+							+"\n그룹openID:"+groupRet.getGroupInfo().groupOpenid 
+							+"\n그룹 가입 Key는 "+groupRet.getGroupInfo().groupKey)이다;
+				}else{
+					if(2002 == groupRet.errorCode){
+						//길드 회장의 길드 화면에는 그룹 바인딩 버튼 표시가능하며 회장이 아닐 경우는 미바인딩을 표시한다
+						MsdkCallback.sendResult("조회 실패，현재 길드 바인딩 기록이 없다！");
+					}else if(2003 == groupRet.errorCode){
+						//유저 길드 화면에서 그룹 가입 버튼을 표시할 수 있다
+						MsdkCallback.sendResult("조회 실패，현 유저 아직 QQ그룹에 가입하지 않아, 우선 QQ 그룹에 가입하기 바란다！");
+					}else if(2007 == groupRet.errorCode){
+						//유저 길드 화면에서 그룹 가입 버튼을 표시할 수 있다
+						MsdkCallback.sendResult("죄회 실패，해당 QQ그룹은 해산되거나 존재하지 않는다！");
+					}else{
+						//유저 조회 재시도를 안내한다
+						MsdkCallback.sendResult("조회 실패，시스템 에러, 다시 시도하기 바람！");
+					}
+				}
+			}
+		
+			@Override
+			public void OnBindGroupNotify(QQGroupRet groupRet) {
+				//TODO GAME QQ그룹 바인딩 콜백 추가
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					//길드과 바인딩에 관련 정보를 게임에서 조회 가능
+					//현 QQSDK에서 지원 불가능하기 때문에 바인딩 성공 여부이든 MSDK는 게임에게 성공 콜백을 발송한다. 해당 콜백을 받은 후 조회 인터페이스를 호출하여 바인딩 성공 여부를 확인
+					MsdkCallback.sendResult("바인딩 성공");
+				}else{
+					//유저 재시도를 안내한다
+					MsdkCallback.sendResult("바인딩 실패，시스템 에러, 다시 시도하기 바람！");
+				}
+			}
+		
+			@Override
+			public void OnUnbindGroupNotify(QQGroupRet groupRet) {
+				//TODO GAME QQ그룹 바인딩 해제의 콜백 추가
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					//바인딩 해제 성공, 게임은 유저에게 바인딩 해제 성공을 알려주며 길드회장의 길드 화면에서 그룹 바인딩 버튼을 노출하여 비 회장 화면에는 미바인딩 버튼을 노출하게 한다
+					MsdkCallback.sendResult("바인딩 해제 성공");
+				}else{
+					if(2001 == groupRet.errorCode){
+						//바인딩 해제에 사용된 openID는 그룹과의 바인딩 기록이 없어서 게임에서 다시 조회 인터페이스를 호출하여 바인딩 상황을 조회
+						MsdkCallback.sendResult("바인딩 해제 실패，현 QQ그룹에 바인딩 기록이 없다！");
+					}else if(2003 == groupRet.errorCode){
+						//유저 로그인 상태 기간만료，재 로그인하기 바람
+						MsdkCallback.sendResult("바인딩 해제 실패，유저 로그인 상태 기간만료이니, 재 로그인하기 바람！");
+					}else if(2004 == groupRet.errorCode){
+						//조작이 너무 빈범하여 유저로 하여금 잠시 후 다시 시도하기 바람
+						MsdkCallback.sendResult("해제 실패,조작이 너무 빈범하여 유저로 하여금 잠시 후 다시 시도하기 바람！");
+					}else if(2005 == groupRet.errorCode){
+						//해제 파라미터 오류, 게임에 다시 조회 인터페이스를 호출하여 바인딩 상황을 조회
+						MsdkCallback.sendResult("해제 실패, 해제 파라미터 오류！");
+					}else{
+						//유저로 하여금 다시 시도하게 안내한다
+						MsdkCallback.sendResult("해제 실패, 시스템 오류, 다시 시도하기 바람！");
+					}
+				}
+			}
+		}
 
-	com.tencent.tauth.AuthActivity와 com.tencent.connect.common.AssistActivity는 AndroidManifest.xml에서 본 장절 앞부분 설명과 일치해야 한다. 
+- **콜백 설정：**
 
-- 게임 Activity가 Launch Activity이면 게임 Activity 선언에 android:configChanges="orientation|screenSize|keyboardHidden"를 추가해야 한다. 그렇지 않으면 로그인과 콜백이 없는 문제를 초래할 수 있다.
+		 //QQ 그룹 가입 및 그룹 바인딩 콜백
+	     WGPlatform.WGSetQQGroupObserver(new MsdkQQGroupCallback());
 
+#### C++ 층 콜백：
+
+- **콜백 구현 예시（간단한 예시를 보여주며 상세한 내용은 java층의 콜백을 참조 바람）：**
+
+		// 광고의 콜백，
+		class QQGroupCallback: public WGQQGroupObserver {
+		
+			virtual void OnQueryGroupInfoNotify(QQGroupRet& groupRet){
+				// 게임은 이 위치에서 그룹 정보 조회하여 리턴한 후의 로직을 추가
+				LOGD("QQGroupCallback OnQueryGroupInfoNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+			}
+			virtual void OnBindGroupNotify(QQGroupRet& groupRet){
+				//게임은이 위치에서 그룹 바인딩한 후의 로직을 추가하며 현재 openSDK지원 불가, MSDK는 인터페이스 호출 성공으로만 리턴 가능한 것을 뜻한다
+				LOGD("QQGroupCallback OnQueryGroupInfoNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+			}
+			virtual void OnUnbindGroupNotify(QQGroupRet& groupRet){
+				// 게임은 이 위치에서 바인딩 해제 인터페이스 호출한 후의 리턴 결과를 추가
+				LOGD("QQGroupCallback OnQueryGroupInfoNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+			}
+		};
+		QQGroupCallback qqGroup_callback;
+
+- **콜백 설정：**
+	
+		WGPlatform::GetInstance()->WGSetQQGroupObserver(&qqGroup_callback);
+		
 ## 퀵 로그인
 
 퀵 로그인이란 유저가 QQ 혹은 위챗 공유 메시지를 클릭하여 직접 게임 호출해서 게임 로그인할 때，플랫폼에서 관련 토큰정보를 투과전송 하여 로그인 실행. 해당 이런 스테이지에서 게임이 호출된 후 유저는 다시 인증할 필요없이 게임에 로그인 할 수 있다.
@@ -477,13 +571,20 @@ QQ는 게임센터를 통해 시작을 클릭하여 직접 킉 로그인 할 수
 
 QQ그룹 바인딩
 ------
+게임 길드/연맹 내에서 길드장은 “바인딩” 버튼을 클릭하여 길드장이 만든 그룹을 불러와 해당 길드의 길드 그룹으로 바인딩시킬 수 있다. 호출 인터페이스: WGBindQQGroup. 바인딩 정보는 콜백을 통해 게임에게 알려준다.콜백 설정 설정은 [그룹 가입 및 그룹 바인딩 콜백 설정]참조.(qq.md#그룹 가입 및 그룹 바인딩 콜백 설정)
 
-게임 길드/연맹 내에서 길드장은 “바인딩” 버튼을 클릭하여 길드장이 만든 그룹을 불러와 해당 길드의 길드 그룹으로 바인딩시킬 수 있다. 호출 인터페이스: WGBindQQGroup. **현재 게임은 메인 스레드에서 이 인터페이스를 호출해야 한다**
+####버전 상황：
+
+- MSDK1.7.5 버전부터 해당 이 기능 제공하기 시작.
+- **MSDK2.6버전 이전의 게임에 해당 인터페이스는 반드시 메인 스레드에서 호출해야 한다.**
 
 #### 인터페이스 선언:
 	
 	/**
 	 * 게임 그룹 바인딩: 게임 길드/연맹 내에서 길드장은 “바인딩” 버튼을 클릭하여 길드장이 만든 그룹을 불러와 해당 길드의 길드 그룹으로 바인딩시킬 수 있다
+	 * 바인딩 결과는 WGQQGroupObserver의 OnBindGroupNotify를 통해 게임에 리턴.
+	 * 현제 QQ SDK는 그룹 바인딩의 콜백을 지원하지 않기 때문에,MSDK2.7.0a버전부터 바인딩 성공 여부를 막론하고 MSDK는 게임에 성공의 콜백을 발송할 것이다.
+	 * 게임이 콜백을 받은 후 조회 인터페이스를 호출하여 바인딩 성공 여부를 확인해야 한다
 	 * @param cUnionid 길드ID, opensdk 숫자만 입력 가능, 문자는 바인딩 실패를 초래할 수 있음	 
 	 * @param cUnion_name 길드명
 	 * @param cZoneid 큰구역 ID, opensdk문자는 바인딩 실패를 초래할 수 있음	 
@@ -509,25 +610,64 @@ QQ그룹 바인딩
 		(unsigned char *)cSignature.c_str()
 	);
 
-### 그룹 바인딩 절차: 
-![그룹 바인딩 흐름도](bindqqgroup.jpg)
-### 바인딩 해제 절차: 
-![그룹 바인딩 흐름도](unbindqqgroup.jpg)
+	
 #### 주의사항:
 
 1.	**게임에서 그룹 바인딩 시 길드id와 큰구역 id는 반드시 숫자여야 한다** 문자를 사용하면 바인딩 실패를 초래할 수 있으며 보통 “파라미터 검증 실패”를 제시한다.
 
 - 게임에서 그룹 바인딩 시 서명 생성 규칙: 유저openid\_게임appid\_게임appkey\_길드id\_구역id의 md5값, 이 규칙에 따라 생성한 서명을 사용할 수 없으면 RTX를 통해 OpenAPIHelper에 문의
 
-- 게임에서 길드ID는 한 개 QQ그룹만 바인딩할 수 있다. 유저가 길드 QQ그룹을 해체해도 길드ID와 길드QQ그룹은 자동으로 바인딩이 해제되지 않기에 길드ID는 새로운 QQ그룹과 바인딩할 수 없게 된다. 이럴 경우, 앱은 이 인터페이스를 호출하여 길드ID와 QQ그룹의 바인딩을 해제하여 새로운 길드QQ그룹을 생성하거나 이미 있는 QQ그룹과 바인딩을 진행할 수 있다. 인터페이스 호출 방법은 RTX를 통해 OpenAPIHelper에 문의하거나 opensdk wiki 참조: [http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup](http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup)
+- 게임에서 길드ID는 한 개 QQ그룹만 바인딩할 수 있다. 유저가 길드 QQ그룹을 해체해도 길드ID와 길드QQ그룹은 자동으로 바인딩이 해제되지 않기에 길드ID는 새로운 QQ그룹과 바인딩할 수 없게 된다. 이럴 경우, 앱은 바인딩 해제 인터페이스를 호출하여 길드ID와 QQ그룹의 바인딩을 해제하여 새로운 길드QQ그룹을 생성하거나 이미 있는 QQ그룹과 바인딩을 진행할 수 있다.
 
 - **api 호출 변수는 되도록 임시 변수를 사용하지 말아야 한다**
 
-- 자세한 내용은 [게임에서 그룹/친구 추가 FAQ](qq.md#그룹/친구 추가 FAQ) 참조
+- **현제 QQ SDK는 그룹 바인딩의 콜백을 지원하지 않기 때문에,MSDK2.7.0a버전부터 바인딩 성공 여부를 막론하고 MSDK는 게임에 성공의 콜백을 발송할 것이다. 게임이 콜백을 받은 후, [조회 인터페이스](qq.md#QQ그룹 바인딩 정보 조회)를 호출하여 바인딩 성공 여부를 확인해야 한다**
+
+- 더 상세한 내용은 [게임내 그룹 가입 및 그룹 바인딩 FAQ]를 참고(qq.md#그룹 가입 및 그룹 바인딩 FAQ)
+
+QQ그룹 바인딩 정보 조회
+------
+유저 길드 화면에 들어가거나 그룹 바인딩 한 다음에 바인딩 정보를 조회 필요 시, 인터페이스를 호출하면 현 길드와 그룹의 바인딩 정보를 조회할 수 있다.`WGQueryQQGroupInfo`인터페이스를 호출하면 된다. 조회 결과는 콜백을 통해 게임에 알려준다. 콜백 설정은 [그룹 가입 및 그룹 바인딩 콜백 설정](qq.md#그룹 가입 및 그룹 바인딩 콜백 설정)
+
+####버전 상황：
+
+- MSDK2.7.0 버전부터 이 기능을 제공하기 시작.
+- **MSDK2.7버전 이전의 게임은 [그룹 가입 및 그룹 바인딩 FAQ](qq.md#그룹 가입 및 그룹 바인딩 FAQ)에서 해결 방안을 확인.**
+
+#### 인터페이스 성명：
+	
+	/**
+	 * 길드 바인딩한 그룹 정보를 조회, 조회 결과는 WGQQGroupObserver의 OnQueryGroupInfoNotify를 통해 게임에 콜백할 것이다.
+	 * @param unionid 길드ID
+	 * @param zoneid 월드ID
+	 */
+    void WGQueryQQGroupInfo(unsigned char* cUnionid,unsigned char* cZoneid);
+
+#### 인터페이스 호출：
+인터페이스 호출 예시：
+
+	std::string cUnionid = "1";
+	std::string cZoneid = "1";
+	WGPlatform::GetInstance()->WGQueryQQGroupInfo(
+		(unsigned char *)cUnionid.c_str(),(unsigned char *)cZoneid.c_str());
+
+#### 에러 코드：
+
+| 에러 코드| 설명 |
+| ------------- |:-----|
+|2002 	|바인딩 기록이 없다.현 길드는 바인딩 기록이 없어 기입한 길드ID 및 월드ID의 정확성을 확인하기 바란다.|
+|2003 	|조회 실패，현 유저는 QQ그룹에 가입되지 않아, 우선 QQ그룹에 가입하기 바란다|
+|2007 	|조회 실패，현 길드 바인딩한 QQ그룹은 해산되거나 존재하지 않는다.|
+|기타 	|시스템 오류, 기업QQ를 통해 기술 지원 요청하여 문제 발생하는 원인을 파악하고 해결 방안을 획득.| 
 
 QQ그룹 추가
 ------
-유저는 게임에서 QQ그룹을 직접 추가할 수 있다. 호출 인터페이스: WGJoinQQGroup. **현재 게임은 메인 스레드에서 이 인터페이스를 호출해야 한다**
+유저는 게임에서 QQ그룹을 직접 추가할 수 있다. 호출 인터페이스: WGJoinQQGroup.
+
+####버전 상황：
+
+- MSDK1.7.5 버전부터 이 기능을 제공하기 시작.
+- **MSDK2.6.0a버전 이전 게임에 해당 인터페이스는 반드시 메인 스레드에서 호출해야 한다.**
 
 #### 인터페이스 선언:
 
@@ -543,20 +683,100 @@ QQ그룹 추가
 	std::string cQqGroupKey = "xkdNFJyLwQ9jJnozTorGkwN30Gfue5QN";
 	WGPlatform::GetInstance()->WGJoinQQGroup((unsigned char *)cQqGroupKey.c_str());
 
-### 그룹 추가 절차:
-![그룹 추가 흐름도](joinqqgroup.jpg)
+
 
 #### 주의사항:
 
-1. 게임에서 그룹 추가시 사용하는 파라미터는 대응하는 QQ그룹 번호가 아니라 openAPI 백그라운드에서 생성한 특수한 Key 값이다. 게임에서 사용시 openAPI의 인터페이스를 호출하여 획득해야 한다. 호출 방법은 RTX를 통해 OpenAPIHelper에 문의하면 된다. 연동 테스트 단계는 [http://qun.qq.com](http://qun.qq.com)**(그룹 추가 컴포넌트/Android코드에서 확인)**， 아래 그림 참조: ![그룹 추가 안내도](qqgrouup.png)
+1. 게임에서 그룹 추가시 사용하는 파라미터는 대응하는 QQ그룹 번호가 아니라 openAPI 백그라운드에서 생성한 특수한 Key 값이다. MSDK 2.7.0a 및 이후버전에 해당 값은 조회 인터페이스를 호출할 때 획득 가능.MSDK 2.7.0a이전 버전을 사용할 경우 openAPI인터페이스를 호출해야 획득 가능.호출 방법은 RTX 를 통해 OpenAPIHelper에게 문의할 수 있다. 연동 테스트 단계에는 [http://qun.qq.com](http://qun.qq.com)**(그룹 가입 모듈/Android 코드에서 확인할 수 있다)**아래 이미지 참고：![그룹 가입 투시도](qqgrouup.png)
 
 - **api 호출 변수는 되도록 임시 변수를 사용하지 말아야 한다**
 
-- 자세한 내용은 [게임에서 그룹/친구 추가 FAQ](qq.md#그룹/친구 추가 FAQ) 참조
+- 더 상세한 내용은 [게임 내 그룹 가입 및 그룹 바인딩 FAQ]를 참고(qq.md#그룹 가입 및 그룹 바인딩 FAQ)
+
+
+QQ 그룹 바인딩 해제
+------
+길드 회장은 길드와 QQ 그룹 간의 바인딩 관계를 해제할 수 있다. `WGUnbindQQGroup`인터페이스를 호출하면 된다. 해제 결과는 콜백을 통해 게임에 알려준다.콜백 설정은 [그룹 가입 및 그룹 바인딩 콜백 설정]참고.(qq.md#그룹 가입 및 그룹 바인딩 콜백 설정)
+
+####버전 상황：
+
+- MSDK2.7.0a 버전부터 이 기능을 제공하기 시작.
+- **MSDK2.7.0a 이전 버전은 [그룹 가입 및 그룹 바인딩 FAQ](qq.md#그룹 가입 및 그룹 바인딩 FAQ)에서 바인딩 해제 방법을 확인할 수 있다.**
+
+#### 인터페이스 성명：
+	
+	/**
+	 * 현재 길드 바인딩하고 있는 QQ그룹을 해제하며 해제 결과는 WGQQGroupObserver의 OnUnbindGroupNotify를 통해 게엠에 콜백할 것이다.
+	 * @param cGroupOpenid 길드와 바인딩한 그룹의 openid
+	 * @param cUnionid 길드ID
+	 */
+
+    void WGUnbindQQGroup(unsigned char* cGroupOpenid,unsigned char* cUnionid);
+
+#### 인터페이스 호출：
+인터페이스 호출 예시：
+
+	std::string cGroupOpenid = "5C336B37DBCDB04D183A3F4E84B2AB0E";
+	std::string cUnionid = "1";
+	WGPlatform::GetInstance()->WGUnbindQQGroup(
+		(unsigned char *)cGroupOpenid.c_str(),(unsigned char *)cUnionid.c_str());
+
+#### 에러 코드：
+
+| 에러 코드| 설명 |
+| ------------- |:-----|
+|2001 	|해제 실패，해당 QQ그룹에 바인딩 기록이 없다！|
+|2003 	|해제 실패，유저 로그인 상태 기간 만료, 다시 로그인하기 바람！|
+|2004 	|해제 실패，조작이 너무 빈범하여 잠시 후 시도하기 바람！|
+|2004 	|해제 실패，해제 파라미터 오류！|
+|기타 	|시스템 오류, 기업QQ를 통해 기술 지원 요청하여 문제 발생하는 원인을 파악하고 해결 방안을 획득.| 
+
+그룹 가입 및 그룹 바인딩 FAQ
+---
+### 신분 검증 실패의 알림이 노출한 이유？
+- 게임내 그룹과 바인딩할 때, 길드id와 월드id는 반드시 숫자여야 한다. 만약, 문자기호로 사용할 경우 바인딩 실패를 일으킬 수 있다. 일반적으로 “파라미터 검증 실페”의 알림이 노출.
+- 게임내 그룹 바인딩할 때 사인이 생성한 규칙은 아래와 같다：유저의 openid\_게임appid\_게임appkey\_길드id\_월드id의 md5값，위 규칙대로 생성된 사인이 사용 불가일 경우 직접 RTX로  OpenAPIHelper에게 문의하기 바란다.
+- 월드id가 없을 경우, 0으로 표시.（demo에서 바인딩 실패의 원인은 사인에 오류가 있어, 사인에 대해 다시 계산하기 필요.appid、appkey、openid등은 logcat에서 확인할 수 있다）
+
+### MSDK 2.7 이전 버전의 그룹 바인딩 프로세스：
+![그룹 바인딩 프로세스](bindqqgroup.jpg)
+
+### MSDK 2.7 이전 버전에는 모 그룹의 바인딩 정보를 조회하는 방법은？
+[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)를 참고하기 바란다.리턴한 에러 코드가 2004일 경우，해당 그룹은 appid와 바인딩을 하지 않았다.
+
+### MSDK 2.7 이전 버전에는 길드멤버가 그룹에 있는지를 조회하는 방법은？
+[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)를 참고하기 바란다.리턴한 에러 코드가 2003일 경우，해당 그룹은 appid와 바인딩을 하지 않았다.
+
+### MSDK 2.7 이전 버전에서 QQ그룹과 바인딩 성공 여부를 조회하는 방법은？
+[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)를 참고하기 바란다.리턴 코드 0일 경우, group_openid는 QQ그룹의 group_openid를 표시하며 group_openid를 통해 그룹명을 조회.（제6조를 참고） 
+**특별 설명，msdk와 qq는 바인딩 결과를 리턴하지 않아, 게임은 적극적으로 바인딩 성공 여부를 조회해야 한다**
+
+### MSDK 2.7 이전 버전에서 그룹 바인딩 해제하는 방법은？
+[http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup](http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup)를 참고하기 바란다.
+
+### MSDK 2.7 이전 버전에서 바인딩 해제 프로세스：
+![그룹 바인딩 해제 프로세스](unbindqqgroup.jpg)
+
+### MSDK 2.7 이전 버전에 모 길드ID가 바인딩한 그룹을 조회하는 방법은？
+[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info)를 참고하기 바란다.
+
+### MSDK 2.7 이전 버전의 그룹 가입 프로세스：
+![그룹 가입 프로세스](joinqqgroup.jpg)
+
+### 더 상세한 내용은 
+[http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8](http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8)를 참고하기 바란다.
+응용프로그램 홍보API----QQ능력 홍보----길드 QQ그룹
+
 
 QQ친구 추가
 ------
-유저는 게임에서 다른 게임 유저를 직접 qq 친구로 추가할 수 있다. 호출 인터페이스: WGAddGameFriendToQQ. **현재 게임은 메인 스레드에서 이 인터페이스를 호출해야 한다**
+유저는 게임에서 다른 게임 유저를 직접 qq 친구로 추가할 수 있다. 호출 인터페이스: WGAddGameFriendToQQ. 
+
+####버전 상황：
+
+- MSDK1.7.5 버전부터 이 기능을 제공하기 시작.
+- **MSDK2.6.0a이전 버전의 게임은 해당 이 인터페이스는 반드시 메인 스레드에서 호출해야 한다.**
+
 #### 인터페이스 선언:
 
 	/**
@@ -580,35 +800,6 @@ QQ친구 추가
 		(unsigned char *)cMessage.c_str()
 	);
 
-그룹/친구 추가 FAQ
----
-
-### 1. 신분 인증에 실패했다고 제시하는 이유는?
-
-- 게임에서 그룹 바인딩 시 길드id와 큰구역 id는 반드시 숫자여야 한다. 문자를 사용하면 바인딩 실패를 초래할 수 있으며 보통 “파라미터 검증 실패”를 제시한다.
-- 게임에서 그룹 바인딩 시 서명 생성 규칙: 유저openid\_게임appid\_게임appkey\_길드id\_구역id의 md5 값, 이 규칙에 따라 생성한 서명이 사용할 수 없으면 직접 RTX를 통해 OpenAPIHelper에 문의.
-- 구역id가 없으면 0으로 표시.(demo에서 바인딩에 성공하지 못하는 이유는 서명이 고정되었기때문이다. 이러지 말고 스스로 서명을 생성해야 한다. Appid, appkey, openid는 logcat에서 찾을 수 있다)
-
-### 2. 길드ID가 어느 그룹에 바인딩되었느지 확인하려면?
-
-참조: [http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid). 반환한 오류 코드가 2004면 이 그룹과 appid가 바인딩되지 않았음을 표시
-
-### 3. 길드원이 그룹에 있는지 확인하려면?
- 
-참조: [http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid). 반환한 오류 코드가 2003이면 이 그룹과 appid가 바인딩되지 않았음을 표시
-
-### 4. QQ 그룹 바인딩 성공 여부를 판단하려면?
-참조: [http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid). 리턴 코드는 0, group_openid는 QQ그룹의 group_openid 표시. 그다음 group_openid를 통해 그룹명 검색(제6조 참조)
-
-**특별 설명, msdk와 모바일QQ는 바인딩 결과를 반환하지 않기에 게임은 바인딩 성공 여부를 스스로 확인해야 한다**
-
-### 5. 그룹 바인딩을 해제하려면?
-참조: [http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup](http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup)
-### 6. 길드ID가 어느 그룹에 바인딩되었는지 확인하려면?
-참조: [http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info)
-### 7. 다른 문제
-참조: [http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8](http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8)
-앱 홍보 API----QQ 능력 홍보----길드QQ그룹
 
 모바일QQ 기능과 지원하는 버전
 ------

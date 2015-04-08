@@ -16,11 +16,11 @@ MSDK iOS 소개
 	후자는 이 두개 구성 항목이 “GNU++11”과 “libc++(LLVM C++ standard library with C++11 support)”인 프로젝트에 적용된다.
 
 
-![linkBundle](./msdk_structure1.PNG)
+![linkBundle](./파일구조1.PNG)
 
 
     두개 embeddedframework 파일 구조는 일치하다. WGPlatform.embeddedframework를 예로 들면, 그중 폴더 용도는 [포함한 내용] 장절 참조. 업데이트시 기존 파일을 삭제하고 새 파일을 도입하면 된다.
-![linkBundle](./msdk_structure2.PNG) 
+![linkBundle](./파일 구조 2.PNG) 
 WGPlatform.embeddedframework 부합 두 embeddedframework 파일 구조는, 예를 들어, 섹션 [콘텐츠가 포함] 참조 폴더를 사용한다. 업그레이드 원본 파일을 삭제, 새 파일을 가져올 수 있습니다.
 
 
@@ -37,7 +37,7 @@ WGPlatform.embeddedframework 부합 두 embeddedframework 파일 구조는, 예�
     해당 _C11가 있는 framework는 이 두가지 설정이 각각 “GNU++11”와“libc++(LLVM C++ standard library with C++11 support)”가 된 공정에 적용한다.
 
 
-![linkBundle](./msdk_structure_2.4.0_1.PNG)
+![linkBundle](./파일 구조_2.4.0_1.PNG)
 
 
     업데이트 방식은 2.3.4i버전과 일치하며 원래 있는 파일을 삭제하고 새로운 파일을 도입하면 된다.
@@ -89,13 +89,13 @@ WGPlatform.embeddedframework 부합 두 embeddedframework 파일 구조는, 예�
 |대화|모바일QQ 또는 위챗 채닝 메시지|
 |설치 채널|info.plist 설정한 CHANNEL_DENGTA값은 현재 디폴트로 1001（AppStore）. |
 |등록 채널|유저 최초 로그인시 게임 설치 채널은 MSDK 백그라운드에 기록되어 유저의 등록 채널로 간주된다.|
-|Pf|결제에 필요한 필드, 데이터 분석용으로 사용된다. pf 구성: 플랫폼 실행_계정 체계-등록 채널-운영체제-설치 채널-사용자정의 필드|
+|Pf|결제에 필요한 필드, 데이터 분석용으로 사용된다. pf 구성: 플랫폼 실행_계정 체계-등록 채널-운영체제-설치 채널-계정 시스템-appid-openid.예를 들면,desktop_m_qq-73213123-android-73213123-qq-100703379-A65A1614A2F930A0CD4C2FB2C4C5DBE1|
 |pfKey| 결제용|
 |AMS|	인터랙티브 엔터테인먼트 고급 마케팅 시스템, 게임 마케팅 활동 기획과 개발 담당|
 |빠른로그인|	모바일QQ 게임 리스트 또는 공유 링크에서 모바일QQ에 로그인된 계정 정보를 직접 게임에 전송하여 로그인 실현, 게임은 재인증이 필요하지 않음. 의존: MSDK 1.8.0i 이상, 모바일QQ4.6.2 이상|
 |Guest 모드|	Apple은 iOS 모바일 게임이 모바일QQ/위챗 플랫폼 이외의 로그인 방식을 제공할 것을 요구. 직접 게임에 들어가서 완전한 게임 컨텐츠 체험 및 결제 가능|
-|GuestID|	설비 정보를 통해 MSDK에 등록하여 생성된 게스트 신분 식별자, 형식은 "G_숫자/알파벳/_/@"로 구성된 34자리 문자열|
-|Guest AppID|	게스트 모드를 식별하기 위해 Guest 모드에서 AppID는 “G_모바일QQAppID” 형식 사용. 게임에 모바일QQ AppID가 없을 경우 “G_위챗AppID” 사용|
+|GuestID|	설비 정보를 통해 MSDK에 등록하여 생성된 게스트 신분 식별자, 형식은 _ "G_숫자/알파벳/_/@"로 구성된 34자리 문자열|
+|Guest AppID|	게스트 모드를 식별하기 위해 Guest 모드에서 AppID는 "G\_QQ AppId" 형식 사용. 게임에 모바일QQ AppID가 없을 경우 "G\_위챗AppID" 사용. 예시, G_12345.|
 |Guest AppKey|	Guest AppID와 짝을 이루며, 모바일QQ/위챗에 대응하는 AppKey를 사용한다|
 |결제id|	별칭은 OfferId, info.plist의 MSDK_OfferId 항목에 배치.<br>내부 자체개발 게임: 직접 MIDAS 공홈 midas.qq.com에서 ios 앱을 등록하여 offered 생성<br>외부 대리 게임: 게임 제품이 RDM 공홈 rdm.oa.com에서 애플 정보를 신청한 후 정보를 협동기획팀 jiaganzheng에게 제공하여 dev 백그라운드에 입력. 그후 개발자는 관리센터에서 IAP 버전을 추가한 후 offerid 생성|
 

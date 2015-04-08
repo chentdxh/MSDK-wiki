@@ -391,7 +391,7 @@ protected void onNewIntent(Intent intent) {
 	 * @param fOpenId 친구의openid
 	 * @param title 제목 공유
 	 * @param description 설명 공유
-	 * @param mediaId 이미지 id는 백그라운드 인터페이스/share/upload_wx를 통해 획득
+	 * @param mediaId 이미지 id는 백그라운드 인터페이스/share/upload_wx를 통해 획득（비고：Android위챗5.4-6.1버전에서 해당 파라미터는 무효이며 디폴트icon를 사용하고 있다.）
 	 * @param messageExt 게임 공유시 전송한 문자열, 이 메시지를 통해 게임을 실행하면 OnWakeUpNotify(WakeupRet ret) 중 ret.messageExt를 통해 게임에 리턴한다
 	 * @param mediaTagName 실제 상황에 따라 아래 값 중 하나 입력. 이 값은 위챗에 통계용으로 제공. 공유 리턴 시에도 이 값을 반환하며 공유 소스 구분용으로 사용된다
 		 "MSG_INVITE";                   // 초대
@@ -435,7 +435,7 @@ protected void onNewIntent(Intent intent) {
 	 "MSG_SHARE_FRIEND_CROWN";          //금관을 친구에게 공유
 	 "MSG_friend_exceed"         // 초월 자랑하기
 	 "MSG_heart_send"            // 하트 보내기
- * @param thumbMediaId 이미지 id 는 백그라운드 인터페이스 /share/upload_wx를 통해 획득
+ * @param thumbMediaId 이미지 id 는 백그라운드 인터페이스 /share/upload_wx를 통해 획득（비고：Android위챗5.4-6.1버전에서 해당 파라미터는 무효이며 디폴트icon를 사용하고 있다.）
  * @param extMsdkInfo 게임 자체정의 투과전송 필드, 공유 결과 shareRet.extInfo를 통해 게임에 반환. 게임은 extInfo을 이용하여 request 구분 가능
 */
 public static boolean WGSendToWXGameFriend(

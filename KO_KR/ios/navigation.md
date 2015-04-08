@@ -34,8 +34,13 @@
   * [위챗 accesstoken 갱신](WX.md#위챗 accesstoken 갱신)
   * [위챗 각 버전이 지원하는 기능:](WX.md#위챗 각 버전이 지원하는 기능:)  
   
-[로그인 관련](login.md)  
+[로그인 관련]()
 
+  * [개요 ](login.md#개요 )
+  * [명사 해석,인터페이스 설명 ](login.md#명사 해석,인터페이스 설명 )
+  * [MSDK2.6.0i이전 버전에 토큰 처리 프로세스 ](login.md#추천 로그인 프로세스（2.6.0i이전 버전） )
+  * [MSDK2.6.0i 및 이후 버전 토큰 자동 갱신 프로세스](login.md#MSDK2.6.0i및 이후 버전 토큰 자동 갱신 프로세스)
+  
 [Guest 모드]()
 
   * [포함한 콘텐츠와 기능 ](Guest.md#포함한 콘텐츠와 기능 )
@@ -48,7 +53,7 @@
   * [개요](AutoAuth.md#개요)
   * [주의 사항](AutoAuth.md#주의 사항)  
   
-  [내장 브라우저]()
+[내장 브라우저]()
 
   * [개요](InnerBrowser.md#개요)
   * [사용시 주의사항](InnerBrowser.md#사용시 주의사항)
@@ -57,6 +62,14 @@
   * [앱 내에서 App Store 세부페이지 오픈](InnerBrowser.md#앱 내에서 App Store 세부페이지 오픈)
   * [공유](InnerBrowser.md#공유)
   * [AMS 마케팅센터 오픈](InnerBrowser.md#AMS 마케팅센터 오픈) 
+  
+[데이터 보고]()
+
+  * [비콘 연동 설정](beacon.md#비콘 연동 설정)
+  * [자체 정의 데이터 보고](beacon.md#자체 정의 데이터 보고)
+  * [RQD연동 설정](rqd.md#RQD연동 설정)
+  * [Crash데이터 보고](rqd.md#Crash데이터 보고)
+  * [유저 피드백](feedback.md)
   
 [공지]()
 
