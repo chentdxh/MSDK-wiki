@@ -60,6 +60,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 <MSDK/WGPlatform.h>
 <MSDK/WGPlatformObserver.h>
 ```  
+部分游戏导入framework后会有找不到framework的情况，现象是无法打开内置浏览器，日志输出“no MSDKWebViewService exist”，此时需要在Other link flags增加“-ObjC “ “-framework MSDKFoundation -framework MSDK -framework MSDKMarketing -framework MSDKXG”，导入相关framework。
 ---
 ##Step3:配置项
  

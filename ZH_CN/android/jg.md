@@ -50,11 +50,11 @@ MSDK在版本发布前都会做金刚检测，确认当前版本无漏洞才会�
 
 ####MSDK修复建议：升级Midas到1.3.9.e及以上版本解决
 
-## 信鸽拒绝服务漏洞
+## PUSH拒绝服务漏洞
 
 ![jg](./jg_tpush_localservices.png)
 
-####MSDK修复建议：升级MSDK到2.7.0a版本
+####MSDK修复建议：请将该注册代码进行删除，游戏无需在AndroidManifest.xml中注册ForwardActivity
 
 ## 信鸽 Intent协议解析越权漏洞
 

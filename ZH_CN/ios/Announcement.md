@@ -10,7 +10,7 @@
 
 ##由MSDK展示界面的公告接口
  - 调用WGShowNotice将使用MSDK配置的一套界面显示当前有效的公告，调用WGHideScrollNotice隐藏展示的滚动公告。
-```ruby
+```
 Void WGShowNotice (eMSG_NOTICETYPE type, unsigned char *scene);
 ```
 >描述: 显示指定scene当前有效的公告。通过参数type的确定展示哪种公告，如下：
@@ -18,10 +18,10 @@ Void WGShowNotice (eMSG_NOTICETYPE type, unsigned char *scene);
 typedef enum _eMSG_NOTICETYPE
 {
 	//所有公告类型
-eMSG_NOTICETYPE_ALL = 0,
-//弹出提示公告
-eMSG_NOTICETYPE_ALERT,
-//滚动公告
+	eMSG_NOTICETYPE_ALL = 0,
+	//弹出提示公告
+	eMSG_NOTICETYPE_ALERT,
+	//滚动公告
     eMSG_NOTICETYPE_SCROLL,
 }eMSG_NOTICETYPE;
 ```
@@ -29,27 +29,24 @@ eMSG_NOTICETYPE_ALERT,
 1、Type需要展示的公告类型
 2、scene 公告场景ID，不能为空。这个参数和公告管理端的“公告栏”对应，只取制定公告栏有效的公告展示。
  - 
-```ruby
+```
 void WGHideScrollNotice ();
 ```
 >描述: 隐藏展示的滚动公告
-注：公告的展示界面是通过plist定制的。目前有弹出提示公告有“白底、蓝底、黑底、自定义”四种模版，这些模版及对应的资源文件放在WGPlatformResources.bundle/AnnouncementResources下对应的子目录中。模版的元素和定义说明详见附录。
-
----
 
 ##公告数据列表接口
-```ruby
+```
 std::vector<NoticeInfo> WGGetNoticeData(eMSG_NOTICETYPE type,unsigned char *scene);
 ```
 >描述: 显示指定scene当前有效的公告数据。通过参数type的确定展示哪种公告，如下：
-```ruby
+```
 typedef enum _eMSG_NOTICETYPE
 {
 	//所有公告类型
-eMSG_NOTICETYPE_ALL = 0,
-//弹出提示公告
-eMSG_NOTICETYPE_ALERT,
-//滚动公告
+	eMSG_NOTICETYPE_ALL = 0,
+	//弹出提示公告
+	eMSG_NOTICETYPE_ALERT,
+	//滚动公告
     eMSG_NOTICETYPE_SCROLL,
 }eMSG_NOTICETYPE;
 ```
@@ -58,24 +55,24 @@ eMSG_NOTICETYPE_ALERT,
 3、scene 公告场景ID，不能为空。这个参数和公告管理端的“公告栏”对应，只取制定公告栏有效的公告展示。
 返回：
 1、NoticeInfo的数组，NoticeInfo结构如下：
-```ruby
+```
 typedef struct
 {
     std::string msg_id; //公告id
     std::string open_id; //用户open_id
     std::string msg_content; //公告内容
     std::string msg_title; //公告标题
-  std::string msg_url; //公告跳转链接
-  eMSG_NOTICETYPE msg_type; //公告类型，eMSG_NOTICETYPE
-  std::string msg_scene; //公告展示的场景，管理端后台配置
-  std::string start_time; //公告有效期开始时间
-  std::string end_time; //公告有效期结束时间
-std::string content_url; //网页公告url
-std::vector<PicInfo> picArray; //图片公告图片数据
+ 	std::string msg_url; //公告跳转链接
+  	eMSG_NOTICETYPE msg_type; //公告类型，eMSG_NOTICETYPE
+  	std::string msg_scene; //公告展示的场景，管理端后台配置
+  	std::string start_time; //公告有效期开始时间
+  	std::string end_time; //公告有效期结束时间
+	std::string content_url; //网页公告url
+	std::vector<PicInfo> picArray; //图片公告图片数据
 }NoticeInfo; 
 typedef struct
 {
-eMSDK_SCREENDIR screenDir;      //横竖屏   1：横屏 2：竖屏
+	eMSDK_SCREENDIR screenDir;      //横竖屏   1：横屏 2：竖屏
     std::string picPath;    //图片本地路径
     std::string hashValue;  //图片hash值
 }PicInfo; 
@@ -85,24 +82,30 @@ eMSDK_SCREENDIR screenDir;      //横竖屏   1：横屏 2：竖屏
 
 ## 示例代码
  - 获取公告数据列表接口调用代码示例：
-```ruby
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 std::vector<NoticeInfo> vec = plat->WGGetNoticeData(eMSG_NOTICETYPE_ALERT, (unsigned char *)[scene UTF8String]);
-            for (int i = 0; i < vec.size(); i++) {
-                NoticeInfo info = vec[i];
-                NSLog(@"NoticeInfo msgID: %@\nNoticeInfo msgTitle:%@\nNoticeInfo msgContent:%@",
+for (int i = 0; i < vec.size(); i++) {
+   NoticeInfo info = vec[i];
+   NSLog(@"NoticeInfo msgID: %@\nNoticeInfo msgTitle:%@\nNoticeInfo msgContent:%@",
                 [NSString stringWithUTF8String: info.msg_id.c_str()],
                 [NSString stringWithUTF8String: info.msg_title.c_str()],
                 [NSString stringWithUTF8String: info.msg_content.c_str()]);
             }
 ```
+
 ## 常见问题
  - 没有正确导入资源文件导致Crash：
 	如果没有将MsdkReources.bundle正确导入工程的”Copy Bundle Resources“，将会在展示公告时出现crash
-![linkBundle](./Crash_Annoucement.PNG)
+![Alt text](./Crash_Annoucement.png)
  - 如果没有在AppDelegate(AppController)创建window属性，会导致调用公告时crash：	
 	[AppController window]: unrecognized selector sent to instance 0x17fa7130
 	解决方法：在AppDelegate(AppController)增加一个window的property，指向它创建的keywindow
+
+**注意：**
+
+公告的展示界面是通过plist定制的。目前有弹出提示公告有“白底、蓝底、黑底、自定义”四种模版，这些模版及对应的资源文件放在WGPlatformResources.bundle/AnnouncementResources下对应的子目录中。模版的元素和定义说明详见附录。
+
 ## 附录
   - 公告plist配置说明
     公告的展示界面是通过plist定制的。目前有弹出提示公告有“白底、蓝底、黑底、自定义”四种模版，这些模版及对应的资源文件放在framework/Resources/AnnouncementResources下对应的子目录中。每个模版的定义元素如下：

@@ -46,7 +46,7 @@ Bugly上报开关设置
 
 在Bugly平台上查看Crash数据
 ---
-- 网址:[http://rdm.wsd.com/](http://rdm.wsd.com/)->用QQ账号登录->选择相应的App
+- 网址:[http://bugly.qq.com/](http://bugly.qq.com/)->用QQ账号登录->选择相应的App
 
 ![bugly](./bugly1.png)
 

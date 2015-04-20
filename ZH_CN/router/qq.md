@@ -164,9 +164,10 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ![分享图片](./shareQQ_detail.jpg)
 
 
-2.3 Relation服务
+##2.3 Relation服务##
 ---
-### 2.3.1.1接口说明 ###
+### 2.3.1/relation/qqprofile ###
+#### 2.3.1.1接口说明 ####
 　　　获取用户QQ帐号基本信息。
 #### 2.3.1.2输入参数说明 ####
 
@@ -968,7 +969,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 参数名称| 描述|
 | ------------- |:-----|
 | ret|返回码  0：正确，其它：失败 |
-| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节，`错误描述中出现"oidb decode0x5e1 failed, ret:116"表示accessToken过期或openid无效`|
 | list|信息列表vector<VIP> 类型（见下文），获取超级会员的时候，struct VIP中，只有isvip和flag参数有效.|
 	
 	struct VIP {

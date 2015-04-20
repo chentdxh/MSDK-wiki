@@ -2,6 +2,23 @@
 
 Android 2.7 版本历史
 ---
+###Android 2.7.1变更内容
+
+#### 代码变更：
+
+- 新增功能：
+  - 初始化时动态设置版本号
+
+- SDK升级：
+  - 升级灯塔版本到1.9.1
+- bug 修复：
+  - 修复微信登录后保存pf_key值时，将pf值当作pf_key值进行了保存，该bug可能导致支付失败
+  - 修复灯塔页面看不到按版本号统计的用户crash率，可以看到总体用户crash率
+  - 修复查询群信息C++接口在没有绑定群时，查询结果引起crash的问题
+
+#### 文档调整：
+- 调整SDK接入关于[`Step3: MSDK初始化`](android.md#Step3:_MSDK初始化)。其中关于动态版本号设置，即MsdkBaseInfo新增appVersionName和appVersionCode设置。
+
 
 ### Unity版本
 
@@ -35,12 +52,29 @@ Android 2.7 版本历史
 - 增加手Q加群绑群相关的两个接口：[查询QQ群绑定信息](qq.md#查询QQ群绑定信息)和[解绑QQ群](qq.md#解绑QQ群)以及[三个回调](qq.md#加群绑群回调设置)相关的文档。调整[手Q加群绑群相关问题](qq.md#加群绑群常见问题)
 - 优化关于[金刚审计](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html#!jg.md)问题的解决方案
 - 调整应用宝模块关于[`省流量更新的内容`](myApp.md)。**`这部分内容调整较多，游戏需要特别关注！`**
+- 调整push模块关于[`配置AndroidManifest.xml`](msdkpush.md#接入配置)。其中说明了2.6.1版本接入信鸽需要补充的配置
+- 新增push模块关于[`SO库拷贝注意事项`](msdkpush.md#SO库拷贝注意事项)。
 - 调整内置浏览器模块关于[`接入配置`](webview.md)。**`这部分内容调整游戏需要特别关注！`**
 - 调整登录模块关于[`接入登录具体工作（开发必看）`](login.md#接入登录具体工作（开发必看）)。**`这部分内容调整游戏需要特别关注2.7.0a版本登录调用的说明！`**
 - 调整SDK接入关于[`MSDK初始化`](android.md#Step3: MSDK初始化),务必调用onRestart,onResume,onPause,onStop,onDestroy。**`这部分内容调整游戏需要特别关注！`**
 
 Android 2.6 版本历史
 ---
+
+###Android 2.6.1变更内容
+
+#### 代码变更：
+
+- SDK升级：
+	- 升级灯塔版本到v1.9.1(修复灯塔无分版本crash率统计的bug)
+	- 升级信鸽到v2.37（提高抵达率和修复金刚检测漏洞)
+
+- MSDK内部优化：
+	- 优化MSDK微信授权相关逻辑
+	
+#### 文档调整：
+- 调整push模块关于[`配置AndroidManifest.xml`](msdkpush.md#接入配置)。其中说明了2.6.1版本接入信鸽需要补充的配置
+- 新增push模块关于[`SO库拷贝注意事项`](msdkpush.md#SO库拷贝注意事项)。
 
 ###Android 2.6.0变更内容
 

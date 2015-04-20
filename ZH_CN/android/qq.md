@@ -687,7 +687,7 @@ MSDK 手Q 相关模块
 
 #### 注意事项：
 
-1. 游戏内加群时使用的参数不是对应的QQ群的群号码，而是openAPI后台生成的一个特殊Key值，MSDK 2.7.0a及以上版本，这个值在调用查询接口时即可获得。MSDK 2.7.0a以下版本使用的时候需要调用openAPI的接口获取，调用方法可RTX 咨询 OpenAPIHelper，联调阶段可以在[http://qun.qq.com](http://qun.qq.com)**(加群组件/Android代码处查看)**，如下图：![加群示意图](qqgrouup.png)
+1. 游戏内加群时使用的参数不是对应的QQ群的群号码，而是openAPI后台生成的一个特殊Key值。游戏使用的时候需要调用openAPI的接口获取，调用方法可RTX 咨询 OpenAPIHelper，联调阶段可以在[http://qun.qq.com](http://qun.qq.com)**(加群组件/Android代码处查看)**，如下图：![加群示意图](qqgrouup.png)
 
 - **调用api的变量最好不要是临时变量**
 

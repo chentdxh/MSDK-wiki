@@ -78,6 +78,16 @@ MSDK初始化是使用SDK所提供功能可以执行的前提。游戏在应用�
 
 		//游戏必须使用自己的支付offerId联调
 		baseInfo.offerId = "100703***";
+
+        // 自2.7.1a开始游戏可在初始化msdk时动态设置版本号，灯塔和bugly的版本号由msdk统一设置
+        // 2.7.1a之前的版本不要设置
+        // 1、版本号组成 = versionName + versionCode
+        // 2、游戏如果不赋值给appVersionName（或者填为""）和appVersionCode(或者填为-1)，
+        // msdk默认读取AndroidManifest.xml中android:versionCode="51"及android:versionName="2.7.1"
+        // 3、游戏如果在此传入了appVersionName（非空）和appVersionCode（正整数）如下，则灯塔和bugly上获取的版本号为2.7.1.271
+        baseInfo.appVersionName = "2.7.1";
+        baseInfo.appVersionCode = 271;
+
 		WGPlatform.Initialized(this, baseInfo);
 		// 设置拉起QQ时候需要用户授权的项
 		WGPlatform.WGSetPermission(WGQZonePermissions.eOPEN_ALL); 
