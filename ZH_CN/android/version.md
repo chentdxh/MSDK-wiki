@@ -18,14 +18,7 @@ Android 2.7 版本历史
 
 #### 文档调整：
 - 调整SDK接入关于[`Step3: MSDK初始化`](android.md#Step3:_MSDK初始化)。其中关于动态版本号设置，即MsdkBaseInfo新增appVersionName和appVersionCode设置。
-
-
-### Unity版本
-
-#### 2015/4/7
-
-- 发布基于2.6.0a的Unity接口版本
-- 增加Unity版本的[`接入文档`](msdk_android_unity.md)
+- 调整SDK接入关于[`MSDK初始化`](android.md#Step3:_MSDK初始化),务必调用WGPlatform.onRestart, WGPlatform.onResume, WGPlatform.onPause,WGPlatform.onStop,WGPlatform.onDestroy。**`这部分内容调整游戏需要特别关注！`**
 
 ###Android 2.7.0变更内容
 
@@ -58,8 +51,27 @@ Android 2.7 版本历史
 - 调整登录模块关于[`接入登录具体工作（开发必看）`](login.md#接入登录具体工作（开发必看）)。**`这部分内容调整游戏需要特别关注2.7.0a版本登录调用的说明！`**
 - 调整SDK接入关于[`MSDK初始化`](android.md#Step3: MSDK初始化),务必调用onRestart,onResume,onPause,onStop,onDestroy。**`这部分内容调整游戏需要特别关注！`**
 
+Unity版本历史
+---
+
+### 2015/4/7
+
+- 发布基于2.6.0a的Unity接口版本
+- 增加Unity版本的[`接入文档`](msdk_android_unity.md)
+
 Android 2.6 版本历史
 ---
+###Android 2.6.2变更内容
+
+#### 代码变更：
+
+- SDK升级：
+	- 升级灯塔版本到v1.9.4(修复因DB游标未关闭引起的crash问题)
+
+#### 文档调整：
+- 无
+
+
 
 ###Android 2.6.1变更内容
 
@@ -75,6 +87,7 @@ Android 2.6 版本历史
 #### 文档调整：
 - 调整push模块关于[`配置AndroidManifest.xml`](msdkpush.md#接入配置)。其中说明了2.6.1版本接入信鸽需要补充的配置
 - 新增push模块关于[`SO库拷贝注意事项`](msdkpush.md#SO库拷贝注意事项)。
+- 调整SDK接入关于[`MSDK初始化`](android.md#Step3:_MSDK初始化),务必调用WGPlatform.onRestart, WGPlatform.onResume, WGPlatform.onPause,WGPlatform.onStop,WGPlatform.onDestroy。**`这部分内容调整游戏需要特别关注！`**
 
 ###Android 2.6.0变更内容
 

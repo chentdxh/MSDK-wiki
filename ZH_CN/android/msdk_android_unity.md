@@ -249,7 +249,20 @@ protected void onDestroy ()
 
 其中，MSDK API都封装在WGPlatform类。在"MSDKUnitySample"中`MsdkDemo.cs`是对MSDK的C#接口的调用示例，游戏可参考此类时行C#接口调用。
 
-现在以QQ登陆为例，演示如何调用MSDK api与处理回调：
+### Bugly(Crash上报)
+
+MSDK的jar包已经完成了Bugly的初始化，游戏需要在游戏最开始处开启C#层的Crash上报，即加入如下代码：
+```   
+Bugly.EnableLog (true);
+// 设置C#堆栈日志捕获的级别，默认为Exception，可以选择为Assert、Error等
+Bugly.RegisterHandler (LogSeverity.Exception);
+// 如果你已经在Unity项目导出的Android或iOS工程中进行了SDK的初始化，则只需调用此方法完成C#堆栈捕获功能的开启
+Bugly.EnableExceptionHandler();
+```
+
+### 其他接口
+
+以QQ登陆为例，演示如何调用MSDK api与处理回调：
 
     // Msdk的命名空间
     using Msdk;

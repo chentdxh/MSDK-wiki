@@ -66,7 +66,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 点对点定向分享(分享消息给手机QQ好友，在公众账号“QQ手游”中显示)。
 
-***PS：分享的内容只有手机QQ上才可以看到，PCQQ上看不到。接收方需要关注“QQ手游”公众号才能接收到，同一用户同一天收到的同一款游戏能接收的在20条消息左右。***
+***PS：分享的内容只有手机QQ上才可以看到，PCQQ上看不到。接收方需要关注“QQ手游”公众号才能接收到，同一用户同一天收到的同一款游戏能接收的在20条消息左右。整个消息体大小控制在700byte内。***
 
 #### 2.2.1.2输入参数说明 ####
 
@@ -80,18 +80,16 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |oauth_consumer_key|int|appid(应用在QQ平台的唯一id)|
 |dst|int|msf-手q(包括iphone, android qq等),目前只能填1001|
 |flag|int|漫游 (0:是；1:否. 目前只能填1)|
-   |image_url|string|分享图片url (图片尺寸规格为128*128；需要保证网址可访问；且图片大小不能超过2M)|
-    |openid|string|用户标识|
-    |access_token|string|授权凭证|
-    |src|int|消息来源 (默认值:0)|
-    |summary|string|摘要，长度不超过45字节|
-    |target_url|string|游戏中心详情页的URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite<br>，长度不超过1024字节|
-   |title|string|分享标题,长度不能超过45字节|
-    |fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
-    |appid|int|应用在QQ平台的唯一id，同上oauth_consumer_key|
-	|previewText|string|非必填。分享的文字内容，可为空。如“我在天天连萌”，长度不能超过45字节|
-    |game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>
-    |
+|image_url|string|分享图片url (图片尺寸规格为128*128；需要保证网址可访问；且图片大小不能超过2M)|
+|openid|string|用户标识|
+|access_token|string|授权凭证|
+|src|int|消息来源 (默认值:0)|
+|summary|string|摘要，长度不超过45字节|
+|target_url|string|游戏中心详情页的URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite<br>，长度不超过512字节|
+|title|string|分享标题,长度不能超过45字节|
+|fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
+|previewText|string|非必填。分享的文字内容，可为空。如“我在天天连萌”，长度不能超过45字节|
+|game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>|
 ***请注意输入参数的类型，参考1.5***
 #### 2.2.1.3输出参数说明 
 
@@ -802,7 +800,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | qq_vip_start|QQ会员最后一次充值时间，标准时间戳|
 | qq_vip_end|QQ会员期限，标准时间戳|
 | qq_year_vip_start|QQ年费会员最后一次充值时间，标准时间戳|
-| qq_year_vip_end|QQ SVIP最后一次充值时间，预留字段，当前信息无效，标准时间戳|
+| qq_year_vip_end|QQ年费会员期限，标准时间戳|
+| qq_svip_start|QQ SVIP最后一次充值时间，预留字段，当前信息无效，标准时间戳|
 | qq_svip_end|QQ SVIP期限，预留字段，当前信息无效，标准时间戳|
 | is_qq_year_vip|标识是否QQ年费会员（0：不是； 1：是）|
 | is_svip|标识是否QQ超级会员（0：不是； 1：是）|
@@ -863,6 +862,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | uin|int|用户标识,如使用openid帐号体系则默认填0 |
 | openid|string|用户在某个应用的唯一标识|
 | accessToken|string|`用户登录态（新增参数）`|
+| wxAppid|string|微信的appid，此时login需填写1，vip需填写64，仅限查询微信心悦特权使用|
 | vip|int|查询类型:<br\>会员:vip&0x01 !=0；<br/>蓝钻:vip&0x04 != 0；<br/>红钻:vip&0x08 != 0；<br/>超级会员:vip&0x10 != 0;<br/>游戏会员:vip&0x20 != 0；<br/>心悦:vip&0x40 != 0；<br/>黄钻::vip&0x80 != 0；<br/>以上可任意组合(逻辑与)，如需同时查询会员和蓝钻则(vip&0x01 !=0) && (vip&0x04 != 0) 为真,(备注：请求时请只填相关的标识位)|
 ***（请注意输入参数的类型，参考1.5） ***
 
@@ -1145,7 +1145,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ### 2.4.5 /profile/qqscore_batch ###
 
 #### 2.4.5.1接口说明 ####
-　　　上报玩家成就到QQ平台，在QQ游戏中心显示好友分数排行。（实时生效）
+　　　上报玩家成就到QQ平台，在QQ游戏中心显示好友分数排行。（实时生效，可以通过该页面验证是否成功上报：http://youxi.vip.qq.com/act/201502/Gamecheck.html ）
 
 #### 2.4.5.2输入参数说明 ####
 

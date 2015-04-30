@@ -48,7 +48,7 @@
   - 请务必调用在自己的launchActivity的onRestart调用WGPlatform.onRestart,同理依次调用onResume,onPause,onStop,onDestroy。
   
 - **WGGetLoginRecord调用特别说明**：
-  - 自2.7.0a以后，如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果
+  - 自2.7.0a以后，如果'WGGetLoginRecord'返回eFlag_Checking_Token（5001）即正在检查票据，eFlag_WX_AccessTokenExpired（2007）即微信票据过期，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果
 
 	
 ##名词解释、接口说明
@@ -414,7 +414,7 @@ MSDK的登录回调来自以下几个场景：
             // 登录态失效，引导用户重新登录授权
         }
 
-如果获取的LoginRet中的flag为eFlag_Succ则可认为登录有效，可读取有效的票据信息。**自MSDK2.7.0a后，如果'WGGetLoginRecord'返回非5001和2007，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果。** 其中token可以按如下方式获取：
+如果获取的LoginRet中的flag为eFlag_Succ则可认为登录有效，可读取有效的票据信息。**自MSDK2.7.0a后，如果'WGGetLoginRecord'返回5001和2007，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果。** 其中token可以按如下方式获取：
 
 微信平台：
 
@@ -460,7 +460,7 @@ MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流�
 * 游戏需要登录票据时的调用逻辑：
   
 ![login_new](./new_login_1.jpg)
-  `如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果`
+  `如果'WGGetLoginRecord'返回5001和2007，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果`
 
 * 在需要使用本地票据登录时，不再需要调用'WGLoginWithLocalInfo'，改为调用WGLogin(EPlatform.ePlatform_None) ,然后等待onLoginNotify的结果。
 * MSDK内部的票据定时刷新逻辑：

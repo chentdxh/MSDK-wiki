@@ -81,6 +81,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | NeedNotice  | Boolean |  是否启用公告功能 |Yes-启用 No（或不配置）-禁用|公告|
 | Noticetime  | Number |  公告自动拉取的时间间隔（秒） |默认15分钟|公告|  
 | NSLocationWhenInUseUsageDescription  | NSString |  用于iOS8下LBS定位功能 |值可为空|LBS| 
+| MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0及以后版本) |内置浏览器|
  
   *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
   
