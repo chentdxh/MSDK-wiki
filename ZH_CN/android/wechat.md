@@ -259,7 +259,7 @@ protected void onNewIntent(Intent intent) {
 
 大图消息分享
 ------
-此种消息分享需要唤起微信, 需要用户参与才能完成整个分享过程, 可以分享给游戏内和游戏外好友, 通常用来炫耀成绩或者其他需要详图的功能. 此种消息可以分享到会话(好友)或者朋友圈, 微信4.0及以上支持分享到会话, 微信4.2及以上支持分享到朋友圈. 图片大小不能大于10M, 分享的图片微信会做相应的压缩处理. 要完成此功能需要用到的接口有: WGSendToWeixinWithPhoto, 接口详细说明如下:
+此种消息分享需要唤起微信, 需要用户参与才能完成整个分享过程, 可以分享给游戏内和游戏外好友, 通常用来炫耀成绩或者其他需要详图的功能. 此种消息可以分享到会话(好友)或者朋友圈, 微信4.0及以上支持分享到会话, 微信4.2及以上支持分享到朋友圈. 要完成此功能需要用到的接口有: WGSendToWeixinWithPhoto, 接口详细说明如下:
 #### 接口声明
 
 	/**
@@ -277,7 +277,7 @@ protected void onNewIntent(Intent intent) {
 		 "MSG_friend_exceed"         // 超越炫耀
 		 "MSG_heart_send"            // 送心
 	 * @param imgData 原图文件数据
-	 * @param imgDataLen 原图文件数据长度(图片大小不能超过10M)
+	 * @param imgDataLen 原图文件数据长度(图片大小不能超过5M)
 	 * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
 	 * @param messageAction scene为1(分享到微信朋友圈)的情况下才起作用
 	 *   WECHAT_SNS_JUMP_SHOWRANK       跳排行
@@ -336,7 +336,7 @@ protected void onNewIntent(Intent intent) {
 
 #### 注意事项：
 - **朋友圈按钮显示有网络延迟且必须在微信5.1及以上版本**
-- `大图分享图片不能超过10M`，否则会分享失败
+- 在微信6.1以上此接口`分享图片不能超过1M`，否则会分享失败
 
 音乐消息分享
 ------

@@ -771,13 +771,76 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2004 	|该群与appid没有绑定关系。|
 |2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
 
-
-### 2.3.8 /relation/get_vip_rich_info ###
+### 2.3.8 /relation/get_group_key ###
 
 #### 2.3.8.1接口说明 ####
-　　　查询手Q会员详细信息（充值时间&到期时间）
+ 　QQ游戏公会获取加群用的groupKey接口（目前只针对android）
 
 #### 2.3.8.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|用户在应用中的登录凭据 |
+| groupOpenid|string|和游戏公会ID绑定的QQ群的groupOpenid，来自于公会会长绑群时获得|
+
+
+***（请注意输入参数的类型，参考1.5） ***
+
+### 2.3.8.3输出参数说明 ###
+
+| 参数名称| 描述|
+| ------------- |: -----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+| platCode|平台错误码,当ret非0时关注|
+| joinGroupKey|公会成员加群用的groupKey|
+
+
+
+#### 2.3.8.4 接口调用说明 ####
+
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_group_key |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.8.5 请求示例 ####
+
+	POST /relation/get_group_key?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+    "appid": "1000000688",
+    "openid": "ECF664F0127DAB4004821795B40797F6",
+    "accessToken": "A3296A00BA6E44EF739CC2EE52D35F52",
+    "groupOpenid": "4944D5C58AF654020B010465AC945E76",
+	}
+
+	//返回结果
+	{
+		"ret": 0,
+	    "msg": "success",
+		"is_lost": "0",
+		"joinGroupKey":"ggpas1lMAu9rDASaEXf2be1DYiw0o27I",
+	    "platCode": "0"
+	}
+
+
+
+### 2.3.9 /relation/get_vip_rich_info ###
+
+#### 2.3.9.1接口说明 ####
+　　　查询手Q会员详细信息（充值时间&到期时间）
+
+#### 2.3.9.2输入参数说明 ####
 
 
 | 参数名称| 类型|描述|
@@ -789,7 +852,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5）***
 
-#### 2.3.8.3输出参数说明 ####
+#### 2.3.9.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -807,7 +870,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | is_svip|标识是否QQ超级会员（0：不是； 1：是）|
 
 
-#### 2.3.8.4 接口调用说明 ####
+#### 2.3.9.4 接口调用说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -816,7 +879,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-### 2.3.8.5 请求示例 ###
+### 2.3.9.5 请求示例 ###
 
 	POST http://msdktest.qq.com/relation/get_vip_rich_info/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
