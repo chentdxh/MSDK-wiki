@@ -1,4 +1,4 @@
-内置浏览器
+﻿内置浏览器
 ===
 
 ##概述
@@ -240,6 +240,10 @@ int php_url_decode_special(const char *str, int len, char *out, int *outLen)
 
 ---
 
+##游戏自定义传输参数
+游戏可以自行在url后加上key-value参数，作为url的补充信息，类似：http://***.com?key1=value1&key2=value2
+
+---
 
 ## 判断App是否安装
 - 网页中增加如下JS代码，即可在网页中判断是否安装了对应的App：

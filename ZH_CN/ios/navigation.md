@@ -7,12 +7,17 @@
 
 [极速接入]()
 
+  * #极速接入
   * [Step1:引入依赖库](iOSPlugin.md#Step1:引入依赖库)
   * [Step2:引入MSDK](iOSPlugin.md#Step2:引入MSDK)
   * [Step3:配置项](iOSPlugin.md#Step3:配置项)
   * [Step4:实现回调对象](iOSPlugin.md#Step4:实现回调对象)
   * [Step5:设置全局回调对象](iOSPlugin.md#Step5:设置全局回调对象)
   * [Step:6 Good To Go!](iOSPlugin.md#Step:6 Good To Go!)
+  - - - -
+  * #Unity版本
+  * [接入配置](msdk_iOS_unity.md)
+  * [接口调用](msdk_iOS_unity.md#接口调用)
   
 [接入QQ]()
 
@@ -97,13 +102,14 @@
 [消息推送]()
 
   * [概述](Push.md#概述)
+  * [制作上传pem证书](Push.md#制作上传pem证书)
   * [注册推送](Push.md#注册推送)  
   * [注册成功](Push.md#注册成功)  
   * [注册失败](Push.md#注册失败)  
   * [接收消息](Push.md#接收消息)  
   * [清空badge](Push.md#清空badge)
 
- [音乐分享]()
+[音乐分享]()
 
   * [概述](ShareMusic.md#概述)
   * [接口说明](ShareMusic.md#接口说明)  

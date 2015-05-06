@@ -66,7 +66,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 点对点定向分享(分享消息给手机QQ好友，在公众账号“QQ手游”中显示)。
 
-***PS：分享的内容只有手机QQ上才可以看到，PCQQ上看不到。接收方需要关注“QQ手游”公众号才能接收到，同一用户同一天收到的同一款游戏能接收的在20条消息左右。***
+***PS：分享的内容只有手机QQ上才可以看到，PCQQ上看不到。接收方需要关注“QQ手游”公众号才能接收到，同一用户同一天收到的同一款游戏能接收的在20条消息左右。整个消息体大小控制在700byte内。***
 
 #### 2.2.1.2输入参数说明 ####
 
@@ -80,18 +80,16 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |oauth_consumer_key|int|appid(应用在QQ平台的唯一id)|
 |dst|int|msf-手q(包括iphone, android qq等),目前只能填1001|
 |flag|int|漫游 (0:是；1:否. 目前只能填1)|
-   |image_url|string|分享图片url (图片尺寸规格为128*128；需要保证网址可访问；且图片大小不能超过2M)|
-    |openid|string|用户标识|
-    |access_token|string|授权凭证|
-    |src|int|消息来源 (默认值:0)|
-    |summary|string|摘要，长度不超过45字节|
-    |target_url|string|游戏中心详情页的URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite<br>，长度不超过1024字节|
-   |title|string|分享标题,长度不能超过45字节|
-    |fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
-    |appid|int|应用在QQ平台的唯一id，同上oauth_consumer_key|
-	|previewText|string|非必填。分享的文字内容，可为空。如“我在天天连萌”，长度不能超过45字节|
-    |game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>
-    |
+|image_url|string|分享图片url (图片尺寸规格为128*128；需要保证网址可访问；且图片大小不能超过2M)|
+|openid|string|用户标识|
+|access_token|string|授权凭证|
+|src|int|消息来源 (默认值:0)|
+|summary|string|摘要，长度不超过45字节|
+|target_url|string|游戏中心详情页的URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite<br>，长度不超过512字节|
+|title|string|分享标题,长度不能超过45字节|
+|fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
+|previewText|string|非必填。分享的文字内容，可为空。如“我在天天连萌”，长度不能超过45字节|
+|game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>|
 ***请注意输入参数的类型，参考1.5***
 #### 2.2.1.3输出参数说明 
 
@@ -164,9 +162,10 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ![分享图片](./shareQQ_detail.jpg)
 
 
-2.3 Relation服务
+##2.3 Relation服务##
 ---
-### 2.3.1.1接口说明 ###
+### 2.3.1/relation/qqprofile ###
+#### 2.3.1.1接口说明 ####
 　　　获取用户QQ帐号基本信息。
 #### 2.3.1.2输入参数说明 ####
 
@@ -772,13 +771,76 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2004 	|该群与appid没有绑定关系。|
 |2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
 
-
-### 2.3.8 /relation/get_vip_rich_info ###
+### 2.3.8 /relation/get_group_key ###
 
 #### 2.3.8.1接口说明 ####
-　　　查询手Q会员详细信息（充值时间&到期时间）
+ 　QQ游戏公会获取加群用的groupKey接口（目前只针对android）
 
 #### 2.3.8.2输入参数说明 ####
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|用户在应用中的登录凭据 |
+| groupOpenid|string|和游戏公会ID绑定的QQ群的groupOpenid，来自于公会会长绑群时获得|
+
+
+***（请注意输入参数的类型，参考1.5） ***
+
+### 2.3.8.3输出参数说明 ###
+
+| 参数名称| 描述|
+| ------------- |: -----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| is_lost|判断是否有数据丢失。如果应用不使用cache，不需要关心此参数。0或者不返回：没有数据丢失，可以缓存。1：有部分数据丢失或错误，不要缓存。|
+| platCode|平台错误码,当ret非0时关注|
+| joinGroupKey|公会成员加群用的groupKey|
+
+
+
+#### 2.3.8.4 接口调用说明 ####
+
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/get_group_key |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.8.5 请求示例 ####
+
+	POST /relation/get_group_key?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	Host:$domain
+	Content-Type: application/x-www-form-urlencoded
+	Content-Length: 198
+	
+	{
+    "appid": "1000000688",
+    "openid": "ECF664F0127DAB4004821795B40797F6",
+    "accessToken": "A3296A00BA6E44EF739CC2EE52D35F52",
+    "groupOpenid": "4944D5C58AF654020B010465AC945E76",
+	}
+
+	//返回结果
+	{
+		"ret": 0,
+	    "msg": "success",
+		"is_lost": "0",
+		"joinGroupKey":"ggpas1lMAu9rDASaEXf2be1DYiw0o27I",
+	    "platCode": "0"
+	}
+
+
+
+### 2.3.9 /relation/get_vip_rich_info ###
+
+#### 2.3.9.1接口说明 ####
+　　　查询手Q会员详细信息（充值时间&到期时间）
+
+#### 2.3.9.2输入参数说明 ####
 
 
 | 参数名称| 类型|描述|
@@ -790,7 +852,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5）***
 
-#### 2.3.8.3输出参数说明 ####
+#### 2.3.9.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -801,13 +863,14 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | qq_vip_start|QQ会员最后一次充值时间，标准时间戳|
 | qq_vip_end|QQ会员期限，标准时间戳|
 | qq_year_vip_start|QQ年费会员最后一次充值时间，标准时间戳|
-| qq_year_vip_end|QQ SVIP最后一次充值时间，预留字段，当前信息无效，标准时间戳|
+| qq_year_vip_end|QQ年费会员期限，标准时间戳|
+| qq_svip_start|QQ SVIP最后一次充值时间，预留字段，当前信息无效，标准时间戳|
 | qq_svip_end|QQ SVIP期限，预留字段，当前信息无效，标准时间戳|
 | is_qq_year_vip|标识是否QQ年费会员（0：不是； 1：是）|
 | is_svip|标识是否QQ超级会员（0：不是； 1：是）|
 
 
-#### 2.3.8.4 接口调用说明 ####
+#### 2.3.9.4 接口调用说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -816,7 +879,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-### 2.3.8.5 请求示例 ###
+### 2.3.9.5 请求示例 ###
 
 	POST http://msdktest.qq.com/relation/get_vip_rich_info/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -862,6 +925,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | uin|int|用户标识,如使用openid帐号体系则默认填0 |
 | openid|string|用户在某个应用的唯一标识|
 | accessToken|string|`用户登录态（新增参数）`|
+| wxAppid|string|微信的appid，此时login需填写1，vip需填写64，仅限查询微信心悦特权使用|
 | vip|int|查询类型:<br\>会员:vip&0x01 !=0；<br/>蓝钻:vip&0x04 != 0；<br/>红钻:vip&0x08 != 0；<br/>超级会员:vip&0x10 != 0;<br/>游戏会员:vip&0x20 != 0；<br/>心悦:vip&0x40 != 0；<br/>黄钻::vip&0x80 != 0；<br/>以上可任意组合(逻辑与)，如需同时查询会员和蓝钻则(vip&0x01 !=0) && (vip&0x04 != 0) 为真,(备注：请求时请只填相关的标识位)|
 ***（请注意输入参数的类型，参考1.5） ***
 
@@ -968,7 +1032,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 参数名称| 描述|
 | ------------- |:-----|
 | ret|返回码  0：正确，其它：失败 |
-| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节，`错误描述中出现"oidb decode0x5e1 failed, ret:116"表示accessToken过期或openid无效`|
 | list|信息列表vector<VIP> 类型（见下文），获取超级会员的时候，struct VIP中，只有isvip和flag参数有效.|
 	
 	struct VIP {
@@ -1144,7 +1208,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ### 2.4.5 /profile/qqscore_batch ###
 
 #### 2.4.5.1接口说明 ####
-　　　上报玩家成就到QQ平台，在QQ游戏中心显示好友分数排行。（实时生效）
+　　　上报玩家成就到QQ平台，在QQ游戏中心显示好友分数排行。（实时生效，可以通过该页面验证是否成功上报：http://youxi.vip.qq.com/act/201502/Gamecheck.html ）
 
 #### 2.4.5.2输入参数说明 ####
 

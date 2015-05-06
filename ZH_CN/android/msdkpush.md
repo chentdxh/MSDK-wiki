@@ -11,6 +11,8 @@ assets/msdkconfig.ini中配置打开消息推送开关：
 
 第二步: 配置AndroidManifest.xml
 
+在MSDK2.6.0a(含)及之前版本请按如下设置。
+
     <!-- 【必须】 信鸽SDK所需权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -65,7 +67,7 @@ assets/msdkconfig.ini中配置打开消息推送开关：
         android:process=":xg_service_v2" />
     <!-- 信鸽配置END -->
 
-在MSDK2.7.0a及之后还需要添加如下配置。`注意改下包名。`
+在MSDK2.6.0a之后(如MSDK2.6.1a和MSDK2.7.1a)版本还需要添加如下配置。`注意改下包名。`
 
         <!-- 【必须】 通知service，此选项有助于提高抵达率 -->
         <service
@@ -77,6 +79,19 @@ assets/msdkconfig.ini中配置打开消息推送开关：
            </intent-filter>
         </service>
         <!-- 信鸽配置END -->
+
+另外，MSDK2.6.0a之后版本注册XGPushActivity也做了调整，游戏需添加配置项android:theme="@android:style/Theme.NoDisplay"。
+
+    <!-- 信鸽配置START -->
+    <!-- 【必须】 信鸽通知栏 -->
+    <activity
+        android:name="com.tencent.android.tpush.XGPushActivity"
+        android:theme="@android:style/Theme.NoDisplay"
+        android:exported="true" >
+        <intent-filter>
+            <action android:name="" />
+        </intent-filter>
+    </activity>
 
 第三步，登陆http://dev.ied.com/在消息管理模块中进行推送消息设置，请使用 **消息（正式环境）发送消息**
 
@@ -123,3 +138,9 @@ Android APP开发者通常会利用proguard工具做代码混淆，由于MTA的�
     -keep public class * extends android.content.BroadcastReceiver
     -keep class com.tencent.android.tpush.**  {* ;}
     -keep class com.tencent.mid.**  {* ;}
+
+
+
+SO库拷贝注意事项
+------
+不能使用Android Library Project的游戏，需要复制MSDKLibrary下的libs。在MSDK2.6.1a（含）及之后注意拷贝libtpnsWatchdog.so

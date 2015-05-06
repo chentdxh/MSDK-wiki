@@ -16,13 +16,45 @@
  - 游戏还需要实现UIApplicationDelegate中与推送相关的5个方法：
 >*游戏测试MSDK推送功能时，需要使用正式推送证书进行AD Hoc 方式打包进行测试，并请注意切勿使用全量推送方式进行推送！*
 
+##制作上传pem证书
+ - 制作证书
+
+按照信鸽官网步骤制作pem证书，[制作步骤](http://developer.xg.qq.com/index.php/IOS_%E8%AF%81%E4%B9%A6%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97)。
+
+若制作步骤打开无内容可[点击此处](http://developer.xg.qq.com/index.php/Main_Page)，在打开的页面中点击左侧导航栏中iOS SDK->iOS证书设置指南即可，如下图所示：
+
+![Alt text](./Push2.png)
+
+ - 上传证书
+### Step1:
+进入[飞鹰系统](http://dev.ied.com)，点击左侧导航栏游戏管理->全部游戏,搜索自己的游戏，此处以MSDK为例，如下图所示：
+
+![Alt text](./Push3.png)
+
+### Step2:
+点击上图中的 查看 按钮进入游戏详情页，找到下图所示的信息：
+
+![Alt text](./Push4.png)
+
+### Step3:
+点击上图中的 编辑IOS信息 按钮进入iOS信息页，如下图所示：
+
+![Alt text](./Push5.png)
+
+分别上传按照信鸽官网步骤制作生成开发环境和生产环境的pem证书即可，证书未设置密码则密码项可不填。最后点击左上角 更新游戏IOS信息 按钮保存。
+
+**注意**
+
+生产环境证书需要在RDM上下载，具体路径：游戏产品->发布管理->证书管理，以MSDK为例如下图所示：
+
+![Alt text](./Push_RDM1.png)
+
+在打开的界面中下载对应的xxx_push.p12文件，打开终端进入到xxx_push.p12文件所在的目录执行以下命令：
+
 ```
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo;
-- (void)applicationDidBecomeActive:(UIApplication *)application;
+openssl pkcs12 -in xxx_push.p12 -out xxx_push.pem -nodes
 ```
+将生成的xxx_push.pem文件上传至飞鹰系统即可。
 
 ##注册推送
  - 概述中签名文件配置正确才能成功注册推送。

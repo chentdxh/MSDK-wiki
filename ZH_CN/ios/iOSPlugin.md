@@ -60,6 +60,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 <MSDK/WGPlatform.h>
 <MSDK/WGPlatformObserver.h>
 ```  
+部分游戏导入framework后会有找不到framework的情况，现象是无法打开内置浏览器，日志输出“no MSDKWebViewService exist”，此时需要在Other link flags增加“-ObjC “ “-framework MSDKFoundation -framework MSDK -framework MSDKMarketing -framework MSDKXG”，导入相关framework。
 ---
 ##Step3:配置项
  
@@ -80,6 +81,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | NeedNotice  | Boolean |  是否启用公告功能 |Yes-启用 No（或不配置）-禁用|公告|
 | Noticetime  | Number |  公告自动拉取的时间间隔（秒） |默认15分钟|公告|  
 | NSLocationWhenInUseUsageDescription  | NSString |  用于iOS8下LBS定位功能 |值可为空|LBS| 
+| MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0及以后版本) |内置浏览器|
  
   *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
   

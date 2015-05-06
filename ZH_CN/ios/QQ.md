@@ -727,4 +727,4 @@ http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup
  ---
  
  ## 常见问题
- ###注意事项
+ ###手Q的Api需要在主线程调用，否则会发生断言错误： Assertion failure in +[QQApi sendMessage:], /data/rdm/projects/7088/src/QQApi/QQApi.m:275

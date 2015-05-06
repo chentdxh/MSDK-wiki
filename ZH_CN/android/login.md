@@ -48,7 +48,7 @@
   - 请务必调用在自己的launchActivity的onRestart调用WGPlatform.onRestart,同理依次调用onResume,onPause,onStop,onDestroy。
   
 - **WGGetLoginRecord调用特别说明**：
-  - 自2.7.0a以后，如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果
+  - 自2.7.0a以后，如果'WGGetLoginRecord'返回eFlag_Checking_Token（5001）即正在检查票据，eFlag_WX_AccessTokenExpired（2007）即微信票据过期，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果
 
 	
 ##名词解释、接口说明
@@ -338,7 +338,7 @@ MSDK的登录回调来自以下几个场景：
 
 ### 登录数据上报
 
-为了保证登录数据上报正确, 游戏接入时候必须在在自己的`launchActivity`的`onResume`中调用`WGPlatform.onResume`, `onPause`中调用`WGPlatform.onPause`
+为了保证登录数据上报正确, 游戏接入时候必须在在自己的`launchActivity`的`onResume`中调用`WGPlatform.onResume`, `onPause`中调用`WGPlatform.onPause`,`onRestart`可调用`WGPlatform.onRestart`,`onStop`中调用`WGPlatform.onStop`,	`onDestroy`中调用`WGPlatform.onDestroy`
 
 ### 微信票据自动刷新
 
@@ -401,10 +401,20 @@ MSDK的登录回调来自以下几个场景：
 
 ####调用示例：
 
-    LoginRet ret = new LoginRet();
-    WGPlatform.WGGetLoginRecord(ret);
+	    LoginRet lr = new LoginRet();
+        WGPlatform.WGGetLoginRecord(lr);
+	    if(lr.flag == CallbackFlag.eFlag_Succ) {
+	        // 获取票据
+	    } 
+	    // TODO Game 自MSDK2.7.0a后，需要对eFlag_Checking_Token和eFlag_WX_AccessTokenExpired按如下方式调用
+	    else if(lr.flag == CallbackFlag.eFlag_Checking_Token || lr.flag == CallbackFlag.eFlag_WX_AccessTokenExpired) {
+	        // eFlag_Checking_Token（5001）正在检查票据，eFlag_WX_AccessTokenExpired（2007）微信票据过期，再检查并刷新一次
+            WGPlatform.WGLogin(EPlatform.ePlatform_None);
+        } else {
+            // 登录态失效，引导用户重新登录授权
+        }
 
-如果获取的LoginRet中的flag为eFlag_Succ则可认为登录有效，可读取有效的票据信息。**自MSDK2.7.0a后，如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果。** 其中token可以按如下方式获取：
+如果获取的LoginRet中的flag为eFlag_Succ则可认为登录有效，可读取有效的票据信息。**自MSDK2.7.0a后，如果'WGGetLoginRecord'返回5001和2007，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果。** 其中token可以按如下方式获取：
 
 微信平台：
 
@@ -434,9 +444,12 @@ QQ平台：
 
 无
 
-##常见问题
+## 常见问题
 
 1. 支付时提示paytoken过期，则需要拉起登录界面重新授权后方能支付。paytoken过期以后必须重新授权。
+
+1. `未装手Q时用webQQ登录一直提示"网络异常"。`
+如果游戏是用Unity直接打出Apk包，出现此问题，需要把MSDK的jar包中的assets解压放入Android/assets中。如果使用其他方式打包需要保证MSDK的jar包中的so文件和资源文件打入Apk包中。
 
 
 ##MSDK2.7.0a及以后的票据自动刷新流程
@@ -447,7 +460,7 @@ MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流�
 * 游戏需要登录票据时的调用逻辑：
   
 ![login_new](./new_login_1.jpg)
-  `如果'WGGetLoginRecord'返回非0，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果`
+  `如果'WGGetLoginRecord'返回5001和2007，此时调用WGLogin(EPlatform.ePlatform_None)，然后在onLoginNotify处理票据异步刷新后的结果`
 
 * 在需要使用本地票据登录时，不再需要调用'WGLoginWithLocalInfo'，改为调用WGLogin(EPlatform.ePlatform_None) ,然后等待onLoginNotify的结果。
 * MSDK内部的票据定时刷新逻辑：

@@ -2,7 +2,7 @@
 ===
 
 ##개요
- - 이 기능은 버전 1.6.1 이후부터 제공되며 XCode5.0 이상 버전으로 컴파일해야 한다.
+ - 이 기능은 버전 1.6.1 이후부터 제공되며 XCode5.0 이상 버전으로 컴파일해야 합니다.
 아래 코드를 호출하여 지정된 url 접속
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
@@ -11,19 +11,19 @@ plat->WGOpenUrl((unsigned char*)[url UTF8String]);
 ---
 
 ##사용시 주의사항
- - 브라우저 모듈은 xib를 통해 UI를 맞춤 제작한다. xib는 WGPlatformResources.bundle/디렉토리에 위치하고 xib가 사용하는 png 등 리소스 파일은 WGPlatformResources.bundle/WebViewResources 디렉토리에 위치한다. iOS7.0을 지원해야 하기에 Xcode5.0 및 이상 버전이 있어야 편집할 수 있다.
- - 모바일QQ가 공유하는 URL 최대 길이는 512바이트이다. URL이 너무 길면 짧은 주소로 전환해야 한다.
+ - 브라우저 모듈은 xib를 통해 UI를 커스터마이징합니다. xib는 WGPlatformResources.bundle/디렉토리에 위치하고 xib가 사용하는 png 등 리소스 파일은 WGPlatformResources.bundle/WebViewResources 디렉토리에 위치합니다. iOS7.0을 지원해야 하므로 Xcode5.0 및 이상 버전이 있어야 편집할 수 있습니다.
+ - 모바일QQ가 공유하는 URL 최대 길이는 512바이트이며 URL가 길면 짧은 주소로 전환해야 합니다.
 ---
 
 ##로그인 상태 파라미터 암호화 전송
   - ### 전체 방안
-게임에 로그인한 후 내장 브라우저를 통해 웹페이지를 방문하면 암호화된 로그인 상태 파라미터를 전송한다. 구체 절차:
-1.MSDK가 이런 파라미터를 암호화하여 페이지에 전송;
-2.페이지는 암호문을 획득한 후 MSDK 백그라운드 디코딩 인터페이스를 통해 평문 획득;
-3.평문의 Token으로 로그인 인증 진행.
+게임에 로그인한 후 내장 브라우저를 통해 웹페이지를 방문하면 암호화된 로그인 상태 파라미터를 전송합니다. 상세 절차는 아래와 같습니다.
+1.MSDK가 이런 파라미터를 암호화하여 페이지에 전송합니다.
+2.페이지는 암호문을 획득한 후 MSDK 백그라운드 디코딩 인터페이스를 통하여 평문을 획득합니다.
+3.평문의 Token으로 로그인 인증 진행합니다.
 
   - ### URL에 포함된 파라미터
-  - MSDK는 URL 뒤에 다음과 같은 파라미터를 부가한다. 중복된 파라미터를 전송하면 디코딩 실패를 초래할 수 있다.
+  - MSDK는 URL 뒤에 아래과 같은 파라미터를 추가합니다. 중복된 파라미터를 전송하면 디코딩 실패를 초래할 수 있습니다.
 
 |파라미터명|	설명	|값|
 |--|--|--|
@@ -34,7 +34,7 @@ plat->WGOpenUrl((unsigned char*)[url UTF8String]);
 |version|	MSDK 버전 번호|	예, 1.6.2i|
 |sig|	요청 자체 서명|	|
 |encode|	코딩 파라미터|	1|
-|openid|	유저 인증 후 플랫폼이 반환한 고유 식별자 | | 
+|openid|	유저 인증 후 플랫폼이 리턴한 유니크ID | | 
 
  
   - ### 암호화된 데이터
@@ -49,20 +49,20 @@ plat->WGOpenUrl((unsigned char*)[url UTF8String]);
 |platid 	|단말 유형|	0.iOS；1.Android|
  
     
-   - 예를 들어, 내장 브라우저가 방문한 URL이 http://apps.game.qq.com/ams/gac/index.html이라면 실제로 스니핑하여 확인한 방문 URL은 다음과 같다.
+   - 예를 들어, 내장 브라우저가 방문한 URL이 http://apps.game.qq.com/ams/gac/index.html이라면 실제로 스니핑하여 확인한 방문 URL은 아래와 같습니다.
 http://apps.game.qq.com/ams/gac/index.html?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&msdkEncodeParam=***&version=1.6.2i&encode=1 
-   - 그중 msdkEncodeParam이 실제로 전송한 것은 아래 파라미터를 암호화하여 얻은 암호문이다(url encode):
+   - 그중 msdkEncodeParam이 실제로 전송한 것은 아래 파라미터를 암호화하여 얻은 암호문입니다.(url encode):
 acctype=weixin&appid=100732256&openid=ol7d0jsVhIm3BQwlNG9g2f4puyUg&access_token=OezXcEiiBSKSxW0eoylIeCKi7qrm-
 vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-rVGhoQVkgSYJ8KXr9Rmh8IvdqK3zsXryo37sMJAa9Q&platid=0
 
 - ### 디코딩 방법
-- 업무 페이지는 상기 URL을 받은 후 MSDK 디코딩 인터페이스 호출을 요청한다. 현재 디코딩 인터페이스는 2가지 파라미터 전송 방식이 있다. 업무 백그라운드는 algorithm 파라미터에 따라 두가지 파라키터 암호화 전송 방식을 구현 및 지원해야 한다 – 방안:
+- 게임 페이지에서 상기 URL을 받은 후 MSDK 디코딩 인터페이스 호출을 요청합니다. 현재 디코딩 인터페이스는 2가지 파라미터 전송 방식이 있습니다. 게임 백그라운드에서 algorithm 파라미터에 따라 두가지 파라키터 암호화 전송 방식을 구현 및 지원해야 합니다 – 방안:
 - MSDK1.7.1i 및 이후부터 파라미터 암호화 전송 방안:(아래 URL이 방문한 것은 MSDK 테스트 환경)
 http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v2&version=1.7.1i&encode=1
-	첫단계에서 얻은 msdkEncodeParam 안의 암호문 값을 Post 방식으로 body에 직접 넣어 Post 방식으로 전송해야 한다. key“msdkEncodeParam=”를 추가하지 않도록 주의해야 한다.
-- MSDK1.7.1i 이전의 파라미터 암호화 전송 방안은 다음과 같다:(이 방안의 단말은 더이상 사용되지 않지만 백그라운드는 여전히 구현하여 낡은 버전을 지원해야 함)
+	첫단계에서 얻은 msdkEncodeParam 안의 암호문 값을 Post 방식으로 body에 직접 넣어 Post 방식으로 전송해야 합니다. key“msdkEncodeParam=”를 추가하지 않도록 주의해야 합니다.
+- MSDK1.7.1i 이전의 파라미터 암호화 전송 방안은 아래와 같습니다.(이 방안의 단말은 더이상 사용되지 않지만 백그라운드는 여전히 구현하여 기존 버전을 지원해야 함)
 http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&version=1.6.2i&encode=1 
-msdkEncodeParam 안의 암호문URL Decode를 body에 넣어 Post 방식으로 전송. key“msdkEncodeParam=”를 추가하지 않도록 주의해야 한다. 스니핑은 다음과 같다.
+msdkEncodeParam 안의 암호문URL Decode를 body에 넣어 Post 방식으로 전송. key“msdkEncodeParam=”를 추가하지 않도록 주의해야 합니다. 스니핑은 다음과 같습니다.
 ![Alt text](./InnerBrowser2.png)
 - ###암호문 디코딩 코드 예(php버전)
 - 코드 예:
@@ -93,7 +93,7 @@ print $data;
 ?>
 ```
 - ###암호문 디코딩 코드 예(C코드):
-1. 아래 2개 파일을 불러온다
+1. 아래 2개 파일을 호출합니다.
 
 ```
 #ifndef URL_H
@@ -235,14 +235,14 @@ int php_url_decode_special(const char *str, int len, char *out, int *outLen)
 }
 ```
 
-2. 수신된 문자열 encodeParam을 php_url_decode와 php_url_decode_special로 차례로 디코딩하여 얻은 것이 암호문이다
+2. 수신된 문자열 encodeParam을 php_url_decode와 php_url_decode_special로 차례로 디코딩하여 얻은 것이 암호문입니다.
 ![Alt text](./InnerBrowser5.png)
 
 ---
 
 
 ## App 설치 여부 판단
-- 웹페이지에 다음 JS 코드를 추가하면 웹페이지에서 필요한 App가 설치되었는 지 판단할 수 있다.
+- 웹페이지에 다음 JS 코드를 추가하면 웹페이지에서 필요한 App가 설치되었는 지 판단할 수 있습니다.
 ```
 document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
 function onBridgeReady(event) {
@@ -264,13 +264,13 @@ log("not install :텐센트 뉴스");
 ---
 
 ##앱 안에서 App Store 세부페이지 열기
-(iOS6.0 및 이상)웹페이지에서 itunes 링크(http://itunes.apple.com/cn/app/id439638720?mt=8)를 클릭하면 앱 안에서 해당 앱의 AppStore 세부페이지를 열 수 있다. 그림:
+(iOS6.0 및 이상)웹페이지에서 itunes 링크(http://itunes.apple.com/cn/app/id439638720?mt=8)를 클릭하면 앱 안에서 해당 앱의 AppStore 세부페이지를 열 수 있습니다.
 ![Alt text](./InnerBrowser6.png)
 
 ---
 
 ##공유
-“공유” 버튼을 클릭하면 현재 페이지를 모멘트, QZone, 위챗 친구, QQ 친구에게 공유할 수 있다. 아래 그림 참조. 주의: 모바일QQ가 공유하는 URL 최대 길이는 512바이트이다. URL이 너무 길면 짧은 주소를 사용해야 한다.
+“공유” 버튼을 클릭하면 현재 페이지를 모멘트, QZone, 위챗 친구, QQ 친구에게 공유할 수 있습니다. 아래 이미지 참조 바랍니다. 주의: 모바일QQ가 공유하는 URL 최대 길이는 512바이트이므로 URL 길면 짧은 주소를 사용해야 합니다.
 ![Alt text](./InnerBrowser7.png)
 
 ---

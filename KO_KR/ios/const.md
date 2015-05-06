@@ -27,25 +27,25 @@
             eFlag_QQ_UnRegistered = 1008,    // qq에서 등록하지 않음
             eFlag_QQ_MessageTypeErr = 1009,    // QQ 메시지 유형 오류
             eFlag_QQ_MessageContentEmpty = 1010,    // QQ 메시지는 null
-            eFlag_QQ_MessageContentErr = 1011,     // QQ 메시지 불가용(너무 길거나 기타)
+            eFlag_QQ_MessageContentErr = 1011,     // QQ 메시지 불사용(길거나 기타)
             eFlag_WX_NotInstall     = 2000,     //Weixin is not installed
             eFlag_WX_NotSupportApi  = 2001,     //Weixin don't support api
             eFlag_WX_UserCancel     = 2002,     //Weixin user has cancelled
             eFlag_WX_UserDeny       = 2003,     //Weixin User has deny
             eFlag_WX_LoginFail      = 2004,     //Weixin login fail
-            eFlag_WX_RefreshTokenSucc = 2005, // Weixin 토큰 갱신 성공
-            eFlag_WX_RefreshTokenFail = 2006, // Weixin 토큰 갱신 실패
-            eFlag_WX_AccessTokenExpired = 2007, // Weixin AccessToken 효력 상실, 이때 refreshToken으로 토큰 갱신을 시도할 수 있다
+            eFlag_WX_RefreshTokenSucc = 2005, // Weixin 토큰 업데이트 성공
+            eFlag_WX_RefreshTokenFail = 2006, // Weixin 토큰 업데이트 실패
+            eFlag_WX_AccessTokenExpired = 2007, // Weixin AccessToken 효력 상실, 이럴 경우 refreshToken으로 토큰을 업데이트
             eFlag_WX_RefreshTokenExpired = 2008, // Weixin refresh token 기한만료, 재인증 필요
             eFlag_Error				= -1,
-            eFlag_Local_Invalid = -2, // 로컬 토큰 무효, 게임은 로그인 화면에서 다시 인증해야 한다
-            eFlag_LbsNeedOpenLocationService = -4, // 유저가 위치확인 서비스를 실행하도록 안내해야 한다
+            eFlag_Local_Invalid = -2, // 로컬 토큰 무효, 게임은 로그인 화면에서 다시 인증하여야 합니다.
+            eFlag_LbsNeedOpenLocationService = -4, // 유저가 위치확인 서비스를 실행하도록 안내하여야 합니다.
             eFlag_LbsLocateFail = -5, // 위치추적 실패
             eFlag_UrlTooLong = -6,     // for WGOpenUrl
             eFlag_NeedLogin = 3001,     //로그인 페이지 방문 필요
             eFlag_UrlLogin = 3002,    //URL로 로그인 성공
             eFlag_NeedSelectAccount = 3003, //다른계정 제시 팝업 필요
-            eFlag_AccountRefresh = 3004, //URL을 통해 토큰 갱신
+            eFlag_AccountRefresh = 3004, //URL을 통해 토큰 업데이트
             eFlag_InvalidOnGuest = -7, //이 기능은 Guest 모드에서 불가용
             eFlag_Guest_AccessTokenInvalid = 4001, //Guest 토큰 효력 상실
             eFlag_Guest_LoginFailed = 4002,  //Guest 모드 로그인 실패
@@ -66,13 +66,13 @@
 		}eTokenType;
 ||플랫폼	token 유형||	token 역할||	token ||type	||유효 기간||
 	
-		모바일QQ	accesstoken	 모바일QQ 개인, 친구, 관계사슬, 공유 등 조회 기능  eToken_QQ_Access	90일
+		모바일QQ	accesstoken	 모바일QQ 개인, 친구, SNS(친구정보), 공유 등 조회 기능  eToken_QQ_Access	90일
 		paytoken	 결제 관련	 eToken_QQ_Pay	2일
-		위챗	accesstoken	 위챗 개인, 친구, 관계사슬, 공유, 결제 조회 등  eToken_WX_Access	2시간
-		refreshtoken	accesstoken갱신	eToken_WX_Refresh	30일
+		위챗	accesstoken	 위챗 개인, 친구, SNS(친구정보), 공유, 결제 조회 등  eToken_WX_Access	2시간
+		refreshtoken	accesstoken업데이트	eToken_WX_Refresh	30일
 
 4. TokenRet 토큰 structure
-MSDK server는 토큰을 통해 게임 유저 신분을 검증한다. TokenRet 구조 정의에 대한 설명은 다음과 같다.
+MSDK server는 토큰을 통하여 게임 유저 신분을 검증합니다. TokenRet 구조 정의에 대한 설명은 아래와 같습니다.
 
 		typedef struct {
 	 		int type; //토큰 유형  eTokenType 유형
@@ -81,22 +81,22 @@ MSDK server는 토큰을 통해 게임 유저 신분을 검증한다. TokenRet �
 		}TokenRet;
 
 5. LoginRet 계정 structure
-유저 인증 후 계정 정보는 이 구조에 저장된다. LoginRet 정의:
+유저 인증 후 계정 정보는 이 구조에 저장됩니다. LoginRet 정의:
 
 		typedef struct loginRet_ {
-			int flag;               //표시 리턴, 인증 또는 갱신 성공 여부 표시  eFlag유형
+			int flag;               //표시 리턴, 인증 혹은 업데이트 성공 여부 표시  eFlag유형
 			std::string desc;       //설명 반환
 			int platform;           //현재 인증한 플랫폼, ePlatform 유형
-			std::string open_id;     //유저 계정 고유 표시
+			std::string open_id;     //유저 계정 유니트ID
 			std::vector<TokenRet> token;     //토큰 배열 저장
-			std::string user_id;    //유저ID, 일단 보류, 위챗과 협상 후 결정
+			std::string user_id;    //유저ID, 일단 보류, 위챗과 논의 후 결정
 			std::string pf;        //결제용    WGGetPf()를 호출하여 획득
 			std::string pf_key;    //결제용    WGGetPfKey()를 호출하여 획득
 			loginRet_ ():flag(-1),platform(0){}; //구조 방법
 		}LoginRet;
                                     	
 6. ShareRet 공유 결과 structure
-공유 결과 정보는 이 구조에 저장된다. ShareRet 정의:
+공유 결과 정보는 이 구조에 저장됩니다. ShareRet 정의:
 
 		typedef struct{
 			int platform;           //플랫폼 유형   ePlatform 유형
@@ -106,7 +106,7 @@ MSDK server는 토큰을 통해 게임 유저 신분을 검증한다. TokenRet �
 		}ShareRet;
 	
 7. WakeupRet 실행 structure
-플랫폼이 게임을 실행하는 정보는 이 구조에 저장된다. WakeupRet 구조 정의:
+플랫폼이 게임을 실행하는 정보는 이 구조에 저장됩니다. WakeupRet 구조 정의:
 
 		typedef struct{
 			int flag;                //오류 코드   eFlag 유형
@@ -117,16 +117,16 @@ MSDK server는 토큰을 통해 게임 유저 신분을 검증한다. TokenRet �
 
 			std::string lang;          //언어     현재 위챗 5.1이상에서만 사용, 모바일QQ는 사용하지 않음
 			std::string country;       //국가     현재 위챗 5.1이상에서만 사용, 모바일QQ는 사용하지 않음
-			std::string messageExt; //게임 공유시 전송한 자체정의 문자열, 플랫폼에서 게임 실행시 어떤 처리도 반환하지 않는다. 현재 위챗5.1 이상만 사용. 모바일QQ는 사용하지 않는다
-            std::vector<KVPair> extInfo;  //게임－플랫폼에 운반하는 자체정의 파라미터, 모바일QQ 전용
+			std::string messageExt; //게임 공유시 전송한 자체정의 문자열, 플랫폼에서 게임 실행시 어떤 처리도 리턴하지 않습니다. 현재 위챗 5.1 이상만 사용. 모바일QQ는 사용하지 않습니다.
+            std::vector<KVPair> extInfo;  //게임－플랫폼의 자체정의 파라미터, 모바일QQ 전용
 		}WakeupRet;
 
 8. PersonInfo 개인정보 structure
-조회 결과에서 단일 친구 또는 개인 정보는 이 구조에 저장된다. PersonInfo 정의:
+조회 결과에서 단일 친구 혹은 개인 정보는 이 구조에 저장됩니다. PersonInfo 정의:
 
 		typedef struct {
     		std::string nickName;  //닉네임
-    		std::string openId;    //계정 고유 표시
+    		std::string openId;    //계정 유니크ID
     		std::string gender;    //성별
     		std::string pictureSmall;     //작은 아바타
     		std::string pictureMiddle;    //일반 아바타
@@ -141,13 +141,13 @@ MSDK server는 토큰을 통해 게임 유저 신분을 검증한다. TokenRet �
 		}PersonInfo;
 
 9. RelationRet 조회 결과 structure
-조회 결과는 이 구조에 저장된다. RelationRet 정의:
+조회 결과는 이 구조에 저장됩니다. RelationRet 정의:
 
 		typedef struct {
     		int flag;     //조회 결과 flag, 0는 성공
     		std::string desc;    // 설명
-    		std::vector<PersonInfo> persons;//친구 또는 개인 정보 저장
-            std::string extInfo; //게임 조회시 전송된 자체정의 필드, 조회 1회를 표시한다
+    		std::vector<PersonInfo> persons;//친구 혹은 개인 정보 저장
+            std::string extInfo; //게임 조회시 전송된 자체정의 필드, 조회 1회를 표시
 		}RelationRet;
 
 10. ADRet 광고 structure
@@ -155,11 +155,11 @@ ADRet 정의:
         typedef struct
         {
             std::string viewTag;   //Button 클릭 tag
-            _eADType scene;   //일시정지 또는 종료 위치
+            _eADType scene;   //일시정지 혹은 종료 위치
         } ADRet;
 
 11. AddressInfo 주소 정보 structure
-LBS 주소 정보는 이 구조에 저장된다. AddressInfo 정의:
+LBS 주소 정보는 이 구조에 저장됩니다. AddressInfo 정의:
 
         typedef struct
         {
@@ -169,7 +169,7 @@ LBS 주소 정보는 이 구조에 저장된다. AddressInfo 정의:
         }AddressInfo;
 
 12. LocationRet 지리적 위치 structure
-LBS 지리적 위치 정보는 이 구조에 저장된다. LocationRet 정의:
+LBS 지리적 위치 정보는 이 구조에 저장됩니다. LocationRet 정의:
 
         typedef struct {
             int flag;
@@ -179,7 +179,7 @@ LBS 지리적 위치 정보는 이 구조에 저장된다. LocationRet 정의:
         }LocationRet;
 
 13. PicInfo 이미지 정보 structure
-이미지 정보는 이 구조체에 저장된다. PicInfo 정의:
+이미지 정보는 이 구조체에 저장됩니다. PicInfo 정의:
 
         typedef struct
         {
@@ -189,7 +189,7 @@ LBS 지리적 위치 정보는 이 구조에 저장된다. LocationRet 정의:
         }PicInfo;
 
 14. NoticeInfo 공지 정보 structure
-공지 정보는 이 구조체에 저장된다. NoticeInfo 정의:
+공지 정보는 이 구조체에 저장됩니다. NoticeInfo 정의:
 
         typedef struct
         {

@@ -5,7 +5,7 @@
 [MSDK iOS 소개](index.md)
 
 
-[고속 액세스]()
+[고속 연동]()
 
   * [Step1:의존 라이브러리 도입](iOSPlugin.md#Step1:의존 라이브러리 도입)
   * [Step2:MSDK 도입](iOSPlugin.md#Step2:MSDK 도입)
@@ -14,24 +14,24 @@
   * [Step5:전역 콜백 객체 설정](iOSPlugin.md#Step5:전역 콜백 객체 설정)
   * [Step:6 Good To Go!](iOSPlugin.md#Step:6 Good To Go!)
   
-[QQ 액세스]()
+[QQ 연동]()
 
-  * [액세스 설정](QQ.md#액세스 설정)
+  * [연동 설정](QQ.md#연동 설정)
   * [인증 로그인](QQ.md#인증 로그인)
   * [빠른 로그인](QQ.md#빠른 로그인)
-  * [모바일QQ 관계사슬 조회](QQ.md#모바일QQ 관계사슬 조회)
+  * [모바일QQ SNS친구정보 조회](QQ.md#모바일QQ SNS친구정보 조회)
   * [모바일QQ 구조화 메시지 공유](QQ.md#모바일QQ 구조화 메시지 공유)
   * [모바일QQ 빅이미지 공유](QQ.md#모바일QQ 빅이미지 공유)
   
-[위챗 액세스]()
+[위챗 연동]()
 
-  * [위챗 액세스 설정](WX.md#위챗 액세스 설정)
+  * [위챗 연동 설정](WX.md#위챗 연동 설정)
   * [위챗 인증](WX.md#위챗 인증)
-  * [위챗 관계사슬 인터페이스](WX.md#위챗 관계사슬 인터페이스)
+  * [위챗 SNS친구정보 인터페이스](WX.md#위챗 SNS친구정보 인터페이스)
   * [위챗 구조화 공유](WX.md#위챗 구조화 공유)
   * [위챗 빅이미지 공유](WX.md#위챗 빅이미지 공유)
   * [위챗에 URL 공유](WX.md#위챗에 URL 공유)
-  * [위챗 accesstoken 갱신](WX.md#위챗 accesstoken 갱신)
+  * [위챗 accesstoken 업데이트](WX.md#위챗 accesstoken 업데이트)
   * [위챗 각 버전이 지원하는 기능:](WX.md#위챗 각 버전이 지원하는 기능:)  
   
 [로그인 관련]()
@@ -39,7 +39,7 @@
   * [개요 ](login.md#개요 )
   * [명사 해석,인터페이스 설명 ](login.md#명사 해석,인터페이스 설명 )
   * [MSDK2.6.0i이전 버전에 토큰 처리 프로세스 ](login.md#추천 로그인 프로세스（2.6.0i이전 버전） )
-  * [MSDK2.6.0i 및 이후 버전 토큰 자동 갱신 프로세스](login.md#MSDK2.6.0i및 이후 버전 토큰 자동 갱신 프로세스)
+  * [MSDK2.6.0i 및 이후 버전 토큰 자동 업데이트 프로세스](login.md#MSDK2.6.0i및 이후 버전 토큰 자동 업데이트 프로세스)
   
 [Guest 모드]()
 
@@ -63,12 +63,12 @@
   * [공유](InnerBrowser.md#공유)
   * [AMS 마케팅센터 오픈](InnerBrowser.md#AMS 마케팅센터 오픈) 
   
-[데이터 보고]()
+[데이터 전송]()
 
   * [비콘 연동 설정](beacon.md#비콘 연동 설정)
-  * [자체 정의 데이터 보고](beacon.md#자체 정의 데이터 보고)
+  * [자체 정의 데이터 전송](beacon.md#자체 정의 데이터 전송)
   * [RQD연동 설정](rqd.md#RQD연동 설정)
-  * [Crash데이터 보고](rqd.md#Crash데이터 보고)
+  * [Crash데이터 전송](rqd.md#Crash데이터 전송)
   * [유저 피드백](feedback.md)
   
 [공지]()
@@ -111,4 +111,4 @@
   
 [상수 조회](const.md)
 
-[변경 역사](version.md)
+[변경 이력](version.md)

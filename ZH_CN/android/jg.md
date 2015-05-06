@@ -21,7 +21,7 @@ MSDK在版本发布前都会做金刚检测，确认当前版本无漏洞才会�
 
 ![jg](./jgp3.png)
 
-####MSDK修复建议：非紧急漏洞，将会在MSDK2.7.0a解决
+####MSDK修复建议：升级到MSDK2.6.1a及以上版本
 
 ## 米大师通用型拒绝服务漏洞
 
@@ -50,14 +50,14 @@ MSDK在版本发布前都会做金刚检测，确认当前版本无漏洞才会�
 
 ####MSDK修复建议：升级Midas到1.3.9.e及以上版本解决
 
-## 信鸽拒绝服务漏洞
+## PUSH拒绝服务漏洞
 
 ![jg](./jg_tpush_localservices.png)
 
-####MSDK修复建议：升级MSDK到2.7.0a版本
+####MSDK修复建议：请将该注册代码进行删除，游戏无需在AndroidManifest.xml中注册ForwardActivity
 
 ## 信鸽 Intent协议解析越权漏洞
 
 ![jg](./jg_tpush_intent.png)
 
-####MSDK修复建议：已经与信鸽同事确认，尚未提供解决方案版本
+####MSDK修复建议：已经添加到金刚白名单中，不会有漏洞警告了
