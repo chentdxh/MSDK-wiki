@@ -1,4 +1,4 @@
-# MSDK
+﻿# MSDK
 
 [사이트 맵](http://wiki.dev.4g.qq.com/v2/site.html)
 
@@ -16,18 +16,18 @@
   * [MSDK패키지 도입](android.md)
   * [설정 설명](android.md)
   * [MSDK초기화](android.md)
-  * [전반 콜백 설정](android.md)
+  * [전역 콜백 설정](android.md)
   - - - - 
   * # 버전 업데이트
-  * [Android Library Project류 게임 업데이트](update.md#Android Library Project류 게임 업데이트)
-  * [비 Android Library Project류 게임 업데이트](update.md#비Android Library Project류 게임 업데이트)
+  * [Android Library Project타입 게임 업데이트](update.md#Android Library Project타입 게임 업데이트)
+  * [비 Android Library Project타입 게임 업데이트](update.md#비Android Library Project타입 게임 업데이트)
   * [코드 난독화 설정](update.md#코드 난독화 설정)
   - - - -
   * # 환경 설정
   * [C++컴파일 설정](env.md#C++컴파일 설정)
   - - - -
-  * # 체크 연동
-  * [셜프 체크 설정 연동](env.md#셜프 체크 설정 연동)
+  * # 연동 체크
+  * [연동 설정 자체 검토](env.md#연동 설정 자체 검토)
 
 [QQ 연동]()
 
@@ -37,7 +37,7 @@
   * # 로그인 모듈
   * [인증 로그인](qq.md#인증 로그인)
   * [자동 로그인](qq.md#자동 로그인)
-  * [다른 계정](diff-account.md)
+  * [Diff계정](diff-account.md)
   - - - -
   * # SNS
   * [개인 정보 조회](qq.md#개인 정보 조회)
@@ -56,8 +56,8 @@
   * [그룹 및 친구 추가에 관련 FAQ](qq.md#그룹 및 친구 추가에 관련 FAQ)
   - - - -
   * # 기타 설명
-  * [QQ기능이 대응한 지원 버전](qq.md#)
-  * [게임 센터 디테일 페이지](qq.md#)
+  * [QQ기능에 대응된 지원 버전](qq.md#)
+  * [게임센터 상세페이지](qq.md#)
   
 [위챗 연동]()
 
@@ -67,7 +67,7 @@
   * # 로그인 모듈
   * [인증 로그인](wechat.md#인증 로그인)
   * [권한 설정](wechat.md#권한 설정)
-  * [다른 계정](diff-account.md)
+  * [Diff계정](diff-account.md)
   - - - -
   * # SNS
   * [개인 정보 조회](wechat.md#개인 정보 조회)
@@ -80,7 +80,7 @@
   * [백그라운드 공유](wechat.md#백그라운드 공유)
   - - - -
   * # 기타 설명
-  * [위챗 인증 호출 불가](wechat.md#Android위챗 체크 스텝에 로그인 불가)
+  * [위챗 인증 호출 불가](wechat.md#Android 위챗 체크 스텝에 로그인 불가)
 
 [내장 브라우저]()
 
@@ -92,15 +92,15 @@
   * [투과 전송 파라미터 설명](webview.md#투과 전송 파라미터 설명)
   * [로그인 상태 암호화/암호화 해제](webview.md#로그인 상태 암호화/암호화 해제)
   
-[데이터 보고]()
+[데이터 전송]()
 
   * # 비콘
   * [비콘 연동 설정](beacon.md#비콘 연동 설정)
-  * [사용자 정의 데이터 보고](beacon.md#사용자 정의 데이터 보고)
+  * [사용자 정의 데이터 전송](beacon.md#사용자 정의 데이터 전송)
   - - - -
   * # RQD(RDM)
   * [RQD연동 설정](rqd.md#RQD연동 설정)
-  * [Crash데이터 보고](rqd.md#Crash데이터 보고)
+  * [Crash데이터 전송](rqd.md#Crash데이터 전송)
    - - - -
   * # 유저 피드백
   * [유저 피드백](feedback.md)
@@ -121,7 +121,7 @@
   * [공지 데이터 획득 인터페이스](notice.md#공지 데이터 획득 인터페이스)
   - - - -
   * # FAQ
-  * [게임 공지 정상으로 체크 스텝 전시 불가](notice.md#게임 공지 정상으로 체크 스텝 전시 불가)
+  * [게임 공지 비정상 전시 검토 절차](notice.md#게임 공지 비정상 전시 검토 절차)
  
   
 [광고]()
@@ -132,7 +132,7 @@
 [PUSH]()
 
   * [연동 설정](msdkpush.md#연동 설정)
-  * [XG에 연동 완료한 응용 해결 방안](msdkpush.md#XG에 연동 완료한 응용 해결 방안)
+  * [XG를 연동한 게임의 해결안](msdkpush.md#XG에 연동한 게임의 해결안)
   
 [LBS]()
 
@@ -161,7 +161,7 @@
 
  * # 상수 정의
  * [플랫폼 유형ePlatform](const.md#플랫폼 유형ePlatform)
- * [콜백 표지eFlag](const.md#콜백 표지eFlag)
+ * [콜백 표식 eFlag](const.md#콜백 표식 eFlag)
  - - - - 
  * # 데이터 구조
  * [eTokenType](const.md#eTokenType)
@@ -182,13 +182,13 @@
   - - - - 
   * #MSDK관련
   * [MSDK버전 정보 획득](tool.md#MSDK버전 정보 획득)
-  * [설치 경로를 획득](tool.md#설치 경로를 획득)
+  * [설치 경로 획득](tool.md#설치 경로 획득)
   * [가입 경로 획득](tool.md#가입 경로 획득)
   * [로컬 로그](tool.md#로컬 로그)
  
 [게임 연동 FAQ]()
 
   * [위챗 인증 호출 불가](wechat.md#Android위챗 체크 스텝에 로그인 불가)
-  * [공지 전시 불가](notice.md#게임 공지 장상으로 체크 스텝 전시 불가)
+  * [공지 전시 불가](notice.md#게임 공지 비장상 전시 검토 절차)
   * [QQ 그룹 및 친구 추가 FAQ](qq.md#QQ 그룹 및 친구 추가 FAQ)
-  * [다른 계정 FAQ](diff-account.md)
+  * [Diff계정 FAQ](diff-account.md)
