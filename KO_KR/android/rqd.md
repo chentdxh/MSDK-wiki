@@ -31,7 +31,7 @@ DEV 등록 게임은 자동으로 RDM을 등록하므로 수동으로 등록할 
 
 ![rdmregister](./rmdregister.png)
 
-그중 boundID는 게임 자체의 AndroidManifest중 packageName 입니다. 등록하지 않은 게임은 데이터 전송시 바로 버려집니다.
+그중 boundID는 게임 자체의 AndroidManifest중 packageName 입니다. 등록하지 않은 게임일 경우 데이터 전송 시 데이터가 분실됩니다.
 
 자세한 내용은 운영팀을 통하여 rdm 도우미한테 문의 바랍니다.
 
