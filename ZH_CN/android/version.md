@@ -54,6 +54,10 @@ Android 2.7 版本历史
 Unity版本历史
 ---
 
+### 2015/5/12
+- 发布基于2.6.2a的Unity接口版本,[`下载地址`](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD)(内网)
+- 增加[MSDKUnitySample工程使用说明](msdk_android_unity.md#MSDKUnitySample工程使用说明)
+
 ### 2015/4/7
 
 - 发布基于2.6.0a的Unity接口版本

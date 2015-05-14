@@ -448,8 +448,8 @@ QQ平台：
 
 1. 支付时提示paytoken过期，则需要拉起登录界面重新授权后方能支付。paytoken过期以后必须重新授权。
 
-1. `未装手Q时用webQQ登录一直提示"网络异常"。`
-如果游戏是用Unity直接打出Apk包，出现此问题，需要把MSDK的jar包中的assets解压放入Android/assets中。如果使用其他方式打包需要保证MSDK的jar包中的so文件和资源文件打入Apk包中。
+2. `未装手Q时用webQQ登录一直提示"网络异常"，在webQQ登录页面(或提示下载手Q页面)返回游戏时Crash。`
+如果游戏是用Unity直接打出Apk包，出现此问题，需要把MSDK的jar包中的assets中的内容解压放入Android/assets中。如果使用其他方式打包需要保证MSDK的jar包中的so文件和资源文件打入Apk包中。
 
 
 ##MSDK2.7.0a及以后的票据自动刷新流程

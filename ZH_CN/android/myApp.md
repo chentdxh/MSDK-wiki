@@ -84,6 +84,10 @@ protected void onDestroy() {
 
 ## 省流量更新接入流程
 
+使用应用宝省流量更新流程图：
+
+![myapp_newflow](./myapp_newflow.jpg)
+
 使用应用宝省流量更新有以下几步：
 
 ### 第〇步: 开关配置
@@ -491,16 +495,3 @@ protected void onDestroy() {
 	 */
 	void WGStartSaveUpdate()
 	
-### 省流量更新体验图
-
-体验图只是模拟省流量的应用场景，其中**界面由游戏自定义**。应用宝回调函数会更新状态和下载进度，具体可参看省流量接入章节。调试省流量更新，调试手机上的游戏版本要低于上传到应用宝的版本。
-
-![myapp_update](./updatesave1.png "省流量更新的体验图1")
-
-![myapp_update](./updatesave2.png "省流量更新的体验图2")
-
-![myapp_update](./updatesave3.png "省流量更新的体验图3")
-
-![myapp_update](./updatesave4.png "省流量更新的体验图4")
-
-![myapp_update](./updatesave5.png "省流量更新的体验图5")
