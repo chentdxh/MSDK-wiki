@@ -37,7 +37,7 @@ Crash上报在MSDK2.6.1i之前（不包括MSDK2.6.1i)使用的是RQD上报，上
 
 在bugly平台上查看Crash数据
 ---
-- 网址:[http://rdm.wsd.com/](http://rdm.wsd.com/)->用QQ账号登录->选择相应的App
+- 网址:[http://bugly.qq.com/](http://bugly.qq.com/)->用QQ账号登录->选择相应的App
 
 ![bugly](./bugly1.png)
 

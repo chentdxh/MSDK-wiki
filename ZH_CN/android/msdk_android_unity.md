@@ -21,17 +21,34 @@ MSDK(Android)的Unity发布包(zip)主要包含`MSDKUnityLibrary`、`MSDKUnitySa
 
 **注意：**
 1. 如果游戏工程中已有Android项目，则不导入`AndroidManifest.xml`，之后再将`AndroidManifest_Need.xml`中的内容合并到游戏**Plugins/Android**目录下的 AndroidManifest.xml 中。
+2. 如果游戏使用的Unity是5.0及以上，则需要去掉 libs 文件夹下的**MSDK_Android_R_xxx.jar**。
 2. 如果游戏并非用Unity导出Apk包，而是用Eclipse等类似环境出包，则需要去掉 libs 文件夹下的**MSDK_Android_R_xxx.jar**，assets中只保留`adconfig.ini, channel.ini, msdkconfig.ini`这几个文件。
 
-### Step2:修改BuildSettings及AndroidManifest
+### Step2:Crash上报配置
 
-#### 2.1修改BuildSettings
+#### Bugly配置
+
+MSDK的jar包已经完成了Bugly的初始化，游戏需要在初始化时开启C#层的Crash上报，即加入如下代码：
+```   
+Bugly.EnableLog (true);
+// 设置C#堆栈日志捕获的级别，默认为Exception，可以选择为Assert、Error等
+Bugly.RegisterHandler (LogSeverity.Exception);
+// 如果你已经在Unity项目导出的Android或iOS工程中进行了SDK的初始化，则只需调用此方法完成C#堆栈捕获功能的开启
+Bugly.EnableExceptionHandler();
+```
+**注意：**
+如果使用 Unity4.6.1 打包，会存在 native crash 无法上报的bug！需要使用非4.6.1的 Unity 版本(低于或高于此版本)打出Apk包。
+
+
+### Step3:修改BuildSettings及AndroidManifest
+
+#### 3.1修改BuildSettings
 
 在Unity的IDE中，依次点击**File -> Build Settings**, 如图选择Android平台点**Player Settings**，在Inspector面板中设置游戏包名，版本号，屏幕方向等属性。
 
 ![BuildSettings_1](./unity_BuildSettings_1.png)
 
-#### 2.2修改AndroidManifest
+#### 3.2修改AndroidManifest
 
 每个游戏都需要个性化修改**Plugins/Android**目录下的 AndroidManifest.xml ，包括包名，appid，屏幕方向等。
 
@@ -106,7 +123,7 @@ MSDK(Android)的Unity发布包(zip)主要包含`MSDKUnityLibrary`、`MSDKUnitySa
 <!-- TODO SDK接入 QQ接入配置 END -->
 ```
 
-#### 2.3导出游戏Android工程并导入Eclipse
+#### 3.3导出游戏Android工程并导入Eclipse
 
 在Unity的IDE中，依次点击**File -> Build Settings**，勾选**Google Android Project**，并点击**Export**，如下图示。
 
@@ -123,15 +140,15 @@ MSDK(Android)的Unity发布包(zip)主要包含`MSDKUnityLibrary`、`MSDKUnitySa
 **注意：**
 接入各模块功能时请阅读wiki中对应的接入配置部分，并检查 AndroidManifest.xml 的配置是否有误。
 
-### Step3:在Eclipse中引入并修改封装MSDK代码
+### Step4:在Eclipse中引入并修改封装MSDK代码
 
-#### 3.1拷贝封装的java源码
+#### 4.1拷贝封装的java源码
 
 将`MSDKUnityLibrary/src`中的文件`com/example/wegame/wxapi/WXEntryActivity.java`拷贝到游戏Android工程src目录下`用包名+wxapi`位置，`com/tencent/msdk/u3d/U3DActivity.java`拷贝到游戏Android工程src目录下并保持目录结构不变。此时游戏Android工程应类似如下
 
 ![FilesStructure](./unity_FilesStructure2.png)
 
-#### 3.2修改源码
+#### 4.2修改源码
 
 因部分信息无法得知，需要手动修改部分封装源码。
 
@@ -170,6 +187,8 @@ protected void onCreate(Bundle savedInstanceState) {
 
 ```
 import com.unity3d.player.UnityPlayerNativeActivity;
+或
+import com.example.wegame.UnityPlayerNativeActivity
 >>>
 import 游戏包名.UnityPlayerNativeActivity;
 ```
@@ -187,7 +206,7 @@ import 游戏包名.UnityPlayerNativeActivity;
 	}
 ```
 
-#### 3.3加入去重代码
+#### 4.3加入去重代码
 
 在Android系统中游戏与其他APP(如手Q，应用宝)交互时可能会产生多个游戏实例，导致行为异常。因此需要修改游戏包名下的UnityPlayerNativeActivity.java，加入去除重复实例的机制。在onCreat中的super.onCreate()后加入示例代码：
 
@@ -221,23 +240,25 @@ protected void onDestroy ()
 }
 ```
 
-### Step4:导出游戏Apk包
+### Step5:导出游戏Apk包
 
 导出游戏Apk包有两种方式，一种是在Unity的IDE中直接导出Apk包，另一种是直接用Eclipse或类似的安卓环境导出Apk包。接下来需要根据游戏的出包方式选择不同的操作。
 
-#### 4.1在Unity中导出Apk包
+#### 5.1在Unity中导出Apk包
 
 要在Unity中导出Apk包，需要将前面步骤中修改得的源码导成jar包并放入游戏Unity工程的**Plugins/Android/libs**下。
 
 在Eclipse中选中游戏Android工程的 src ，并export成jar包。步骤如下：
 
 ![ExportJar](./unity_ExportJar1.png)
+
 ![ExportJar](./unity_ExportJar2.png)
+
 ![ExportJar](./unity_ExportJar3.png)
 
 将此处生成的jar包放入游戏Unity工程的**Plugins/Android/libs**下，在**Player Settings**中配置好keystore等相关项即可在**Build Settings**中导出Apk包。
 
-#### 4.2在Eclipse中导出Apk包
+#### 5.2在Eclipse中导出Apk包
 
 如果游戏已按步骤1中的注意事项操作删除了多余项，则可以直接用此工程导出Apk包，否则需要在游戏Android工程中删除导入的多余的文件。
 
@@ -247,20 +268,10 @@ protected void onDestroy ()
 
 ![Unity截图](./unity_plugins.png "Unity截图")
 
-其中，MSDK API都封装在WGPlatform类。在"MSDKUnitySample"中`MsdkDemo.cs`是对MSDK的C#接口的调用示例，游戏可参考此类时行C#接口调用。
+其中，MSDK API都封装在WGPlatform类，其中对接口的详细的注释。在"MSDKUnitySample"中`MsdkDemo.cs`是对MSDK的C#接口的调用示例，游戏可参考此类时行C#接口调用。
 
-### Bugly(Crash上报)
 
-MSDK的jar包已经完成了Bugly的初始化，游戏需要在游戏最开始处开启C#层的Crash上报，即加入如下代码：
-```   
-Bugly.EnableLog (true);
-// 设置C#堆栈日志捕获的级别，默认为Exception，可以选择为Assert、Error等
-Bugly.RegisterHandler (LogSeverity.Exception);
-// 如果你已经在Unity项目导出的Android或iOS工程中进行了SDK的初始化，则只需调用此方法完成C#堆栈捕获功能的开启
-Bugly.EnableExceptionHandler();
-```
-
-### 其他接口
+### 登录及回调
 
 以QQ登陆为例，演示如何调用MSDK api与处理回调：
 
@@ -342,4 +353,16 @@ Bugly.EnableExceptionHandler();
         }
     }
 
-关于MSDK Api的说明，在WGPlatform类中有详细的注释。如果想要更详细的了解MSDK接口和MSDK接入的常见问题，请参考MSDK Android文档。
+## MSDKUnitySample工程使用说明
+
+点击**MSDKUnitySample\Assets\msdk.unity**可打开MSDKUnitySample工程，需要作以下修改即可打包Sample的Apk包。
+
+1. MSDKUnitySample工程中只包含Assets资源，因此场景绑定有问题，需要手动将 **MsdkDemo.cs** 脚本绑定到 **msdk.unity** 中。
+2. 如果游戏使用的Unity是5.0及以上，则需要去掉 libs 文件夹下的**MSDK_Android_R_xxx.jar**。
+3. 在 Player Settings 面板的Android设置的 Other Settings 中修改包名、版本号，如图示：
+    ![unity_identification](./unity_identification.png)
+4. 在 Player Settings 面板的Android设置的 Publishing Settings 中设置签名文件 keystore，选择 `MSDKUnitySample/Assets/Plugins/Android`目录下的 debug.keystore，Alias为 androiddebugkey，Password 都为 android。如下图示：
+	![unity_release](./unity_release.png)
+
+在"MSDKUnitySample"中`MsdkDemo.cs`是对MSDK的C#接口的调用示例，游戏可参考此类时行C#接口调用。
+ 

@@ -29,7 +29,7 @@ QQ接入
  ---
 ## 授权登录
  ### 概述
- - 通过唤起手Q客户端或web页面授权，授权成功后返回给游戏openId、accessToken、payToken (附录A票据类型)、pf和pfKey。
+ - 通过唤起手Q客户端或web页面授权，授权成功后返回给游戏openId、accessToken、payToken、pf和pfKey。
 完成手Q授权需要调用WGSetPermission和WGLogin接口完成。
 ```
 void WGSetPermission(unsigned int permissions);
@@ -63,7 +63,7 @@ plat->WGSetPermission(eOPEN_ALL);//设置授权权限
 plat->WGLogin(ePlatform_QQ);//调用手Q客户端或web授权
 ```
 - 授权回调代码如下：
-```ruby
+```
 void MyObserver::OnLoginNotify(LoginRet& loginRet)
 {
 if(eFlag_Succ == loginRet.flag)
@@ -129,10 +129,10 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 >2. 手Q4.6.2以上;
 >3. 游戏配置scheme：
 	![Alt text](./QQ4.png)
-- 成功则在拉起游戏，携带openId、accessToken、payToken (附录A票据类型)、pf和pfKey。
+- 成功则在拉起游戏，携带openId、accessToken、payToken、pf和pfKey。
 
 - 快速登录和异帐号结果在wakeupRet的flag中返回，相关的flag说明如下：
-```ruby
+```
 eFlag_Succ: 
 不存在异账号，成功唤起。这种情况下的拉起App的URL不携带票据，和之前版本的拉起一致。
 eFlag_AccountRefresh: 
@@ -151,7 +151,7 @@ eFlag_NeedSelectAccount：
 
 
 - 用户选择后，需要调用WGSwitchUser接口进行异帐号后续逻辑处理。（两个选项都需要调用下面这个接口，详见示例代码）
-```ruby
+```
 bool WGSwitchUser(bool flag);
 ```
 >描述: 通过外部拉起的URL登录。该接口用于异帐号场景发生时，用户选择使用外部拉起帐号时调用。
@@ -164,7 +164,7 @@ bool WGSwitchUser(bool flag);
 ###示例代码
 
 - 在拉起app时增加设置回调的代码
-```ruby
+```
 -(BOOL)application:(UIApplication*)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     NSLog(@"url == %@",url);
@@ -179,79 +179,77 @@ bool WGSwitchUser(bool flag);
 }
 ```
 - 拉起回调代码示例如下:
+```
+void MyObserver::OnWakeupNotify (WakeupRet& wakeupRet)
+{
+	switch (wakeupRet.flag) 
+	{
+	    case eFlag_Succ:[viewController setLogInfo:@"唤醒成功"];
+		break;
+		case eFlag_NeedLogin:[viewController setLogInfo:@"异帐号发生，需要进入登录页"];
+	    break;
+		case eFlag_UrlLogin:[viewController setLogInfo:@"异帐号发生，通过外部拉起登录成功"];
+	    break;
+		case eFlag_NeedSelectAccount:
+		{
+		    [viewController setLogInfo:@"异帐号发生，需要提示用户选择"];
+		    UIAlertView *alert = [[[UIAlertView alloc]initWithTitle:@"异帐号" message:@"发现异帐号，请选择使用哪个帐号登录" delegate:viewController cancelButtonTitle:@"不切换，使用原帐号" otherButtonTitles:@"切换外部帐号登录", nil] autorelease];
+		     [alert show];
+		}
+	    break;
+	 	case eFlag_AccountRefresh:[viewController setLogInfo:@"外部帐号和已登录帐号相同，使用外部票据更新本地票据"];
+	    break;
+	 	default:
+	    break;
+	}
+	
+    if(eFlag_Succ == wakeupRet.flag ||
+eFlag_NeedLogin == wakeupRet.flag ||
+eFlag_UrlLogin == wakeupRet.flag ||
+eFlag_NeedSelectAccount == wakeupRet.flag ||
+eFlag_AccountRefresh == wakeupRet.flag)
+    {
+ 		[viewController setLogInfo:@"唤醒成功"];
+    }
+    else
+   	{
+ 		[viewController setLogInfo:@"唤醒失败"];
+   	}
+} 
 
-        void MyObserver::OnWakeupNotify (WakeupRet& wakeupRet)
-            {
-        switch (wakeupRet.flag) {
-             case eFlag_Succ:
-         [viewController setLogInfo:@"唤醒成功"];
-        break;
-        case eFlag_NeedLogin:
-            [viewController setLogInfo:@"异帐号发生，需要进入登录页"];
-            break;
-        case eFlag_UrlLogin:
-            [viewController setLogInfo:@"异帐号发生，通过外部拉起登录成功"];
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
+{
+   	BOOL switchFlag = NO;
+   	switch (buttonIndex) 
+   	{
+      	case 0:
+     	NSLog(@"用户选择不切换帐号");
+     	break;
+	 	case 1:
+	 	{
+	     	NSLog(@"用户选择切换帐号");
+	     	switchFlag = YES;
+	 	}
+	     break;
+	 	default:
+	     break;
             
-            break;
-        case eFlag_NeedSelectAccount:
-        {
-            [viewController setLogInfo:@"异帐号发生，需要提示用户选择"];
-            UIAlertView *alert = [[[UIAlertView alloc]initWithTitle:@"异帐号" message:@"发现异帐号，请选择使用哪个帐号登录" delegate:viewController cancelButtonTitle:@"不切换，使用原帐号" otherButtonTitles:@"切换外部帐号登录", nil] autorelease];
-            [alert show];
-        }
-            break;
-        case eFlag_AccountRefresh:
-            [viewController setLogInfo:@"外部帐号和已登录帐号相同，使用外部票据更新本地票据"];
-            break;
-        default:
-            break;
-         }
-            if(eFlag_Succ == wakeupRet.flag ||
-       eFlag_NeedLogin == wakeupRet.flag ||
-       eFlag_UrlLogin == wakeupRet.flag ||
-       eFlag_NeedSelectAccount == wakeupRet.flag ||
-       eFlag_AccountRefresh == wakeupRet.flag)
-             {
-        [viewController setLogInfo:@"唤醒成功"];
-             }
-             else
-          {
-        [viewController setLogInfo:@"唤醒失败"];
-          }
-            } 
-
-        - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-          BOOL switchFlag = NO;
-          switch (buttonIndex) {
-             case 0:
-            NSLog(@"用户选择不切换帐号");
-            break;
-        case 1:
-        {
-            NSLog(@"用户选择切换帐号");
-            switchFlag = YES;
-        }
-            break;
-        default:
-            break;
-                   }
-             WGPlatform* plat = WGPlatform::GetInstance();
-                          plat->WGSwitchUser(switchFlag);
-        }
-
+    }
+    WGPlatform* plat = WGPlatform::GetInstance();
+    plat->WGSwitchUser(switchFlag);
+ }
+```
 
 ### 注意事项
 - 手Q版本4.6以上才支持快速登录。
 - URL Types中的scheme 需配置tencentlaunch+AppID拉起时才会携带登录信息。
-- ---
 
 ##手Q关系链查询
 
 - ###查询个人信息
 #### 概述
 用户通过手Q授权后只能获取到openId和accessToken，此时游戏需要用户昵称，性别，头像等其他信息。手Q授权成功后可调用WGQueryQQMyInfo获取个人信息。
-- 
-```ruby
+```
 bool WGQueryQQMyInfo();
 ```
 >描述: 获取用户QQ帐号基本信息
@@ -259,17 +257,16 @@ bool WGQueryQQMyInfo();
   - false:手Q未授权或AppID等配置不对
   -  true:参数无异常
 通过OnRelationNotify(RelationRet& relationRet) 回调游戏
-RelationRet（附录A）结构体中PersonInfo的province和city字段手Q为空，小、中、大三幅图片尺寸为：40 40 100（像素）
+RelationRet结构体中PersonInfo的province和city字段手Q为空，小、中、大三幅图片尺寸为：40 40 100（像素）
 
- #### 调用示例代码：
-- 
-```ruby
+#### 调用示例代码：
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 plat->WGQueryQQMyInfo();
 ```
 #### 回调示例代码：
-- 
-```ruby
+
+```
 OnRelationNotify(RelationRet &relationRet)
 {
     NSLog(@"relation callback");
@@ -300,7 +297,7 @@ MSDKRelationService *service = [[MSDKRelationService alloc] init];
  ###查询同玩好友信息
 ####概述
 - 游戏授权后需要查询用户同玩好友的昵称，性别，头像、openid等信息，可以调用WGQueryQQGameFriendsInfo获取。
-```ruby
+```
 bool WGQueryQQGameFriendsInfo();
 ```
 >描述: 获取用户QQ同玩好友基本信息
@@ -308,10 +305,10 @@ bool WGQueryQQGameFriendsInfo();
    - false:手Q未授权或AppID等配置不对
    - true:参数无异常
 通过OnRelationNotify(RelationRet& relationRet) 回调游戏
-RelationRet（附录A）结构体中PersonInfo的province和city字段手Q为空，小、中、大三幅图片尺寸为：40、40、100（像素）。
+RelationRet结构体中PersonInfo的province和city字段手Q为空，小、中、大三幅图片尺寸为：40、40、100（像素）。
 
 - 调用示例代码：
- ```ruby
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 plat->WGQueryQQGameFriendsInfo();
 回调示例代码：
@@ -352,10 +349,10 @@ MSDKRelationService *service = [[MSDKRelationService alloc] init];
 
  ###唤起手Q客户端分享
 - 唤起手机QQ(iphone版)或通过网页，在手Q内部选择分享的好友或空间。手Q会话中点击此会话会打开传入的url，通常此url配置成游戏在手Q游戏中心的详情页。Qzone中点击此消息会大图展示图片。网页分享体验较差，不推荐使用，游戏可以弹框提示用户安装手Q。
- ```ruby
+```
 void WGSendToQQ(const eQQScene[Int 转为 eQQScene]& scene, unsigned char* title,  unsigned char* desc,   unsigned char* url,  unsigned char* imgData, const int& imgDataLen);
 ```
->描述: 分享消息到手Q回话或Qzone, url填游戏手Q游戏中心详情页, 点击消息则会在手Q游戏中心详情页唤起游戏。
+>描述: 分享消息到手Q会话或Qzone, url填游戏手Q游戏中心详情页, 点击消息则会在手Q游戏中心详情页唤起游戏。
 参数:
     - scene 标识分享到朋友圈还是会话
     - QQScene_Qzone：唤起手Q并默认弹出分享到空间的弹框
@@ -366,10 +363,10 @@ void WGSendToQQ(const eQQScene[Int 转为 eQQScene]& scene, unsigned char* title
  例如：游戏中心详情页为“AAAAA”,游戏自定义字段为“bbbbb”，则url为：AAAAA&bbbbb。bbbbb通过wakeupRet.extInfo返回给游戏。
     - imgData 图片文件数据
     - imgDataLen 图片文件数据长度
-分享成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(附录A)
+分享成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(常量查询)
 
-	调用代码示例：
-```ruby
+- 调用代码示例：
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob = new MyObserver();
 plat->WGSetObserver(ob);
@@ -386,7 +383,10 @@ plat->WGSendToQQ(
                      (unsigned char*)[data bytes],
                      [data length]
                      ); 
-	回调代码示例：
+```
+
+- 回调代码示例：
+```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
@@ -426,7 +426,7 @@ imgDataLen:0];
 ###直接分享到好友（不需要唤起手Q客户端）
 ####概述
 - 不会唤起手Q客户端直接发送的指定的同玩好友，同玩好友的openId可以通过WGQueryQQGameFriendsInfo接口获取。此分享消息在pc QQ上不显示。
-```ruby
+```
 bool WGSendToQQGameFriend(int act, unsigned char* fopenid, unsigned char *title, unsigned char *summary, unsigned char *targetUrl, unsigned char *imgUrl, unsigned char* previewText, unsigned char* gameTag, unsigned char* extMsdkInfo[1.7.0i])
 ```
 >描述: 点对点定向分享(分享消息给手机QQ好友，在对话框中显示)。分享的内容只有手机QQ上才可以看到，PCQQ上看不到。手Q中点击此会话可以唤起游戏
@@ -452,11 +452,11 @@ MSG_FRIEND_EXCEED       //超越炫耀
 MSG_HEART_SEND          //送心
   MSG_SHARE_FRIEND_PVP    //PVP对战
  - extMsdkInfo 分享时游戏传入，通过ShareRet.extInfo回调给游戏。[1.7.0i]
-分享结束会通过OnShareCallBack(ShareRet ret)回调给游戏。Ret.flag表示不同的分享结果，具体见eFlag(附录A)
+分享结束会通过OnShareCallBack(ShareRet ret)回调给游戏。Ret.flag表示不同的分享结果，具体见eFlag(常量查询)
 
 
  - 调用代码示例：
-```ruby
+```
 unsigned char* openid = (unsigned char*)"86EA9CA0C965B7EE9793E7D0B29161B8";
 unsigned char* picUrl = (unsigned char*)"XXXXX";
 unsigned char* title = (unsigned char*)"msdk 测试 QQ 分享来了";
@@ -477,7 +477,7 @@ plat->WGSendToQQGameFriend(
                                );
 ```
 回调代码示例：
-```ruby
+```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
@@ -520,20 +520,20 @@ gameTag:(unsigned char *)"MSG_INVITE"];
 ##手Q大图分享
 ###概述
 调用WGSendToQQWithPhoto会唤起手Q，在手Q内部选择分享的好友或空间进行大图分享。手Q中点击此分享消息会全屏预览图片。
-```ruby
+```
 void WGSendToQQWithPhoto(const eQQScene[Int 转 eQQScene]& scene, unsigned char* imgData, const int& imgDataLen)
 ```
->描述: 分享消息到手Q回话消息或Qzone
+>描述: 分享消息到手Q会话消息或Qzone
   -  scene 标识分享到朋友圈还是会话
 QQScene_Qzone：唤起手Q并默认弹出分享到空间的弹框
 QQScene_session：唤起手Q没有空间，只能分享到好友
   - imgData 图片文件数据
   - imgDataLen 图片文件数据长度
 
- - 分享成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(附录A)
-###示例代码
-调用代码示例：
-```ruby
+ - 分享成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(常量查询)
+ ###示例代码
+- 调用代码示例：
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob = new MyObserver();
 ob->setViewcontroller(self);
@@ -543,7 +543,7 @@ NSData* data = [NSData dataWithContentsOfFile:path];
 plat->WGSendToQQWithPhoto(1,(unsigned char*)[data bytes], [data length]);
 ```
  - 回调代码示例：
-```ruby
+```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
@@ -591,7 +591,7 @@ imgDataLen:(int)[data length]];
 ##手Q接入注意事项
  - ###手Q功能对应支持版本
 通过`WGGetIphoneQQVersion()`方法可以获取手Q版本号。
-```ruby
+```
 int WGGetIphoneQQVersion();
 [MSDKInfoService getIphoneQQVersion];//2.4.0i及之后版本
 ```
@@ -625,7 +625,7 @@ int WGGetIphoneQQVersion();
  以下接口2.0.2i以后提供，需要手Q5.1版本以上，且App id已经在手Q后台审核通过并上线：
 WGAddGameFriendToQQ:可以在游戏内选择其它玩家，调用该接口添加为好友；
 WGBindQQGroup:工会会长可以选择自己创建的群，绑定某个群作为该工会的工会群
-```ruby
+```
 void WGAddGameFriendToQQ(
 unsigned char* cFopenid, unsigned char* cDesc, unsigned char* cMessage)
 ```
@@ -634,9 +634,9 @@ unsigned char* cFopenid, unsigned char* cDesc, unsigned char* cMessage)
   - cFopenid  必填参数 需要添加好友的openid
   - cDesc  必填参数 要添加好友的备注
   - cMessage    添加好友时发送的验证信息
-  添加成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(附录A)
+  添加成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(常量查询)
 
- ```ruby
+ ```
 void  WGBindQQGroup (unsigned char* cUnionid, unsigned char* cUnion_name,
                        unsigned char* cZoneid, unsigned char* cSignature)
 ```
@@ -646,11 +646,11 @@ void  WGBindQQGroup (unsigned char* cUnionid, unsigned char* cUnion_name,
   - cUnion_name 公会名称
   - cZoneid 大区ID，opensdk限制只能填数字，字符可能会导致绑定失败
   - cSignature 游戏盟主身份验证签名，生成算法为openid_AppID_appkey_公会id_区id 做md5
-  添加成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(附录A)
+  添加成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(常量查询)
   
  - ###示例代码 
- 调用代码示例：
-```ruby
+- 调用代码示例：
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 //加好友
 plat->WGAddGameFriendToQQ((unsigned char*)"D2DEFFFBE310779E88CD067C9D3329E5", (unsigned char*)"测试加好友", (unsigned char*)"你好吗～");
@@ -666,8 +666,8 @@ plat->WGAddGameFriendToQQ((unsigned char*)"D2DEFFFBE310779E88CD067C9D3329E5", (u
     
     plat->WGBindQQGroup((unsigned char*)"1", (unsigned char*)"1", (unsigned char*)"test", (unsigned char*)[orgSigStr UTF8String]);
 ```
-回调代码示例：
-```ruby
+- 回调代码示例：
+```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
