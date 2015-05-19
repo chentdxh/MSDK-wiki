@@ -72,9 +72,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
-| appid|int| 应用在QQ开放平台中的唯一id |
 | openid|string|普通用户唯一标识（QQ平台） |
-| openkey|string|授权凭证access_token |
 | userip|string|用户客户端ip|
 |act|int|跳转行为(0: URL跳转；1:APP跳转,默认:0)|
 |oauth_consumer_key|int|appid(应用在QQ平台的唯一id)|
@@ -88,7 +86,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |target_url|string|游戏中心详情页的URL<br>http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite<br>，长度不超过512字节|
 |title|string|分享标题,长度不能超过45字节|
 |fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
-|previewText|string|非必填。分享的文字内容，可为空。如“我在天天连萌”，长度不能超过45字节|
+|previewText|string|不需要填写|
 |game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>|
 ***请注意输入参数的类型，参考1.5***
 #### 2.2.1.3输出参数说明 
@@ -1275,7 +1273,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 #### 2.4.5.6上报数据类型说明（有疑问请联系：joceyzhou&kyleli&samzou） ####
 
-| type(上报数据类型，int)| data(成就值，string)| expires(过期时间，string)| bcover(是否覆盖上报，int)| 备注`(非常重要，请关注)`|
+| type(上报数据类型，int)| data(成就值，string)| expires(过期时间，string，如2015-05-30 23:59:59过期，则填写"1433001599")| bcover(是否覆盖上报，int)| 备注`(非常重要，请关注)`|
 | ------------- |:-------------:|:-----|:-----|:-----|  
 |1  |等级                                          |  "0"|1|变化时上报                                                                |
 |2  |金钱                                          |  "0"|1|变化时上报                                                                |
