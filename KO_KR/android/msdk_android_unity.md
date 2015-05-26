@@ -248,6 +248,17 @@ Unity3D에서 MSDK와 관련된 부분은 Assets/Plugins/Msdk 폴더에 위치:
 ![Unity 스크린샷](./unity_plugins.png "Unity 스크린샷")	
 	
 그중, MSDK API는 전부 WGPlatform 클래스에 캡슐화된다. "MSDKUnitySample"에서 `MsdkDemo.cs`는 MSDK의 C# 인터페이스 호출 샘플이다. 게임은 C# 인터페이스 호출에 이를 참조할 수 있다.	
+
+### Bugly(Crash전송)
+
+MSDK jar패키지에서 Bugly초기화를 완료했으며 게임은 최초시 C#층의 Crash전송 기능을 오픈 하여야 합니다. 즉 아래와 같은 코드를 추가：
+```   
+Bugly.EnableLog (true);
+// C#스택 로그 획득 등급을 설정，디폴트로 Exception이고 Assert 및 Error 옵션으로 선택 가능.
+Bugly.RegisterHandler (LogSeverity.Exception);
+// Unity프로젝트에서 출력된 Android 혹 iOS공정에서 SDK 초기화를 진행했으면 해당 방법을 호출하여 C#스택 획득 기능을 오픈하면 됩니다. 
+Bugly.EnableExceptionHandler();
+```
 	
 QQ 로그인을 예로 들어 MSDK api 호출 및 콜백 처리 실연:	
 	

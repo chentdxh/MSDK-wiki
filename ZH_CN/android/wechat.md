@@ -259,7 +259,13 @@ protected void onNewIntent(Intent intent) {
 
 大图消息分享
 ------
-此种消息分享需要唤起微信, 需要用户参与才能完成整个分享过程, 可以分享给游戏内和游戏外好友, 通常用来炫耀成绩或者其他需要详图的功能. 此种消息可以分享到会话(好友)或者朋友圈, 微信4.0及以上支持分享到会话, 微信4.2及以上支持分享到朋友圈. 要完成此功能需要用到的接口有: WGSendToWeixinWithPhoto, 接口详细说明如下:
+
+此种消息分享需要唤起微信, 需要用户参与才能完成整个分享过程, 可以分享给游戏内和游戏外好友, 通常用来炫耀成绩或者其他需要详图的功能. 此种消息可以分享到会话(好友)或者朋友圈, 微信4.0及以上支持分享到会话, 微信4.2及以上支持分享到朋友圈. 
+
+### 使用图片数据分享
+
+此接口使用图片数据进行分享，名称为 `WGSendToWeixinWithPhoto`。建议使用此接口时传入的图片数据小于1MB，否则在微信6.1及以上易分享失败。接口详细说明如下:
+
 #### 接口声明
 
 	/**
@@ -277,7 +283,7 @@ protected void onNewIntent(Intent intent) {
 		 "MSG_friend_exceed"         // 超越炫耀
 		 "MSG_heart_send"            // 送心
 	 * @param imgData 原图文件数据
-	 * @param imgDataLen 原图文件数据长度(图片大小不能超过5M)
+	 * @param imgDataLen 原图文件数据长度(建议图片小于1MB)
 	 * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
 	 * @param messageAction scene为1(分享到微信朋友圈)的情况下才起作用
 	 *   WECHAT_SNS_JUMP_SHOWRANK       跳排行
@@ -306,12 +312,85 @@ protected void onNewIntent(Intent intent) {
 	std::string messageExt = " messageExt ";
 	std::string messageAction = " messageAction ";
 	WGPlatform::GetInstance()->WGSendToWeixinWithPhoto(
-	1,
-	(unsigned char *)mediaTagName.c_str(),
-	(unsigned char*) imgData,
-	imgDataLen,
-	(unsigned char *)messageExt.c_str(),
-	(unsigned char *)messageAction.c_str()
+		1,
+		(unsigned char *)mediaTagName.c_str(),
+		(unsigned char*) imgData,
+		imgDataLen,
+		(unsigned char *)messageExt.c_str(),
+		(unsigned char *)messageAction.c_str()
+	);
+
+#### 回调实现(Demo)代码
+
+	virtual void OnShareNotify(ShareRet& shareRet) {
+	LOGD("OnShareNotify: platform:%d flag:%d",
+			shareRet.platform, shareRet.flag);
+	// 处理分享回调
+	if (shareRet.platform == ePlatform_QQ) {
+		… // 手Q分享返回的回调处理
+	} else if (shareRet.platform == ePlatform_Weixin) {
+		switch (shareRet.flag) {
+		case eFlag_Succ:
+			// 分享成功
+			break;
+		case eFlag_Error:
+			// 分享失败
+			break;
+			}
+		}
+	}
+
+### 使用图片路径分享
+
+此接口使用图片数据进行分享，名称为 `WGSendToWeixinWithPhotoPath`。建议使用此接口分享的图片小于3MB。此接口在 **2.7.2a** 及以上版本增加，如需要使用请先升级 **MSDK**。
+接口详细说明如下:
+
+#### 接口声明
+
+	/**
+	 * @param scene 指定分享到朋友圈, 或者微信会话, 可能值和作用如下:
+	 *   WechatScene_Session: 分享到微信会话
+	 *   WechatScene_Timeline: 分享到微信朋友圈
+	 * @param mediaTagName (必填)请根据实际情况填入下列值的一个, 此值会传到微信供统计用, 在分享返回时也会带回此值, 可以用于区分分享来源
+		 "MSG_INVITE";                   // 邀请
+		 "MSG_SHARE_MOMENT_HIGH_SCORE";    //分享本周最高到朋友圈
+		 "MSG_SHARE_MOMENT_BEST_SCORE";    //分享历史最高到朋友圈
+		 "MSG_SHARE_MOMENT_CROWN";         //分享金冠到朋友圈
+		 "MSG_SHARE_FRIEND_HIGH_SCORE";     //分享本周最高给好友
+		 "MSG_SHARE_FRIEND_BEST_SCORE";     //分享历史最高给好友
+		 "MSG_SHARE_FRIEND_CROWN";          //分享金冠给好友
+		 "MSG_friend_exceed"         // 超越炫耀
+		 "MSG_heart_send"            // 送心
+	 * @param imgPath 本地图片的路径(建议图片小于3MB)
+	 * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
+	 * @param messageAction scene为1(分享到微信朋友圈)的情况下才起作用
+	 *   WECHAT_SNS_JUMP_SHOWRANK       跳排行
+	 *   WECHAT_SNS_JUMP_URL            跳链接
+	 *   WECHAT_SNS_JUMP_APP           跳APP
+	 * @return void
+	 *   通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
+	 *     eFlag_Succ: 分享成功
+	 *     eFlag_Error: 分享失败
+	 */
+	void WGSendToWeixinWithPhotoPath(
+		const eWechatScene &scene,
+		unsigned char *mediaTagName,
+		unsigned char *imgPath,
+		unsigned char *messageExt,
+		unsigned char *messageAction
+	);
+
+#### 接口调用
+	std::string mediaTagName = " mediaTagName ";
+	std::string imgPath = "/storage/emulated/0/test.png";
+	std::string messageExt = " messageExt ";
+	std::string messageAction = " messageAction ";
+	WGPlatform::GetInstance()->WGSendToWeixinWithPhotoPath(
+		1,
+		(unsigned char *)mediaTagName.c_str(),
+		(unsigned char *)imgPath.c_str(),
+		(unsigned char *)messageExt.c_str(),
+		(unsigned char *)messageAction.c_str()
 	);
 
 #### 回调实现(Demo)代码
@@ -336,7 +415,6 @@ protected void onNewIntent(Intent intent) {
 
 #### 注意事项：
 - **朋友圈按钮显示有网络延迟且必须在微信5.1及以上版本**
-- 在微信6.1以上此接口`分享图片不能超过1M`，否则会分享失败
 
 音乐消息分享
 ------

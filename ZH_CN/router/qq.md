@@ -123,7 +123,6 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "image_url": "http://mat1.gtimg.com/www/images/qq2012/erweimaVideoPic.png",
 	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
 	    "access_token": "933FE8C9AB9C585D7EABD04373B7155F",
-	    "appid": 100703379,
 	    "src": 0,
 	    "summary": "摘要",
 	    "target_url": "http://gamecenter.qq.com/gcjump?appid={YOUR_APPID}&pf=invite&from=iphoneqq&plat=qq&originuin=111&ADTAG=gameobj.msg_invite
@@ -1019,7 +1018,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 | 参数名称 | 类型|描述|
 | ------------- |:-------------:|:-----|
-| appid|string| 应用在平台的唯一id |
+| appid|`string`| 应用在平台的唯一id，`特别注意，类型为string` |
 | openid|string|用户在某个应用的唯一标识|
 | accessToken|string|`用户登录态（新增参数）`|
 | vip|int|查询类型:<br/>会员:vip&0x01 !=0；<br/>QQ等级:vip&0x02 !=0；<br/>蓝钻:vip&0x04 != 0；<br/>红钻:vip&0x08 != 0；<br/>超级会员:vip&0x10 != 0;<br/>心悦:vip&0x40 != 0；<br/>黄钻::vip&0x80 != 0；<br/>以上可任意组合(逻辑与)，如需同时查询会员和蓝钻则(vip&0x01 !=0) && (vip&0x04 != 0) 为真,(备注：请求时请只填相关的标识位)|
