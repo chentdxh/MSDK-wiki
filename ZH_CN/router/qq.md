@@ -910,7 +910,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 　　提供查询QQ账号VIP信息服务。
 
-### 2.4.1 /profile/load_vip(即将停用，请调用/profile/query_vip接口) ###
+### 2.4.1 /profile/load_vip(该接口于2015年6月30日停止服务，获取会员特权请调用/profile/query_vip接口) ###
   获取QQ账号VIP信息。
 
 #### 2.4.1.2输入参数说明 ####
