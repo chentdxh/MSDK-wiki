@@ -78,7 +78,19 @@ MSDK초기화 기능을 사용하는 전제는 SDK에서 제공하는 모든 기
 
 		//게임은 자신의 결제 offerId를 사용하여 연동 테스트 진행
 		baseInfo.offerId = "100703***";
+
+        // MSDK 2.7.1a 버전부터 게임은 msdk초기화 시 다이내믹적으로 버전번호 설정 가능하며 비콘 및 bugly의 버전번호는 msdk에서 통일로 설정합니다.
+        // 2.7.1a이전 버전은 설정하지 않습니다.
+        // 1.버전번호 구성 = versionName + versionCode
+        // 2.게임이 appVersionName（혹 ""로 기입）및 appVersionCode(혹 -1로 기입)에게 값을 부여하지 않을 경우，
+        // msdk디폴트로 AndroidManifest.xml에 있는 android:versionCode="51" 및 android:versionName="2.7.1"를 불러옵니다.
+        // 3.게임이 여기에서 아래와 같은 appVersionName（빈칸 불가）및 appVersionCode（양의 정수）기입할 경우，비콘과 bugly에서 획득한 버전번호는 2.7.1.271입니다.
+        baseInfo.appVersionName = "2.7.1";
+        baseInfo.appVersionCode = 271;
+
 		WGPlatform.Initialized(this, baseInfo);
+		// QQ호출 시 필요한 인증 옵션을 설정
+		WGPlatform.WGSetPermission(WGQZonePermissions.eOPEN_ALL); 
 
 		// handleCallback는 Initialized 후 진행
 		// launchActivity의 onCreat()와 onNewIntent()에서 필수 호출

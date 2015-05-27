@@ -21,7 +21,7 @@ MSDK는 버전 출시 전에 JG심사를 진행하여 현재 버전 버그 존�
 
 ![jg](./jgp3.png)
 
-####MSDK수정 제안：긴급 버그가 아닐 경우 MSDK2.7.0a에서 해결
+####MSDK수정 제안：MSDK버전을 2.6.1a 및 그 이상 버전으로 업데이트
 
 ## Midas 통용 서비스 거부 버그
 
@@ -50,14 +50,14 @@ MSDK는 버전 출시 전에 JG심사를 진행하여 현재 버전 버그 존�
 
 ####MSDK수정 제안：Midas버전을 1.3.9.e 및 그 이상 버전으로 업데이트 
 
-## XG푸시 서비스 거부 버그
+## PUSH 서비스 거부 버그
 
 ![jg](./jg_tpush_localservices.png)
 
-####MSDK수정 제안：MSDK 버전을 2.7.0a버전으로 업데이트
+####MSDK수정 제안：해당 가입 코드 삭제해 주시기 바랍니다. 게임이 AndroidManifest.xml에서 ForwardActivity 가입할 필요 없습니다.
 
 ## XG 푸시 Intent 프로토콜 해석 월권 버그
 
 ![jg](./jg_tpush_intent.png)
 
-####MSDK수정 제안：이슈 파악은 되었지만 해결안은 추후 제공
+####MSDK수정 제안：해당 이슈를 JG White List에 추가되었으니 버그 경고가 없을 것입니다.
