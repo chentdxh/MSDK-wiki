@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+<title>MSDK 문서 가이드</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+@charset "utf-8";
+/* code@bihe832.com */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,th,td{margin:0;padding:0;list-style:none;}
+fieldset,img{border:0;}
+
+h1,
+span,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Malgun Gothic", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    color: #333;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+	line-height: 36px;
+}
+a {
+    color: #0069d6;
+	text-decoration: none;
+}
+a:hover {
+    color: #0050a3;
+}
+h1 {
+	color: #333;
+    margin-bottom: 12px;
+	margin-top: 12px;
+    font-size: 20px;
+}
+
+h2 {
+	color: #333;
+    font-size: 16px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+@media screen and (min-width: 914px) {
+    body {
+        width: 90%;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,span,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+
+li {
+ float: left;
+ padding-left:20px;
+}
+.strong{
+	font-weight:bold;
+	color:red;
+}
+.cgl { text-align: right; }
+.cgli{border-right: 1px solid #D2D2D1; margin: 0 10px;}
+.cglg { display: inline-block;border-bottom: 5px solid #ff0000;line-height: 25px; }
+h1,h2{clear: both;}
+</style>
+<title>머리말</title>
+
+</head>
+<body>
+<div class="cgl">
+    <span class="cgli"></span>
+    <a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/index.html" class="cglg">中文</a>
+</div>
+<h1>머리말</h1>
+<p>MSDK발포한 빌드 패킷에는 연동 설명 문서를 제공하지 않으며 관련 문서는 모두 wiki를 통해 접속해야 합니다. 아래는 MSDK관련 모듈의 링크 리스트입니다.</p>
+
+<h1>MSDK 연동 설명：</h1>
+<ul>
+	<li><a href="http://open.qq.com/" target="_blank">게임 가입</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E9%A6%96%E9%A1%B5" target="_blank">텐센트 모바일 게임 오픈 플랫폼</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=MSDK%E6%8E%A5%E5%85%A5%E6%B5%81%E7%A8%8B" target="_blank" class="strong">MSDK연동 프로세스（라이브）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E6%8E%A5%E5%85%A5%E6%8C%87%E5%BC%95" target="_blank" class="strong">MSDK연동 프로세스（퍼섭）</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E4%B8%8B%E8%BD%BDMSDK" target="_blank">다운로드 주소（라이브）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD" target="_blank">다운로드（퍼섭）</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/MSDK-wiki" target="_blank">Wiki On Github</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/index.html" target="_blank">Android Wiki</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/index.html" target="_blank">IOS Wiki</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/router/index.html" target="_blank">Router Wiki</a></li>
+	<li><a href="http://dev.ied.com/" target="_blank">Eagle 시스템</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E" target="_blank">MSDK권한 설명（퍼섭）</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">MSDK연동 FAQ（라이브）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/SDK%E6%8E%A5%E5%85%A5%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">MSDK연동 FAQ（퍼섭）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/%E5%85%B6%E4%BB%96%E4%B8%8B%E8%BD%BD" target="_blank">플랫폼 검수list（퍼섭）</a></li>
+</ul>
+
+
+<h1>Android 관련 소개：</h1>
+<h2>기본 모듈</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/index.md" target="_blank">모듈 소개</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/android.md" target="_blank">SDK패킷 소개</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/android.md" target="_blank" class="strong">퀵 연동 가이드</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/update.md" target="_blank" class="strong">버전 업데이트 안내</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/login.md" target="_blank" class="strong">MSDK로그인 모듈 가이드（강력 추천）</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/share.md" target="_blank" class="strong">MSDK공유 모듈 가이드（강력 추천）</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/const.md" target="_blank">상수, 오류 코드 정의</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/version.md" target="_blank">버전 이력</a></li>
+</ul>
+
+<h2>구체적 모듈</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/qq.md" target="_blank"  class="strong">몹Q 연동</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/wechat.md" target="_blank"  class="strong">위챗 연동</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/webview.md" target="_blank">내장 브라우저</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/beacon.md" target="_blank">등탑</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/rqd.md" target="_blank">RDM</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/feedback.md" target="_blank">유저 파드백</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/notice.md" target="_blank">공지</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/ad.md" target="_blank">광고</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/msdkpush.md" target="_blank">Push</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/lbs.md" target="_blank">LBS</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/myApp.md" target="_blank">응용보</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/qmi.md" target="_blank">모겜보</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/midas.md" target="_blank">Midas</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/qqgame.md" target="_blank">게임 로비</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/tool.md" target="_blank">버전 획득</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/tool.md" target="_blank">채널 번호 획득</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/tool.md" target="_blank">로컬 로그</a></li>
+</ul>
+
+<h2>FAQ</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/wechat.md#Android위챗 로그인 불가의 체크 절차" target="_blank">Android위챗 로그인 불가의 체크 절차</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/notice.md#게임 공지 정상적으로 표시 못하는 문제의 체크 절차" target="_blank">게임 공지 정상적으로 표시 못하는 문제의 체크 절차</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/qq.md#QQ그룹 추가 QQ친구 추가에 FAQ" target="_blank">몹Q그룹 추가 QQ친구 추가에 FAQ</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/android/diff-account.md" target="_blank">MSDK 다른 계정 문제</a></li>
+</ul>
+
+
+<h1>iOS 관련 소개：</h1>
+<h2>기본 모듈</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/index.md" target="_blank">SDK패킷 소개</a></li>
+	
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/iOSPlugin.md" target="_blank" class="strong">퀵 연동 가이드</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/version.md" target="_blank">버전 이력</a></li>
+</ul>
+
+<h2>구체적 모듈</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/QQ.md" target="_blank"  class="strong">몹Q 연동</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/WX.md" target="_blank"  class="strong">위챗 연동</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/AutoAuth.md" target="_blank">자동 인증 및 token검증</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/Guest.md" target="_blank">게스트 모드</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/InnerBrowser.md" target="_blank">내장 브라우저</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/Announcement.md" target="_blank">공지</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/Advertisement.md" target="_blank">광고</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/lbs.md" target="_blank">LBS</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/Push.md" target="_blank">Push</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/ios/const.md" target="_blank">상수</a></li>
+</ul>
+
+
+<h1>백그라운드 관련 소개 ：</h1>
+<h2>기본 모듈</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/router/index.md" target="_blank">백그라운드 개요</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/router/qq.md" target="_blank"  class="strong">몹Q 연동</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/router/wx.md" target="_blank"  class="strong">위챗 연동</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/router/guest.md" target="_blank">게스트 모드 토큰</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/router/faq.md" target="_blank">백그라운드 FAQ</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/KO_KR/router/errorCode.md" target="_blank">백그라운드 오류 코드</a></li>
+</ul>
+
+</body>
+</html>
