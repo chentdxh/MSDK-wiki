@@ -368,7 +368,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ### 2.3.4 /relation/qqfriends_vip ###
 
 #### 2.3.4.1接口说明 ####
- 　批量查询QQ会员信息。
+ 　批量查询QQ会员信息（好友非好友均支持）。
 
 #### 2.3.4.2输入参数说明 ####
 
@@ -377,7 +377,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 | accessToken|string|用户在应用中的登录凭据 |
-| fopenids|vector<string>|好友openid列表，每次最多可输入50个|
+| fopenids|vector<string>|待查询openid列表，每次最多可输入50个|
 | flags|string|VIP业务查询标识。目前支持查询QQ会员信息:qq_vip,QQ超级会员：qq_svip。后期会支持更多业务的用户VIP信息查询。如果要查询多种VIP业务，通过“,”分隔。如果不输入该值，默认为全部查询,见示例。|
 | userip|string|调用方ip信息|
 | pf|string|玩家登录平台，默认openmobile，有openmobile_android/openmobile_ios/openmobile_wp等，该值来自客户端手Q登录返回|

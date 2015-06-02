@@ -72,7 +72,7 @@ plat->WGSetPermission(eOPEN_ALL);//设置授权权限
 plat->WGLogin(ePlatform_QQ);//调用手Q客户端或web授权
 ```
     原授权回调代码如下：
-```ruby
+```
 void MyObserver::OnLoginNotify(LoginRet& loginRet)
 {
 if(eFlag_Succ == loginRet.flag)
@@ -123,6 +123,10 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 }
 ```
 
+
+## 2.3.5
+ - 【代码变更】
+1.【修改】修正MSDKLog特殊情况下crash的隐患。
 
 ## 2.3.4
  - 【组件更新】
