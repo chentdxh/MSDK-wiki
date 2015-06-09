@@ -22,10 +22,6 @@
   * [MSDK初始化](android.md)
   * [设置全局回调](android.md)
   - - - - 
-  * # 核心模块
-  * [**登录模块(强烈推荐)**](login.md)
-  * [**分享模块(强烈推荐)**](share.md)
-  - - - - 
   * # 版本更新
   * [Android Library Project类游戏更新](update.md#Android Library Project类游戏更新)
   * [非Android Library Project类游戏更新](update.md#非Android Library Project类游戏更新)
@@ -44,6 +40,23 @@
   * [接入配置](msdk_android_unity.md)
   * [接口调用](msdk_android_unity.md#接口调用)
 
+[核心模块]()
+
+  * [**登录模块(强烈推荐)**](login.md)
+  * [接入登录具体工作](login.md#接入登录具体工作（开发必看）)
+  * [接口说明](login.md#名词解释、接口说明)
+  * [异帐号逻辑](diff-account.md#异帐号处理逻辑（开发关注）)
+  * [特殊逻辑](login.md#其余特殊逻辑处理)
+  - - - -
+  * [**分享模块(强烈推荐)**](share.md)
+  * [推荐用法](share.md#MSDK 推荐用法)
+  * [分享类消息对比](share.md#各种分享类消息对比)
+  - - - -
+  * [**加群模块(强烈推荐)**](group.md)
+  * [接口说明](group.md#名词解释、接口说明)
+  * [接入流程](group.md#加群组件接入流程)
+  * [手Q加群推荐用法](group.md#手Q加群组件推荐使用方法)
+  
 [接入QQ]()
 
   * # 接入配置
@@ -65,11 +78,12 @@
   * [后端分享](qq.md#后端分享)
   - - - -
   * # 游戏内加群、好友
-  * [绑定QQ群](qq.md#绑定QQ群)
-  * [查询QQ群绑定信息](qq.md#查询QQ群绑定信息)
-  * [解绑QQ群](qq.md#解绑QQ群)
-  * [加入QQ群](qq.md#加入QQ群)
-  * [加群绑群常见问题](qq.md#加群绑群常见问题)
+  * [绑定QQ群](group.md#绑定QQ群)
+  * [查询QQ群绑定信息](group.md#查询QQ群绑定信息)
+  * [查询QQ群加群Key](group.md#获取加入QQ群的key)
+  * [解绑QQ群](group.md#解绑QQ群)
+  * [加入QQ群](group.md#加入QQ群)
+  * [加群绑群常见问题](group.md#QQ加群绑群常见问题)
   * [添加QQ好友](qq.md#添加QQ好友)
   - - - -
   * # 其他说明
@@ -115,7 +129,7 @@
   * [灯塔接入配置](beacon.md#灯塔接入配置)
   * [自定义数据上报](beacon.md#自定义数据上报)
   - - - -
-  * # RQD(RDM)
+  * # RQD(RDM&Bugly)
   * [RQD接入配置](rqd.md#RQD接入配置)
   * [Crash数据上报](rqd.md#Crash数据上报)
    - - - -
@@ -140,12 +154,6 @@
   * # 常见问题
   * [游戏公告不能正常展示检查步骤](notice.md#游戏公告不能正常展示检查步骤)
  
-  
-[广告]()
-
-  * [概述](ad.md#一、概述)
-  * [游戏接入](ad.md#二、游戏接入)
-
 [PUSH]()
 
   * [接入配置](msdkpush.md#接入配置)
@@ -176,7 +184,11 @@
  * # 游戏大厅
  * [不带登录态拉起游戏](qqgame.md)
  * [带登录态拉起游戏](qqgame.md#带登录态拉起游戏)
- 
+  - - - -
+ * # 广告
+  * [概述](ad.md#一、概述)
+  * [游戏接入](ad.md#二、游戏接入)
+
 [常量查询]()
 
  * # 常量定义

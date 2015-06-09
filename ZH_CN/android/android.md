@@ -175,6 +175,8 @@ MSDK通过`WGPlatformObserver`抽象类中的方法将授权、分享或查询�
 		public void OnRelationNotify(RelationRet relationRet) { }
 		@Override
 		public void OnLoginNotify(LoginRet ret) { }
+		@Override
+		public void OnAddWXCardNotify(CardRet ret) { }
 	});
 
 设置C++ 回调(**设置了Java层回调会优先调用Java层回调, 如果要使用C++层回调则不能设置Java层回调**)：
@@ -185,6 +187,7 @@ MSDK通过`WGPlatformObserver`抽象类中的方法将授权、分享或查询�
 	    virtual void OnShareNotify(ShareRet& shareRet) { }
 	    virtual void OnWakeupNotify(WakeupRet& wakeupRet) { }
 	    virtual void OnRelationNotify(RelationRet& relationRet) { }
+	    virtual void OnAddWXCardNotify(CardRet& ret) { }
 	    virtual ~GlobalCallback() { }
 	};
 	GlobalCallback g_Test;
