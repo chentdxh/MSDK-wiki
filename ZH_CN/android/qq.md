@@ -60,116 +60,6 @@ MSDK 手Q 相关模块
 
 	1. baseInfo值游戏填写错误将导致 QQ、微信的分享，登录失败 ，切记 ！！！
 
-### 加群绑群回调设置
-
-- 从MGSDK2.7.0开始，MSDK手Q加群绑群增加了单独的全局回调：`WGQQGroupObserver`。通过该全局回调游戏可以在绑群、查询群信息、解绑群时收到对应的回调信息。
-
-#### Java层回调：
-
-- **回调实现事例：**
-
-		//加群绑群回调
-		class MsdkQQGroupCallback implements WGQQGroupObserver {
-
-			@Override
-			public void OnQueryGroupInfoNotify(QQGroupRet groupRet) {
-				//TODO GAME 增加查询群信息的回调
-				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
-				if(CallbackFlag.eFlag_Succ == groupRet.flag){
-					//游戏可以在会长公会界面显解绑按钮，非工会会长显示进入QQ群按钮
-					MsdkCallback.sendResult("查询成功。\n群昵称为："+groupRet.getGroupInfo().groupName 
-							+"\n群openID:"+groupRet.getGroupInfo().groupOpenid 
-							+"\n加群Key为："+groupRet.getGroupInfo().groupKey);
-				}else{
-					if(2002 == groupRet.errorCode){
-						//游戏可以在会长公会界面显示绑群按钮，非会长显示尚未绑定
-						MsdkCallback.sendResult("查询失败，当前公会没有绑定记录！");
-					}else if(2003 == groupRet.errorCode){
-						//游戏可以在用户公会界面显示加群按钮
-						MsdkCallback.sendResult("查询失败，当前用户尚未加入QQ群，请先加入QQ群！");
-					}else if(2007 == groupRet.errorCode){
-						//游戏可以在用户公会界面显示加群按钮
-						MsdkCallback.sendResult("查询失败，QQ群已经解散或者不存在！");
-					}else{
-						//游戏可以引导用户重试
-						MsdkCallback.sendResult("查询失败，系统错误，请重试！");
-					}
-				}
-			}
-		
-			@Override
-			public void OnBindGroupNotify(QQGroupRet groupRet) {
-				//TODO GAME 增加绑定QQ群的回调
-				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
-				if(CallbackFlag.eFlag_Succ == groupRet.flag){
-					//游戏可以去查询绑定的公会的相关信息。
-					//由于目前手QSDK尚不支持，因此无论绑定是否成功，MSDK都会给游戏一个成功的回调，游戏收到回调以后需要调用查询接口确认绑定是否成功
-					MsdkCallback.sendResult("绑定成功。");
-				}else{
-					//游戏可以引导用户重试
-					MsdkCallback.sendResult("绑定失败，系统错误，请重试！");
-				}
-			}
-		
-			@Override
-			public void OnUnbindGroupNotify(QQGroupRet groupRet) {
-				//TODO GAME 增加解绑QQ群的回调
-				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
-				if(CallbackFlag.eFlag_Succ == groupRet.flag){
-					//解绑成功，游戏可以提示用户解绑成功，并在工会会长界面显示绑群按钮，非会长界面显示尚未绑定按钮
-					MsdkCallback.sendResult("解绑成功。");
-				}else{
-					if(2001 == groupRet.errorCode){
-						//解绑用的群openID没有群绑定记录，游戏重新调用查询接口查询绑定情况
-						MsdkCallback.sendResult("解绑失败，当前QQ群没有绑定记录！");
-					}else if(2003 == groupRet.errorCode){
-						//用户登录态过期，重新登陆
-						MsdkCallback.sendResult("解绑失败，用户登录态过期，请重新登陆！");
-					}else if(2004 == groupRet.errorCode){
-						//操作太过频繁，让用户稍后尝试
-						MsdkCallback.sendResult("解绑失败，操作太过频繁，让用户稍后尝试！");
-					}else if(2005 == groupRet.errorCode){
-						//解绑参数错误，游戏重新调用查询接口查询绑定情况
-						MsdkCallback.sendResult("解绑失败，操解绑参数错误！");
-					}else{
-						//游戏可以引导用户重试
-						MsdkCallback.sendResult("解绑失败，系统错误，请重试！");
-					}
-				}
-			}
-		}
-
-- **回调设置：**
-
-		 //QQ 加群绑群回调
-	     WGPlatform.WGSetQQGroupObserver(new MsdkQQGroupCallback());
-
-#### C++层回调：
-
-- **回调实现事例（这里只是简单事例，详细请参考java层回调）：**
-
-		// 广告的回调，
-		class QQGroupCallback: public WGQQGroupObserver {
-		
-			virtual void OnQueryGroupInfoNotify(QQGroupRet& groupRet){
-				// 游戏在此处添加查询群信息返回以后的逻辑
-				LOGD("QQGroupCallback OnQueryGroupInfoNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
-			}
-			virtual void OnBindGroupNotify(QQGroupRet& groupRet){
-				//游戏在此处添加绑定群以后的逻辑,说明目前openSDK不支持，MSDK只能返回接口调用成功
-				LOGD("QQGroupCallback OnQueryGroupInfoNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
-			}
-			virtual void OnUnbindGroupNotify(QQGroupRet& groupRet){
-				// 游戏在此处添加调用解绑接口以后的返回结果
-				LOGD("QQGroupCallback OnQueryGroupInfoNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
-			}
-		};
-		QQGroupCallback qqGroup_callback;
-
-- **回调设置：**
-	
-		WGPlatform::GetInstance()->WGSetQQGroupObserver(&qqGroup_callback);
-
 ## 快速登录
 
 快速登陆是指当玩家在手Q或者微信内点击分享消息直接拉起并进入游戏时，平台会透传登陆相关的票据信息从而直接完成登陆进入游戏。这种场景下，游戏在被拉起以后无需用户再次授权才能进入游戏。
@@ -282,8 +172,8 @@ MSDK 手Q 相关模块
 	 * @param title 结构化消息的标题
 	 * @param desc 结构化消息的概要信息
 	 * @param url  内容的跳转url，填游戏对应游戏中心详情页，游戏被分享消息拉起时, MSDK会给游戏OnWakeup(WakeupRet& wr)回调, wr.extInfo中会以key-value的方式带回所有的自定义参数.
-	 * @param imgUrl 分享消息说略图URL
-	 * @param imgUrlLen 分享消息说略图URL长度
+	 * @param imgUrl 分享消息缩略图URL
+	 * @param imgUrlLen 分享消息缩略图URL长度
 	 * @return void
 	 *   通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
 	 *     eFlag_Succ: 分享成功
@@ -294,7 +184,7 @@ MSDK 手Q 相关模块
 	 *     eFlag_Succ: 分享成功
 	 *     eFlag_Error: 分享失败
 	 *   注意:
-	 *     分享需要SD卡, 没有SD卡不能保证分享成功
+	 *     分享图片需要放置到sdcard分区, 或其他外部程序有权限访问之处
 	 *     由于手Q客户端4.6以前的版本返回的回调是有问题的, 故不要依赖此回调做其他逻辑. (当前flag全都返回均为eFlag_Succ)
 	 *     
 	 */ 
@@ -524,7 +414,7 @@ MSDK 手Q 相关模块
 	 * @param scene 标识发送手Q会话或者Qzone
 	 * 		eQQScene.QQScene_QZone: 分享到空间
 	 * 		eQQScene.QQScene_Session: 分享到手Q会话
-	 * @param imgFilePath 需要分享图片的本地文件路径, 图片需放在sd卡。每次分享的图片路径不能相同，相同会导致图片显示有问题，游戏需要自行保证每次分享图片的地址不相同
+	 * @param imgFilePath 需要分享图片的本地文件路径, 图片需放在sdcard分区。每次分享的图片路径不能相同，相同会导致图片显示有问题，游戏需要自行保证每次分享图片的地址不相同
 	 * @return void
 	 *   通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
 	 *     eFlag_Succ: 分享成功
@@ -569,203 +459,6 @@ MSDK 手Q 相关模块
 3. 大图消息不能通过web分享
 
 
-绑定QQ群
-------
-游戏公会/联盟内，公会会长可在游戏内拉取会长自己创建的群，绑定某个群作为该公会的公会群。调用接口：WGBindQQGroup。绑定信息通过回调告知游戏。回调设置请参考[加群绑群回调设置](qq.md#加群绑群回调设置)
-
-####版本情况：
-
-- 自MSDK1.7.5 开始提供此功能。
-- **MSDK2.6版本以下的游戏，该接口游戏必须需要在主线程调用。**
-
-#### 接口声明：
-	
-	/**
-	 * 游戏群绑定：游戏公会/联盟内，公会会长可通过点击“绑定”按钮，拉取会长自己创建的群，绑定某个群作为该公会的公会群
-	 * 绑定结果结果会通过WGQQGroupObserver的OnBindGroupNotify回调给游戏。
-	 * 由于目前手Q SDK尚不支持绑群的回调，因此从MSDK2.7.0a开始无论绑定是否成功，MSDK都会给游戏一个成功的回调。
-	 * 游戏收到回调以后需要调用查询接口确认绑定是否成功
-	 * @param cUnionid 公会ID，opensdk限制只能填数字，字符可能会导致绑定失败	 
-	 * @param cUnion_name 公会名称
-	 * @param cZoneid 大区ID，opensdk限制只能填数字，字符可能会导致绑定失败	 
-	 * @param cSignature 游戏盟主身份验证签名，生成算法为
-					玩家openid_游戏appid_游戏appkey_公会id_区id 做md5如果按照该方法仍然不能绑定成功，可RTX 咨询 OpenAPIHelper
-	 *
-	 */
-	void WGBindQQGroup(unsigned char* cUnionid, unsigned char* cUnion_name,
-			unsigned char* cZoneid, unsigned char* cSignature);
-
-#### 接口调用：
-接口调用示例：
-
-	std::string cUnionid = "1";
-	std::string cUnion_name = "union_name";
-	std::string cZoneid = "1";
-	//sigature 跟unionid和zoneid，相关，修改的时候要同步改动
-	std::string cSignature = "5C336B37DBCDB04D183A3F4E84B2AB0E";
-	WGPlatform::GetInstance()->WGBindQQGroup(
-		(unsigned char *)cUnionid.c_str(),
-		(unsigned char *)cUnion_name.c_str(), 
-		(unsigned char *)cZoneid.c_str(),
-		(unsigned char *)cSignature.c_str()
-	);
-
-
-#### 注意事项：
-
-1.	**游戏内绑定群的时候公会id和大区id必须是数字**，如果使用字符可能会导致绑定失败，一般提示为“参数校验失败”。
-
-- 游戏内绑定群的时候签名目生成的规则为：玩家openid\_游戏appid\_游戏appkey\_公会id\_区id的md5值，如果按照次规则生成的签名不可用，直接RTX 咨询 OpenAPIHelper
-
-- 游戏一个公会ID只能和一个QQ群进行绑定。如果用户解散了公会QQ群，公会ID和公会QQ群不会自动解绑，这样公会ID就无法绑定新的QQ群。此时，应用需要调用解绑接口将公会ID与QQ群解绑，以便创建新的公会QQ群，或与其他已有的QQ群进行绑定。
-
-- **调用api的变量最好不要是临时变量**
-
-- **由于目前手Q SDK尚不支持绑群的回调，因此从MSDK2.7开始无论绑定是否成功，MSDK都会给游戏一个成功的回调，游戏收到回调以后需要调用[查询接口](qq.md#查询QQ群绑定信息)确认绑定是否成功**
-
-- 更多内容参考[游戏内加群绑群常见问题](qq.md#加群绑群常见问题)
-
-查询QQ群绑定信息
-------
-当玩家打开公会界面的时候，或者绑定群以后，需要查询绑定信息，调用接口可以查询到当前工会绑定群的基本信息。调用接口`WGQueryQQGroupInfo`。查询结果通过回调告知游戏。回调设置请参考[加群绑群回调设置](qq.md#加群绑群回调设置)
-
-####版本情况：
-
-- 自MSDK2.7.0 开始提供此功能。
-- **MSDK2.7版本以下的游戏，在[加群绑群常见问题](qq.md#加群绑群常见问题)了解解决方法**
-
-#### 接口声明：
-	
-	/**
-	 * 查询公会绑定的群的信息，查询结果会通过WGQQGroupObserver的OnQueryGroupInfoNotify回调给游戏
-	 * @param unionid 公会ID
-	 * @param zoneid 大区ID
-	 */
-    void WGQueryQQGroupInfo(unsigned char* cUnionid,unsigned char* cZoneid);
-
-#### 接口调用：
-接口调用示例：
-
-	std::string cUnionid = "1";
-	std::string cZoneid = "1";
-	WGPlatform::GetInstance()->WGQueryQQGroupInfo(
-		(unsigned char *)cUnionid.c_str(),(unsigned char *)cZoneid.c_str());
-
-#### 错误码：
-
-| 错误码| 含义说明 |
-| ------------- |:-----|
-|2002 	|没有绑定记录，当前公会没有绑定记录！请检查传入的公会ID和分区ID是否正确。|
-|2003 	|查询失败，当前用户尚未加入QQ群，请先加入QQ群。|
-|2007 	|查询失败，当前公会绑定的QQ群已经解散或者不存在。|
-|其他 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
-
-加入QQ群
-------
-玩家在游戏中直接加入QQ群调用接口：WGJoinQQGroup。
-
-####版本情况：
-
-- 自MSDK1.7.5 开始提供此功能。
-- **MSDK2.6.0a版本以下的游戏，该接口游戏必须需要在主线程调用。**
-
-#### 接口声明：
-
-	/**
-	 * 游戏内加群,公会成功绑定qq群后，公会成员可通过点击“加群”按钮，加入该公会群
-	 * @param cQQGroupKey 需要添加的QQ群对应的key，游戏server可通过调用openAPI的接口获取，调用方法可RTX 咨询 OpenAPIHelper
-	 */
-	void WGJoinQQGroup(unsigned char* cQQGroupKey);
-
-#### 接口调用：
-接口调用示例：
-
-	std::string cQqGroupKey = "xkdNFJyLwQ9jJnozTorGkwN30Gfue5QN";
-	WGPlatform::GetInstance()->WGJoinQQGroup((unsigned char *)cQqGroupKey.c_str());
-
-
-
-#### 注意事项：
-
-1. 游戏内加群时使用的参数不是对应的QQ群的群号码，而是openAPI后台生成的一个特殊Key值。游戏使用的时候需要调用openAPI的接口获取，调用方法可RTX 咨询 OpenAPIHelper，联调阶段可以在[http://qun.qq.com](http://qun.qq.com)**(加群组件/Android代码处查看)**，如下图：![加群示意图](qqgrouup.png)
-
-- **调用api的变量最好不要是临时变量**
-
-- 更多内容参考[游戏内加群绑群常见问题](qq.md#加群绑群常见问题)
-
-
-解绑QQ群
-------
-公会会长可以解除公会与QQ群的绑定。调用接口`WGUnbindQQGroup`。解绑结果通过回调告知游戏。回调设置请参考[加群绑群回调设置](qq.md#加群绑群回调设置)
-
-####版本情况：
-
-- 自MSDK2.7.0a 开始提供此功能。
-- **MSDK2.7.0a 可以在[加群绑群常见问题](qq.md#加群绑群常见问题)了解解绑方法**
-
-#### 接口声明：
-	
-	/**
-	 * 解绑公会当前绑定的QQ群，结果会通过WGQQGroupObserver的OnUnbindGroupNotify回调给游戏
-	 * @param cGroupOpenid 公会绑定的群的群openid
-	 * @param cUnionid 公会ID
-	 */
-
-    void WGUnbindQQGroup(unsigned char* cGroupOpenid,unsigned char* cUnionid);
-
-#### 接口调用：
-接口调用示例：
-
-	std::string cGroupOpenid = "5C336B37DBCDB04D183A3F4E84B2AB0E";
-	std::string cUnionid = "1";
-	WGPlatform::GetInstance()->WGUnbindQQGroup(
-		(unsigned char *)cGroupOpenid.c_str(),(unsigned char *)cUnionid.c_str());
-
-#### 错误码：
-
-| 错误码| 含义说明 |
-| ------------- |:-----|
-|2001 	|解绑失败，当前QQ群没有绑定记录！|
-|2003 	|解绑失败，用户登录态过期，请重新登陆！|
-|2004 	|解绑失败，操作太过频繁，让用户稍后尝试！|
-|2004 	|解绑失败，操解绑参数错误！|
-|其他 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
-
-加群绑群常见问题
----
-### 为什么提示身份验证失败？
-- 游戏内绑定群的时候公会id和大区id必须是数字，如果使用字符可能会导致绑定失败，一般提示为“参数校验失败”。
-- 游戏内绑定群的时候签名生成的规则为：玩家openid\_游戏appid\_游戏appkey\_公会id\_区id的md5值，如果按照此规则生成的签名不可用，直接RTX 咨询 OpenAPIHelper。
-- 如果区id没有，则用0表示。（demo里面绑定不成功的原因是里面的签名是写死的，不对，需要自己重新算一下签名，appid、appkey、openid都可以在logcat里面找到）
-
-### MSDK 2.7 以下版本绑群流程：
-![绑群流程图](bindqqgroup.jpg)
-
-### MSDK 2.7 版本以下怎么查询某个群是已经被绑定？
-请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)。返回码错误码为2004，该群与appid没有绑定关系
-
-### MSDK 2.7 版本以下怎么如何查询公会成员是否在群中？
-请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)。返回码错误码为2003，该群与appid没有绑定关系
-
-### MSDK 2.7 版本以下怎么判断绑定QQ群是否成功？
-请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_openid)。返回码为0，group_openid则表示QQ群的group_openid。再通过group_openid查询群名称（参考第六条） 
-**特别说明，msdk和手q不会返回绑定结果，需要游戏主动去查询是否绑定成功**
-
-### MSDK 2.7 版本以下怎么解绑群？
-请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup](http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup)
-
-### MSDK 2.7 以下版本解绑流程：
-![绑群流程图](unbindqqgroup.jpg)
-
-### MSDK 2.7 版本以下怎么查询某个公会ID绑定了哪个群？
-请参考：[http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info](http://wiki.open.qq.com/wiki/v3/qqgroup/get_group_info)
-
-### MSDK 2.7 版本以下加群流程：
-![加群流程图](joinqqgroup.jpg)
-
-### 更多问题
-请参考：[http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8](http://wiki.open.qq.com/wiki/API%E5%88%97%E8%A1%A8)
-应用推广类API----QQ能力推广----公会QQ群
 
 
 添加QQ好友

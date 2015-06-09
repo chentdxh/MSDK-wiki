@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<title>MSDK説明文書ガイド</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+@charset "utf-8";
+/* code@bihe832.com */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,th,td{margin:0;padding:0;list-style:none;}
+fieldset,img{border:0;}
+
+h1,
+span,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Meiryo UI", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    color: #333;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+	line-height: 36px;
+}
+a {
+    color: #0069d6;
+	text-decoration: none;
+}
+a:hover {
+    color: #0050a3;
+}
+h1 {
+	color: #333;
+    margin-bottom: 12px;
+	margin-top: 12px;
+    font-size: 20px;
+}
+
+h2 {
+	color: #333;
+    font-size: 16px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+@media screen and (min-width: 914px) {
+    body {
+        width: 90%;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,span,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+
+li {
+ float: left;
+ padding-left:20px;
+}
+.strong{
+	font-weight:bold;
+	color:red;
+}
+.cgl { text-align: right; }
+.cgli{border-right: 1px solid #D2D2D1; margin: 0 10px;}
+.cglg { display: inline-block;border-bottom: 5px solid #ff0000;line-height: 25px; }
+h1,h2{clear: both;}
+</style>
+<title>写在前面</title>
+
+</head>
+<body>
+<div class="cgl">
+    <span class="cgli"></span>
+    <a href="http://coolbee-studio.github.io/index.html" class="cglg">中文</a>
+</div>
+<h1>前言</h1>
+<p>MSDK関連文書について：単独のSDK説明文書は提供しておりません、関連文書は以下通りのリストWikiでご訪問ください。</p>
+
+<h1>MSDK 説明：</h1>
+<ul>
+	<li><a href="http://open.qq.com/" target="_blank">ゲーム登録</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E9%A6%96%E9%A1%B5" target="_blank">テンセントモバイルゲーム開放プラットフォーム</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=MSDK%E6%8E%A5%E5%85%A5%E6%B5%81%E7%A8%8B" target="_blank" class="strong">MSDK接続流れ（外部）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E6%8E%A5%E5%85%A5%E6%8C%87%E5%BC%95" target="_blank" class="strong">MSDK接続流れ（内部）</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E4%B8%8B%E8%BD%BDMSDK" target="_blank">ダウンロード（外部）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD" target="_blank">ダウンロード（内部）</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/MSDK-wiki" target="_blank">Wiki On Github</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/index.html" target="_blank">Android Wiki</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/index.html" target="_blank">IOS Wiki</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/router/index.html" target="_blank">Router Wiki</a></li>
+	<li><a href="http://dev.ied.com/" target="_blank">飞鹰システム</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E" target="_blank">MSDK権限説明（内部）</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">MSDK接続QA（外部）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/SDK%E6%8E%A5%E5%85%A5%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">MSDK接続QA（内部）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/%E5%85%B6%E4%BB%96%E4%B8%8B%E8%BD%BD" target="_blank">プラットフォーム検収list（内网）</a></li>
+</ul>
+<h1>Android 関連紹介：</h1>
+<h2>基本モード</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/index.md" target="_blank">モード紹介</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/android.md" target="_blank">SDK紹介</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/android.md" target="_blank" class="strong">ファスト接続ガイド</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/update.md" target="_blank" class="strong">バージョン更新ガイド</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/login.md" target="_blank" class="strong">MSDKログインモードガイド（勧め）</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/share.md" target="_blank" class="strong">MSDKシェアモードガイド（勧め）</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/const.md" target="_blank">恒量、エラーコード定義</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/version.md" target="_blank">バージョン履歴</a></li>
+</ul>
+<h2>具体モード</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/qq.md" target="_blank"  class="strong">モバイルQQ接続</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/wechat.md" target="_blank"  class="strong">Wechat接続</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/webview.md" target="_blank">インサイドサファリ</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/beacon.md" target="_blank">灯台</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/rqd.md" target="_blank">RDM</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/feedback.md" target="_blank">ユーザーフィードバック</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/notice.md" target="_blank">公告</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/ad.md" target="_blank">広告</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/msdkpush.md" target="_blank">Push</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/lbs.md" target="_blank">LBS</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/myApp.md" target="_blank">応用宝</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/qmi.md" target="_blank">モバゲ宝</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/midas.md" target="_blank">Midas</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/qqgame.md" target="_blank">ゲームロビー</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/tool.md" target="_blank">バージョン受取</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/tool.md" target="_blank">チャネルナンバー</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/tool.md" target="_blank">ローカルログ</a></li>
+</ul>
+<h2>よくある問題</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/wechat.md#AndroidのWechatログインが検査ステップにログインできない場合" target="_blank">AndroidのWechatログインが検査ステップにログインできない場合</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/notice.md#ゲーム広告が検査ステップを正常に展示できない場合" target="_blank">ゲーム広告が検査ステップを正常に展示できない場合</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/qq.md#モバイルQQチャットグループ参加・フレンド添加について" target="_blank">モバイルQQチャットグループ参加・フレンド添加について</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/android/diff-account.md" target="_blank">MSDK 異なるアカウントについて</a></li>
+</ul>
+<h1>iOS 関連紹介：</h1>
+<h2>基本モード</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/index.md" target="_blank">SDK紹介</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/iOSPlugin.md" target="_blank" class="strong">ファースト接続ガイド</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/version.md" target="_blank">バージョン履歴</a></li>
+</ul>
+<h2>具体モード</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/QQ.md" target="_blank"  class="strong">モバイルQQ接続</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/WX.md" target="_blank"  class="strong">Wechat接続</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/AutoAuth.md" target="_blank">自動権限授与＆Token校正検収</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/Guest.md" target="_blank">ゲストモード</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/InnerBrowser.md" target="_blank">インサイドサファリ</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/Announcement.md" target="_blank">公告</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/Advertisement.md" target="_blank">広告</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/lbs.md" target="_blank">LBS</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/Push.md" target="_blank">Push</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/ios/const.md" target="_blank">恒量</a></li>
+</ul>
+
+<h1>バックエンド　関連紹介：</h1>
+<h2>基本モード</h2>
+<ul>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/router/index.md" target="_blank">バックエンド紹介</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/router/qq.md" target="_blank"  class="strong">モバイルQQ接続</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/router/wx.md" target="_blank"  class="strong">Wechat接続</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/router/guest.md" target="_blank">ゲストモード権限識別</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/router/faq.md" target="_blank">バックエンドFAQ</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/CoolBee-Studio.github.io/tree/master/JP/router/errorCode.md" target="_blank">バックエンドエラーコード</a></li>
+</ul>
+
+</body>
+</html>

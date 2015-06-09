@@ -176,6 +176,51 @@ protected void onNewIntent(Intent intent) {
     	}
 	}
 
+#### 注意事项
+1. 为了避免当获取个人信息（比如头像、名字）、 好友信息（比如头像、名字）失败时，导致游戏登入失败，请将查询个人信息、查询好友信息设置为非关键路径。
+1. 另建议游戏侧在获得个人信息和好友信息做缓存处理，避免每次登入都进行拉取刷新个人信息和好友信息，造成微信端访问量过大；并且每天进行1次访问，避免微信好友更新头像和名字时，不能及时在游戏内更新。
+
+
+添加卡券到微信卡包
+------
+
+用户把获取到的卡券插入到微信卡包:
+
+#### 接口声明：
+
+	 /**
+	 * 将微信卡券插入到微信卡包
+	 * @param cardId 卡券ID
+	 * @param timestamp 计算签名的时间戳
+	 * @param sign 签名
+	 */
+	  void WGAddCardToWXCardPackage(unsigned char* cardId,unsigned char* timestamp,unsigned char* sign);
+
+#### 调用示例代码：
+	
+	std::string cCardid ＝ “pe7Gmjg3EpKtnwzNAGHMGJhNKSo4”；
+	std::String cTimeStamp = "1212124445";
+	std::String cSign = "sdffsfffff";
+	WGPlatform::GetInstance()->WGAddCardToWXCardPackage((unsigned char *)cCardid.c_str(),(unsigned char *)cTimeStamp.c_str(),(unsigned char *)cSign.c_str());
+
+
+#### 回调实现(Demo)代码如下:
+
+	JNIEXPORT void JNICALL Java_com_tencent_msdk_api_WGPlatformObserverForSO_OnAddWXCardNotify
+		(JNIEnv * env, jclass, jobject jCardRet){
+	 		LOGD("Java_com_tencent_msdk_api_WGPlatformObserverForSO_OnAddWXCardNotify start%s", "");
+	 		jclass jCardRetClass = env->GetObjectClass(jCardRet);
+	 		CardRet tempCardRet;
+			jboolean isCopy;
+	 		JniGetAndSetIntField(flag, "flag", jCardRetClass, jCardRet, tempCardRet);
+	 		JniGetAndSetIntField(platform, "platform", jCardRetClass, jCardRet, tempCardRet);
+	 		JniGetAndSetStringField(open_id, "open_id", jCardRetClass, jCardRet, tempCardRet);
+	 		JniGetAndSetStringField(wx_card_list, "wx_card_list", jCardRetClass, jCardRet, tempCardRet);
+	 		JniGetAndSetStringField(desc, "desc", jCardRetClass, jCardRet, tempCardRet);
+	 		env->DeleteLocalRef(jCardRetClass);
+	}
+	
+	
 结构化消息分享
 ------
 

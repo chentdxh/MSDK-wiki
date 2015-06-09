@@ -123,6 +123,9 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 }
 ```
 
+## 2.3.6
+ - 【组件更新】
+1.【修改】更新信鸽1.0.1版本，修正部分手Q Appid号段注册信鸽失败的问题。
 
 ## 2.3.5
  - 【代码变更】

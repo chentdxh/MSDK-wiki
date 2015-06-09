@@ -172,6 +172,7 @@ protected void onCreate(Bundle savedInstanceState) {
      *  baseInfo值游戏填写错误将导致 QQ、微信的分享，登录失败 ，切记 ！！！        *
      *  只接单一平台的游戏请勿随意填写其余平台的信息，否则会导致部分公告获取失败  *
      ***********************************************************/
+    mGameObject = "Msdk";   // 此处填写游戏需要回调的脚本绑定的GameObject的名称
     MsdkBaseInfo baseInfo = new MsdkBaseInfo();
     baseInfo.qqAppId = "100703379";
     baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c734514e";
@@ -182,6 +183,10 @@ protected void onCreate(Bundle savedInstanceState) {
     ......
 }
 ```
+**注意：**
+初始化代码处 **mGameObject** 应填写游戏需要回调的脚本绑定的 `GameObject` 的名称。如，示例工程中 MSDKDemo.cs 脚本调用了回调方法(OnLoginNotify等)，它绑定的 GameObject 名称为 "Msdk"，则设置为：
+> mGameObject = "Msdk";
+
 
 修改U3DActivity的import的`UnityPlayerNativeActivity`包名为游戏包名：
 
