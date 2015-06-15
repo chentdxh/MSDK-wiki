@@ -99,16 +99,27 @@ assets/msdkconfig.ini中配置打开消息推送开关：
 
 ![msdkpush_1](./push_1.png)
 
-联调测试
+外网开发者可用开发者账号登录 http://open.qq.com/ 在消息管理模块进行推送消息设置。
+
+游戏推送消息不能正常接收检查步骤
 ------
 
-1、按上面步骤配置好，启动游戏过滤log，如果出现以下log则说明注册设备成功，可以在飞鹰系统进行全量推送了
+1. 确认游戏包名是否与注册时填写的包名一致：
+查看http://open.qq.com上注册的包名与使用的包名是否一致，请务必保证包名一致。如果是继续往下检查。
 
-![msdkpush_1](./push_ce1.png)
+2. AndroidManifest.xml里的配置是否写全。检查方法：参见[接入配置](msdkpush.md#接入配置)。
 
-2、登陆成功后如果看到以下log则说明绑定用户成功，可以在飞鹰系统进行号码包推送了
+3. 检查 **MSDKLibrary/lib** 下的so文件是否全部拷贝到游戏相应目录中。
 
-![msdkpush_1](./push_ce2.png)
+4. 查看信鸽是否注册成功：
+
+    按上面步骤配置好，启动游戏过滤log，如果出现以下log则说明`注册设备成功`，可以在飞鹰系统对Android平台进行推送
+
+    ![msdkpush_1](./push_ce1.png)
+
+    登陆成功后如果看到以下log则说明`绑定用户成功`，可以在飞鹰系统进行号码包推送
+    
+    ![msdkpush_1](./push_ce2.png)
 
 已接入信鸽的应用解决方案
 ------
@@ -143,4 +154,4 @@ Android APP开发者通常会利用proguard工具做代码混淆，由于MTA的�
 
 SO库拷贝注意事项
 ------
-不能使用Android Library Project的游戏，需要复制MSDKLibrary下的libs。在MSDK2.6.1a（含）及之后注意拷贝libtpnsWatchdog.so
+不能使用Android Library Project的游戏，需要复制MSDKLibrary下的libs。在MSDK2.6.1a（含）及之后注意拷贝libtpnsWatchdog.so, libtpnsSecurity.so。

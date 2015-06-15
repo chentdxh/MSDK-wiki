@@ -1,4 +1,4 @@
-﻿内置浏览器
+内置浏览器
 ===
 
 ##概述
@@ -276,5 +276,58 @@ log("not install :腾讯新闻");
 ##分享
 点击“分享”按钮可将当前页面分享到朋友圈、QZone、微信好友、QQ好友。如下图，请注意手Q分享的URL最大限制在512个字节，如果URL比较长，请使用短链。
 ![Alt text](./InnerBrowser7.png)
+
+---
+
+##通过JS在Safiri中打开指定URL
+从MSDK2.7.0版本开始，游戏可在内置浏览器中通过JS方式打开Safiri浏览器并打开指定URL，参数需传递固定接口名称`OpenURLInSafiri`和可变参数data（即要打开的url地址），示例代码如下：
+
+```
+var button1 = document.getElementById('buttons').appendChild(document.createElement('button'))
+		button1.innerHTML = 'Open URL In Safiri'
+		button1.onclick = function(e) {
+			e.preventDefault()
+			var data = 'http://v.qq.com/iframe/player.html?vid=y0140id0vna&tiny=0&auto=0'
+			log('JS sending message', data)
+			
+			bridge.callHandler('OpenURLInSafiri', data, function(response) {
+            	log('JS got response', response);
+            });
+		}
+```
+另：调用方式可参考[该网页](http://wiki.dev.4g.qq.com/tmp/page.html)页面源码。
+
+---
+
+##通过JS打开iOS图库、相机获取照片
+从MSDK2.7.0版本开始，游戏可在内置浏览器中通过JS方式打开打开iOS图库、相机获取照片，参数需传递固定接口名称`OpenImagePickerController`，返回值为'{"message”:”xxx”,”base64String":“xxx”}'json格式串。其中message字段标识获取照片成功与否，值有'success'和'user cancel'。base64String字段为照片的Base64编码串，message为'success'时该字段有值，message为'user cancel'时该字段无值。示例代码如下：
+
+```
+var button2 = document.getElementById('buttons').appendChild(document.createElement('button'))
+		button2.innerHTML = 'Open ImagePickerController'
+		button2.onclick = function(e) {
+			e.preventDefault()
+			var data = 'OpenImagePickerController'
+			log('JS sending message', data)
+			
+			bridge.callHandler('OpenImagePickerController', data, function(response) {
+                /*
+                 response为'{"message”:”xxx”,”base64String":“xxx”}'格式串。
+                 其中message字段标识获取照片成功与否，值有'success'和'user cancel'。
+                 base64String字段为照片的Base64编码串，message为'success'时该字段有值，message为'user cancel'时该字段无值。
+                 */
+                var obj = JSON.parse(response);
+            	log('JS got response', obj["message"]);
+            });
+		}
+```
+
+另：调用方式可参考[该网页](http://wiki.dev.4g.qq.com/tmp/page.html)页面源码。
+
+---
+
+
+##常见问题
+部分游戏导入framework后会有找不到framework的情况，例如是无法打开内置浏览器，日志输出“no MSDKWebViewService exist”，此时需要在Other link flags增加“-ObjC “或 “-framework MSDKFoundation -framework MSDK -framework MSDKMarketing -framework MSDKXG”，导入相关framework。
 
 ---

@@ -1,0 +1,6 @@
+{
+    "useSideMenu": true,
+    "lineBreaks": "gfm",
+    "additionalFooterText": "文档内容由 MSDK 团队提供",
+    "anchorCharacter": "#"
+}

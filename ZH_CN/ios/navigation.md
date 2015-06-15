@@ -66,7 +66,8 @@
   * [判断App是否安装](InnerBrowser.md#判断App是否安装)
   * [应用内打开App Store详情页](InnerBrowser.md#应用内打开App Store详情页)
   * [分享](InnerBrowser.md#分享)
-  * [打开AMS营销活动中心](InnerBrowser.md#打开AMS营销活动中心) 
+  * [通过JS在Safiri中打开指定URL](InnerBrowser.md#通过JS在Safiri中打开指定URL)
+  * [通过JS打开iOS图库、相机获取照片](InnerBrowser.md#通过JS打开iOS图库、相机获取照片)
   
 [数据上报]()
 

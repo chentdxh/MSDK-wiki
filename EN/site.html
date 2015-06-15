@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+<title>MSDK文档指引</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+@charset "utf-8";
+/* code@bihe832.com */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,th,td{margin:0;padding:0;list-style:none;}
+fieldset,img{border:0;}
+
+h1,
+span,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Microsoft Yahei", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    color: #333;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+	line-height: 36px;
+}
+a {
+    color: #0069d6;
+	text-decoration: none;
+}
+a:hover {
+    color: #0050a3;
+}
+h1 {
+	color: #333;
+    margin-bottom: 12px;
+	margin-top: 12px;
+    font-size: 20px;
+}
+
+h2 {
+	color: #333;
+    font-size: 16px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+@media screen and (min-width: 914px) {
+    body {
+        width: 90%;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,span,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+
+li {
+ float: left;
+ padding-left:20px;
+}
+.strong{
+	font-weight:bold;
+	color:red;
+}
+.cgl { text-align: right; }
+.cgli{border-right: 1px solid #D2D2D1; margin: 0 10px;}
+.cglg { display: inline-block;border-bottom: 5px solid #ff0000;line-height: 25px; }
+h1,h2{clear: both;}
+</style>
+<title>写在前面</title>
+
+</head>
+<body>
+<div class="cgl">
+    <span class="cgli"></span>
+    <a href="http://wiki.dev.4g.qq.com/v2/site.html" class="cglg">中文</a>
+</div>
+<h1>写在前面</h1>
+<p>MSDK外发版本包不提供接入文档，相关文档均通过wiki访问，以下为MSDK相关链接的站点列表。</p>
+<!--<h1>语言切换</h1>
+<ul>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/site.html" target="_blank">中文</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/site.html" target="_blank">韩文</a></li>
+</ul>
+<BR>-->
+<h1>MSDK 接入说明：</h1>
+<ul>
+	<li><a href="http://open.qq.com/" target="_blank">游戏注册</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E9%A6%96%E9%A1%B5" target="_blank">腾讯移动游戏开放平台</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=MSDK%E6%8E%A5%E5%85%A5%E6%B5%81%E7%A8%8B" target="_blank" class="strong">MSDK接入流程（外网）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E6%8E%A5%E5%85%A5%E6%8C%87%E5%BC%95" target="_blank" class="strong">MSDK接入流程（内网）</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E4%B8%8B%E8%BD%BDMSDK" target="_blank">下载地址（外网）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD" target="_blank">下载地址（内网）</a></li>
+	<li><a href="https://github.com/CoolBee-Studio/MSDK-wiki" target="_blank">Wiki On Github</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html" target="_blank">Android Wiki</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html" target="_blank">IOS Wiki</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/router/index.html" target="_blank">Router Wiki</a></li>
+	<li><a href="http://dev.ied.com/" target="_blank">飞鹰系统</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/MSDK%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E" target="_blank">MSDK权限说明（内网）</a></li>
+	<li><a href="http://wiki.mg.open.qq.com/index.php?title=%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">MSDK接入常见问题（外网）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/SDK%E6%8E%A5%E5%85%A5%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">MSDK接入常见问题（内网）</a></li>
+	<li><a href="http://mcloud.ied.com/wiki/%E5%85%B6%E4%BB%96%E4%B8%8B%E8%BD%BD" target="_blank">平台验收list（内网）</a></li>
+</ul>
+<h1>Android 相关介绍：</h1>
+<h2>基本模块</h2>
+<ul>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!index.md" target="_blank">模块介绍</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!android.md" target="_blank">SDK包介绍</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!android.md" target="_blank" class="strong">快速接入指引</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!update.md" target="_blank" class="strong">版本更新指引</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!login.md" target="_blank" class="strong">MSDK登陆模块指引（强烈推荐）</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!share.md" target="_blank" class="strong">MSDK分享模块指引（强烈推荐）</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!const.md" target="_blank">常量、错误码定义</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!version.md" target="_blank">版本历史</a></li>
+</ul>
+<h2>具体模块</h2>
+<ul>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!qq.md" target="_blank"  class="strong">手Q接入</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!wechat.md" target="_blank"  class="strong">微信接入</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!webview.md" target="_blank">内置浏览器</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!beacon.md" target="_blank">灯塔</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!rqd.md" target="_blank">RDM</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!feedback.md" target="_blank">用户反馈</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!notice.md" target="_blank">公告</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!ad.md" target="_blank">广告</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!msdkpush.md" target="_blank">Push</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!lbs.md" target="_blank">LBS</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!myApp.md" target="_blank">应用宝</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!qmi.md" target="_blank">手游宝</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!midas.md" target="_blank">Midas</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!qqgame.md" target="_blank">游戏大厅</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!tool.md" target="_blank">获取版本</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!tool.md" target="_blank">获取渠道号</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!tool.md" target="_blank">本地日志</a></li>
+</ul>
+<h2>常见问题</h2>
+<ul>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!wechat.md#Android微信登录不了检查步骤" target="_blank">Android微信登录不了检查步骤</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!notice.md#游戏公告不能正常展示检查步骤" target="_blank">游戏公告不能正常展示检查步骤</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!qq.md#加群加好友常见问题" target="_blank">手Q加群加好友常见</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/android/index.html#!diff-account.md" target="_blank">MSDK 异账号问题</a></li>
+</ul>
+<h1>iOS 相关介绍：</h1>
+<h2>基本模块</h2>
+<ul>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!index.md" target="_blank">SDK包介绍</a></li>
+	
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!iOSPlugin.md" target="_blank" class="strong">快速接入指引</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!version.md" target="_blank">版本历史</a></li>
+</ul>
+<h2>具体模块</h2>
+<ul>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!QQ.md" target="_blank"  class="strong">手Q接入</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!WX.md" target="_blank"  class="strong">微信接入</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!AutoAuth.md" target="_blank">自动授权与token校验</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!Guest.md" target="_blank">游客模式</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!InnerBrowser.md" target="_blank">内置浏览器</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!Announcement.md" target="_blank">公告</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!Advertisement.md" target="_blank">广告</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!lbs.md" target="_blank">LBS</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!Push.md" target="_blank">Push</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/ios/index.html#!const.md" target="_blank">常量</a></li>
+</ul>
+
+<h1>后台 相关介绍：</h1>
+<h2>基本模块</h2>
+<ul>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/router/index.html#!index.md" target="_blank">后台概述</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/router/index.html#!qq.md" target="_blank"  class="strong">手Q接入</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/router/index.html#!wx.md" target="_blank"  class="strong">微信接入</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/router/index.html#!guest.md" target="_blank">游客模式鉴权</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/router/index.html#!faq.md" target="_blank">后台FAQ</a></li>
+	<li><a href="http://wiki.dev.4g.qq.com/v2/EN/router/index.html#!errorCode.md" target="_blank">后台错误码</a></li>
+</ul>
+
+</body>
+</html>

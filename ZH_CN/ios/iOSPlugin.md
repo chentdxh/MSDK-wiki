@@ -9,7 +9,7 @@
 ##Step1:引入依赖库
 
  * 于`Target->Build Phases->Link Binary With Libraries`添加工程依赖的系统库，如下：
-```ruby
+```
 libz.dylib
 libstdc++.dylib
 libz.1.1.3.dylib
@@ -81,7 +81,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | NeedNotice  | Boolean |  是否启用公告功能 |Yes-启用 No（或不配置）-禁用|公告|
 | Noticetime  | Number |  公告自动拉取的时间间隔（秒） |默认15分钟|公告|  
 | NSLocationWhenInUseUsageDescription  | NSString |  用于iOS8下LBS定位功能 |值可为空|LBS| 
-| MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0及以后版本) |内置浏览器|
+| MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0-2.6.3版本，2.7.0版本开始内置浏览器分享开关由MSDK管理端下发，游戏可根据需要申请打开或关闭) |内置浏览器|
  
   *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
   
@@ -92,7 +92,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | QQ  | 格式：QQ+游戏的QQAppID的16进制 |QQ06009C93 | 接入手Q必填，中间无空格   |
 | QQLaunch  | 格式：tencentlaunch+游戏的QQAppID |tencentlaunch100703379|  接入手Q必填，中间无空格   |
 
-   > **注：各游戏配置存在不一致，具体请咨询各游戏与MSDK接口人或RTX联系“连线MSDK”。**
+   > **注：MSDKLog需手动调用WGOpenMSDKLog(true)方法打开控制台log。另各游戏配置存在不一致，具体请咨询各游戏与MSDK接口人或RTX联系“连线MSDK”。**
   
 ---
  ##Step4:实现回调对象
@@ -100,7 +100,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
   * 全局回调对象处理游戏授权、分享、查询或平台唤起等结果，此对象需要继承并实现`WGPlatformObserver`类中的所有方法。
   * 示例：新建名为MyObserver的全局回调对象，粘贴代码如下：
   * 2.3.4i以及之前的版本:
-  ```ruby
+  ```
 //MyObserver.h
 //若使用C99编译选项
 #import <WGPlatform/WGPlatform.h>
@@ -121,7 +121,7 @@ public:
     std::string OnCrashExtMessageNotify();//crash时的处理
 }
 ```
-```ruby
+```
 //MyObserver.mm
 #include "MyObserver.h"
 void MyObserver::OnLoginNotify(LoginRet& loginRet){}
@@ -135,7 +135,7 @@ std::string MyObserver::OnCrashExtMessageNotify(){return "message";}
 ```
 
   * 2.4.0i以及之后的版本:
-```ruby
+```
 //MyObserver.h
 //若使用C99编译选项
 #import <MSDK/MSDK.h>
@@ -155,7 +155,7 @@ std::string OnCrashExtMessageNotify();//crash时的处理
 void OnADNotify(ADRet& adRet);//广告回调
 }
 ```
-```ruby
+```
 //MyObserver.mm
 #include "MyObserver.h"
 void MyObserver::OnLoginNotify(LoginRet& loginRet){}
@@ -174,7 +174,7 @@ void MyObserver::OnADNotify(ADRet& adRet){}
 
  * 打开 `AppDelegate.mm` 文件，添加下列导入语句到头部：
   * 2.3.4i以及之前的版本:
- ```ruby
+```
 //若使用C99编译选项
 #import <WGPlatform/WGPlatform.h>
 #import "WGPlatform/WGInterface.h"
@@ -186,7 +186,7 @@ void MyObserver::OnADNotify(ADRet& adRet){}
 #import "MyObserver.h"
 ```
    * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
- ```ruby
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 MyObserver  *pObserver =plat->GetObserver();
 MyADObserver *adObserver =(MyADObserver *)plat->GetADObserver();
@@ -196,7 +196,7 @@ if(!pObserver){
 }
 ```
    * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
-```ruby
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob =(MyObserver *) plat->GetObserver();
         if (!ob) {
@@ -207,7 +207,7 @@ return  [WGInterface  HandleOpenURL:url];
 ```
 
   * 2.4.0i以及之后的版本:
-```ruby
+```
 //若使用C99编译选项
 #import <MSDK/MSDK.h>
 #import "MyObserver.h"
@@ -215,8 +215,9 @@ return  [WGInterface  HandleOpenURL:url];
 #import <MSDK_C11/MSDK.h>
 #import "MyObserver.h"
 ```
-   * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
-```ruby
+  * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
+
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 WGPlatformObserver *ob = plat->GetObserver();
 if (!ob)
@@ -224,7 +225,6 @@ if (!ob)
         MyObserver* ob = MyObserver::GetInstance();
         plat->WGSetObserver(ob);
 }
-
 或
 WGPlatformObserver *ob = [MSDKService getObserver];
 if (!ob)
@@ -232,10 +232,9 @@ if (!ob)
         MyObserver* ob = MyObserver::GetInstance();
         [MSDKService setObserver:ob];
 }
-
 ```
-   * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
-```ruby
+  * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
+```
 WGPlatform* plat = WGPlatform::GetInstance();
 WGPlatformObserver *ob = plat->GetObserver();
 if (!ob)
@@ -244,7 +243,6 @@ if (!ob)
         plat->WGSetObserver(ob);
 }
 return  [WGInterface  HandleOpenURL:url];
-
 或
 WGPlatformObserver *ob = [MSDKService getObserver];
 if (!ob)
@@ -253,7 +251,6 @@ if (!ob)
         [MSDKService setObserver:ob];
 }
 return [MSDKService handleOpenUrl:url];
-
 ```
 
 >**创建对象后，此对象只需被设置一次，重复设置会覆盖，只有最近设置的才能收到回调。建议于游戏初始化时设置全局回调对象。**
