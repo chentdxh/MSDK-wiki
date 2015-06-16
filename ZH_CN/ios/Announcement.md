@@ -6,6 +6,9 @@
 ![Alt text](./Announcement1.png)
  - 2.0.1i及以后版本支持公告数据定时拉取功能，需要在info中配置如下项：
 ![Alt text](./Announcement2.png)
+ - MSDK从2.8.0i开始增加公告置顶功能。
+ - MSDK公告管理端地址: 外网：[http://open.qq.com](http://open.qq.com) 内网：[http://dev.ied.com](http://dev.ied.com) 。管理端使用说明外网开发者请参考详细的[MSDK公告管理端使用说明](http://wiki.mg.open.qq.com/index.php?title=MSDK%E5%85%AC%E5%91%8A%E7%AE%A1%E7%90%86)。
+ 
 ---
 
 ##由MSDK展示界面的公告接口
@@ -172,4 +175,4 @@ cancelButton节点定制视图中按钮的属性：
 | buttonWidth	| number	| 按钮视图宽度	| 80| 
 | buttonHeight	| number	| 按钮视图高度	| 30| 
 | buttonTop	| number	| 按钮y坐标（不设置或为0则自适应到底部）	| 10| 
-| buttonTitle	| string	| 按钮标题颜色	| #ffffff| 
+| buttonTitle	| string	| 按钮标题	| Title| 

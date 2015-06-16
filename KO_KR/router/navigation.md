@@ -1,11 +1,11 @@
-﻿# MSDK Router WIKI
+# MSDK Router WIKI
 
 [gimmick:theme (inverse: true)](cerulean)
 
 [MSDK백그라운드 소개]()
 
   * # 
-  * [개요](summarize.md#1.개요)
+  * [개요](index.md#1.개요)
 
 [휴대폰 Q 접속]()
 

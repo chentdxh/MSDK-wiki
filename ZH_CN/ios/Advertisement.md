@@ -9,23 +9,24 @@
 
 ##广告接口
  - 调用WGShowAD将使用MSDK配置的一套界面显示当前有效的公告，调用WGHideScrollNotice隐藏展示的滚动公告。
-```ruby
+ 
+```
  void WGPlatform::WGShowAD(const _eADType& scene) const;
 ```
 >描述: 显示指定scene当前有效的公告。通过参数type的确定展示哪种公告，如下：
-```ruby
+
+```
 typedef enum _eADType
 {
-   Type_Pause  = 1, // 暂停位广告
-Type_Stop = 2, // 退出位广告
+   	Type_Pause  = 1, // 暂停位广告
+	Type_Stop = 2, // 退出位广告
 }eADType;
 ```
 iOS目前只使用Type_Pause（暂停位广告）。
 参数: 
   - Type需要展示的广告类型
 
- - 
-```ruby
+```
 void WGCloseAD (const _eADType& scene);
 ```
 >描述: 隐藏已展示的广告
@@ -34,16 +35,18 @@ void WGCloseAD (const _eADType& scene);
 ---
 ##示例代码
  - 获取公告数据列表接口调用代码示例：
-```ruby
+ 
+```
 WGPlatform *plat = WGPlatform::GetInstance();
 plat->WGShowAD(Type_Pause);
 ```
 
  - 根据“Get Started-Step5”设置WGAdObserver后，用户点击按钮的事件会回调在observer的OnADNotify函数，示例代码：
-```ruby
+ 
+```
 void MyAdObserver::OnADNotify(ADRet& adRet) 
 {
-NSString *string = [NSString stringWithCString:(const char*)adRet.viewTag.c_str() encoding:NSUTF8StringEncoding];
+	NSString *string = [NSString stringWithCString:(const char*)adRet.viewTag.c_str() encoding:NSUTF8StringEncoding];
     NSLog(@"btn tag == %@",string);
     
     WGPlatform *plat = WGPlatform::GetInstance();
