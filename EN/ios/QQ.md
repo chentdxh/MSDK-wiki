@@ -1,4 +1,4 @@
-﻿QQ Access
+QQ Access
 ===
 
 ## Access configuration
@@ -134,7 +134,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 
 - Success means carrying openId, accessToken, payToken, pf and pfKey when the game is launched
 
- - Quick login and account inconsistency results are returned in flag of wakeupRet. The relevant description of flag is shown below:
+- Quick login and account inconsistency results are returned in flag of wakeupRet. The relevant description of flag is shown below:
  `` `
  eFlag_Succ:
  Account inconsistency does not exist, and the game is successfully evoked. The URL of App evoked in this case does not carry any token and is consistent with the evoked results of previous versions.

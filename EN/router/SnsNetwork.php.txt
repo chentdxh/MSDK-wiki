@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 /**
- * 发送HTTP网络请求类
+ * Send HTTP network requests
  *
  * @version 3.0.0
  * @author open.qq.com
@@ -15,16 +15,16 @@
 class SnsNetwork
 {
 	/**
-	 * 执行一个 HTTP 请求
+	 * Execute a HTTP request
 	 *
-	 * @param string 	$url 	执行请求的URL 
-	 * @param mixed	$params 表单参数
-	 * 							可以是array, 也可以是经过url编码之后的string
-	 * @param mixed	$cookie cookie参数
-	 * 							可以是array, 也可以是经过拼接的string
-	 * @param string	$method 请求方法 post / get
-	 * @param string	$protocol http协议类型 http / https
-	 * @return array 结果数组
+	 * @param string 	$url 	execute the request URL
+	 * @param mixed	$params  form parameters
+	 * 						, which can be an array, or a URL-encoded string
+	 * @param mixed	$cookie cookie parameters
+	 * 						, which can be an array or a merged string
+	 * @param string	$method  request method post / get
+	 * @param string	$protocol http protocol type http / https
+	 * @return array  result array
 	 */
 	static public function makeRequest($url, $params, $cookie, $method='post', $protocol='http')
 	{   
@@ -90,15 +90,15 @@ class SnsNetwork
 	
 	
 	/**
-	 * 执行一个 HTTP 请求,以post方式，multipart/form-data的编码类型上传文件
+	 * Execute a HTTP request, and upload via post in a file in multipart/form-data encoding type
 	 *
-	 * @param string 	$url 	执行请求的URL
-	 * @param mixed	$params 表单参数，必须是array, 对于文件表单项 直接传递文件的全路径, 并在前面增加'@'符号
-     *                          举例: array('upload_file'=>'@/home/xxx/hello.jpg', 'field1'=>'value1');
-	 * @param mixed	$cookie cookie参数
-	 * 							可以是array, 也可以是经过拼接的string
-	 * @param string	$protocol http协议类型 http / https
-	 * @return array 结果数组
+	 * @param string 	$url   execute the request URL
+	 * @param mixed	$params form parameters, which must be an array; for file form items, directly pass the full path of the file, and add the '@' symbol in front of them
+     *                For example: array('upload_file'=>'@/home/xxx/hello.jpg', 'field1'=>'value1');
+	 * @param mixed	$cookie cookie parameters
+	 * 							, which can be an array or a merged string
+	 * @param string	$protocol http protocol type http / https
+	 * @return array  result array
 	 */
 	static public function makeRequestWithFile($url, $params, $cookie, $protocol='http')
 	{      
