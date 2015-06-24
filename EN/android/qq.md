@@ -1,4 +1,4 @@
-﻿
+
 Relevant Modules of MSDK Mobile QQ
 =======
 
@@ -742,8 +742,8 @@ When the player directly joins QQ group in The developer, he or she can call int
 |Other 	|System error; please contact technical support through enterprise QQ, investigate the cause of the problem and get solutions. | 
 
 FAQ about joining QQ group or binding QQ group
- ---
- ### Why does the system prompt that the identity authentication fails?
+---
+### Why does the system prompt that the identity authentication fails?
  - When you bind QQ group within The developer, Union id and Zone id must be numeric. If they are characters, this may result in binding failure. This is generally prompted as "Parameter validation failure".
  - When you bind a group within The developer, the rule for generating a signature is: the md5 value of the player’s openid\_The developer appid\_The developer appkey\_union id\_zone id. If the signature generated in accordance with the rule does not work, directly RTX to consult OpenAPIHelper
  - If there is no zone id, it can be represented with 0. (The reason for the unsuccessful binding in Demo is because the signature in it is fixed. This is not correct. You need to re-calculate the signature by yourself. appid, appkey and openid can be found inside logcat)
@@ -822,19 +822,21 @@ In The developer, a player can directly add other game players as QQ friends. Ca
 1. **Overview**:
 	
 The functions of mobile QQ are related to mobile QQ versions. The specific function-version relationship is shown as follows:
-Function	Description	Android mobile QQ version
-Login authorization	Authorization for launching Web	mobile QQ 4.0 and higher
-Structured message sharing	Sharing	mobile QQ 4.5 and higher
-Authorization		4.1 and higher
-Directed sharing		4.1 and higher
-Big picture sharing		4.1 and higher
-QZone sharing pop-up box	Evoke the default pop-up box of mobile QQ	4.5 and higher
-Rapid authorization	Mobile QQ evokes a game with authorization status	4.6 and higher
-Qzone & friend circle sharing		4.5 and higher
-Account inconsistency	When the platform evokes The developer, does it carry opened to The developer (account inconsistency)?	4.2 and higher
-Join QQ group within The developer	Mobile QQ evokes a game with authorization status	4.7 and higher
-Bind QQ group within The developer	Mobile QQ evokes a game with authorization status	5.1 and higher
-Add friends within The developer	Mobile QQ evokes a game with authorization status	5.1 and higher
+
+|Function|	Description	|Android mobile QQ version|
+|: ------------- :|: ------------- :|: ------------- :|
+|Login authorization|wakeup Web authorization| mobile QQ 4.0 and higher|
+|Structured message sharing|Sharing|	mobile QQ 4.5 and higher
+|Authorization|		4.1 and higher|
+|Directed sharing|		4.1 and higher|
+|Big picture sharing|		4.1 and higher|
+|QZone sharing pop-up box|	Evoke the default pop-up box of mobile QQ|	4.5 and higher|
+|Rapid authorization|	Mobile QQ evokes a game with authorization status|	4.6 and higher|
+|Qzone & friend circle sharing|		4.5 and higher|
+|Account inconsistency|	When the platform evokes The developer, does it carry opened to The developer (account inconsistency)?|	4.2 and higher|
+|Join QQ group within The developer|	Mobile QQ evokes a game with authorization status|	4.7 and higher|
+|Bind QQ group within The developer|	Mobile QQ evokes a game with authorization status|	5.1 and higher|
+|Add friends within The developer|	Mobile QQ evokes a game with authorization status|	5.1 and higher|
 
 
 Game Center’s details page

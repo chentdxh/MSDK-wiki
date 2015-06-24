@@ -1,27 +1,70 @@
-﻿MSDK Announcement Module===Introduction of the module---### Overview The announcement system is the in-game information notification system provided by SDK. Through web-based visualized operations, it can inform the public of activities, region data and other information, effectively improving the coverage rate of information. It can now provide the game with the following: - Send different announcements or notices under different scenarios (for example: pre-login announcement, post-login announcement) - Multiple user range selection: full announcement, regional operating system, specified number (WeChat number, WeChat number) - A variety of announcement forms: pop-up announcement, scroll announcement - Rich announcement contents: text, image, web page, etc.
-### Terminology| Term | Description || ------------- |:-------------:||Announcement column | SDK announcement module marks announcement fields at different locations. The game will choose one field from the fields when it configures the announcement. It is scene parameter when the client calls the announcement display interface |
-|Pop-out announcement | Display an announcement in the pop-up form, and support text, image and web forms. In case of multiple announcements to display, the next announcement will pop up after the user closes the current announcement. <BR> Pop-out announcement can add a hoplink (skip link). Click on the hoplink can open the corresponding link with the built-in Webview || Scroll announcement | Display an announcement on the top of the game screen in the scroll form. Currently, it only supports text. When a number of announcements need to display, they will be pieced together to display in scroll |
-## Notes on access (important, must-see for access) - The announcement module will go to the backend of the system to draw the effective announcement of the APP after SDK is initialized and the player logs in the system. In addition, the announcement module also has a timed draw mechanism (draw once every 10 minutes by default)
-- When an app calls the announcement display interface and announcement data acquisition interface, it obtains the currently active announcements of the app from the local database. It is proposed that the game should directly use the announcement UI carried by SDK itself to reduce the access cost of the game. - ** This function is provided in versions later than MSDK 1.7.0a. Announcements are divided into two forms: scroll announcements and pop-out announcement s. ** Starting from MSDK 2.0.0a, the content forms of the announcement have increased from only the text form to three forms: text, image and webpage.
-- ** `SDK uses announcement columns to distinguish announcements displayed at different locations. For example, the common pre-login announcement and post-login announcement correspond to different announcement columns in SDK announcement module`**
-Recommended usage---### Scheme overview This section will provide a recommended scheme for the game to access SDK announcement module. The following content simulates the process that a game accesses SDK announcement module:
-- Access pop-out announcements at several locations before login and after login and a scroll announcement at any location in the game.
-- The game uses the UI style provided by SDK announcement module ### Access process 1. In the SDK announcement management side [http://dev.ied.com/](http://dev.ied.com/), add the game’s corresponding announcement columns. The following picture shows information about the corresponding demo announcement columns of SDK:
+MSDK Announcement Module
+===
 
-	![notice_solution_1.png](./notice_solution_1.png "announcement column")- Access to the client:
+Introduction of the modul
+---
+
+### Overview 
+The announcement system is the in-game information notification system provided by SDK. Through web-based visualized operations, it can inform the public of activities, region data and other information, effectively improving the coverage rate of information. It can now provide the game with the following: 
+
+- Send different announcements or notices under different scenarios (for example: pre-login announcement, post-login announcement) 
+- Multiple user range selection: full announcement, regional operating system, specified number (WeChat number, WeChat number) 
+- A variety of announcement forms: pop-up announcement, scroll announcement - Rich announcement contents: text, image, web page, etc.
+
+### Terminology| Term | Description |
+| ------------- |:-------------:|
+|Announcement column | SDK announcement module marks announcement fields at different locations. The game will choose one field from the fields when it configures the announcement. It is scene parameter when the client calls the announcement display interface |
+|Pop-out announcement | Display an announcement in the pop-up form, and support text, image and web forms. In case of multiple announcements to display, the next announcement will pop up after the user closes the current announcement. <BR> Pop-out announcement can add a hoplink (skip link). Click on the hoplink can open the corresponding link with the built-in Webview |
+| Scroll announcement | Display an announcement on the top of the game screen in the scroll form. Currently, it only supports text. When a number of announcements need to display, they will be pieced together to display in scroll |
+
+## Notes on access (important, must-see for access) 
+
+- The announcement module will go to the backend of the system to draw the effective announcement of the APP after SDK is initialized and the player logs in the system. In addition, the announcement module also has a timed draw mechanism (draw once every 10 minutes by default)
+- When an app calls the announcement display interface and announcement data acquisition interface, it obtains the currently active announcements of the app from the local database. It is proposed that the game should directly use the announcement UI carried by SDK itself to reduce the access cost of the game. 
+- ** This function is provided in versions later than MSDK 1.7.0a. Announcements are divided into two forms: scroll announcements and pop-out announcement s. ** Starting from MSDK 2.0.0a, the content forms of the announcement have increased from only the text form to three forms: text, image and webpage.
+- ** `SDK uses announcement columns to distinguish announcements displayed at different locations. For example, the common pre-login announcement and post-login announcement correspond to different announcement columns in SDK announcement module`**
+
+Recommended usage
+---
+
+### Scheme overview 
+
+This section will provide a recommended scheme for the game to access SDK announcement module. The following content simulates the process that a game accesses SDK announcement module:
+
+- Access pop-out announcements at several locations before login and after login and a scroll announcement at any location in the game.
+- The game uses the UI style provided by SDK announcement module
+
+
+ ### Access process 
+
+1. In the SDK announcement management side [http://dev.ied.com/](http://dev.ied.com/), add the game’s corresponding announcement columns. The following picture shows information about the corresponding demo announcement columns of SDK:
+
+	![notice_solution_1.png](./notice_solution_1.png "announcement column")
+
+- Access to the client:
 
 	1. In `AndroidMainfest` and `assets/msdkconfig.ini`, add the relevant configuration of MSDK announcement, and add a module of viewing documents on the page [access configuration] (notice.md# Access configuration) and [switch configuration] (notice.md# Switch configuration).
 
 	- Call of announcements on the client (only for reference):
 		- At the end of the game’s initialization, when the user stays in the login page, the page will display the pre-login announcement. Use the announcement display interface [announcement display interface] (notice.md# announcement display interface) and the corresponding announcement column ID as the parameter to display the pre-login announcement
 		- When the game receives the success callback from loginNotify and enters its main page, the post-login announcement will be displayed. Use the announcement display interface [announcement display interface] (notice.md# announcement display interface) and the corresponding announcement column ID as the parameter to display the post-login announcement
-		- The game calls the interface to display a scroll announcement at the location where it wants to display the scroll announcement (such as the game main page after login, etc.). Use the announcement display interface [announcement display interface] (notice.md# announcement display interface) and the corresponding announcement column ID as the parameter. After the game begins to display a scroll announcement, it generally sets a timer so as to hide the scroll announcement when the specified time period is used up.### Joint debugging and testing
+		- The game calls the interface to display a scroll announcement at the location where it wants to display the scroll announcement (such as the game main page after login, etc.). Use the announcement display interface [announcement display interface] (notice.md# announcement display interface) and the corresponding announcement column ID as the parameter. After the game begins to display a scroll announcement, it generally sets a timer so as to hide the scroll announcement when the specified time period is used up.
+		
+### Joint debugging and testing
+
 1. Confirm that the domain name set by the client `assets/msdkconfig.ini` is `http://msdktest.qq.com`
 2. The product staff select announcements (test environment) and add announcements in the announcement management section [http://dev.ied.com/] (http://dev.ied.com/)
 3. The client displays announcements according to the announcement types set by the products (pre-login, post-login, scroll or popup announcements, etc). If an announcement cannot be displayed, please click [Check steps for game announcements which cannot be normally displayed] (notice.md# Check steps for game announcements which cannot be normally displayed) and check it in accordance with the steps.
-Access configuration---#### Announcement Initialization:
+
+Access configuration
+---
+#### Announcement Initialization:
 	
-The announcement module does not need to be initialized alone. What needs to do is to complete the initialization of MSDK. ** If the game only accesses mobile QQ or WeChat, please only set the corresponding platform’s appid in the initialization (onCreate) and do not freely fill in the rest platforms’ appid; otherwise, this can lead to failure in drawing the pre-login announcement of the game. **#### Configuration of announcement AndroidMainfest: This section is mainly to set permissions related to the announcement UI of MSDK.
+The announcement module does not need to be initialized alone. What needs to do is to complete the initialization of MSDK. ** If the game only accesses mobile QQ or WeChat, please only set the corresponding platform’s appid in the initialization (onCreate) and do not freely fill in the rest platforms’ appid; otherwise, this can lead to failure in drawing the pre-login announcement of the game. 
+
+**#### Configuration of announcement AndroidMainfest: 
+
+This section is mainly to set permissions related to the announcement UI of MSDK.
 
 	<!-- TODO Notice  Announcement configuration  START -->
     <!--  MSDK Pop-out announcement-related configuration  -->
@@ -32,23 +75,41 @@ The announcement module does not need to be initialized alone. What needs to do 
 	<!--  MSDK Scroll announcement-related configuration  -->
     <service android:name="com.tencent.msdk.notice.RollFloatService" >
     </service>
-    <!-- TODO Notice  Announcement configuration  END -->**Note: The game can set the screen orientation of the announcement activity (android:screenOrientation's value) in accordance with the orientation of the screen. ** Switch configuration
---- MSDK provides switches for game to control whether to enable MSDK announcement and control the timed draw time-frequency of announcements.#### Whether to enable announcement
+    <!-- TODO Notice  Announcement configuration  END -->
+
+**Note: The game can set the screen orientation of the announcement activity (android:screenOrientation's value) in accordance with the orientation of the screen. 
+
+**Switch configuration
+--- 
+MSDK provides switches for game to control whether to enable MSDK announcement and control the timed draw time-frequency of announcements.
+#### Whether to enable announcement
 	
-The announcement module is turned off by default. Games which need to use the announcement module need to set the value of needNotice to true in assets/msdkconfig.ini. #### Set the timed draw time of announcements. The default automatic draw time of the announcement module is ten minutes. Games can set the value of needNotice to the corresponding time in assets/msdkconfig.ini according to their needs. ** (the shortest draw time which the game can set is 5 minutes) **## Announcement display interface Call WGShowNotice to use a set of UI configured by MSDK to display the current valid announcement. For pop-out announcements, you can set whether they can carry a hoplink. For announcements with a hoplink, click on Details can launch MSDK’s built-in WebView to open the URL of the corresponding content. #### Interface declaration:
+The announcement module is turned off by default. Games which need to use the announcement module need to set the value of needNotice to true in assets/msdkconfig.ini. 
+#### Set the timed draw time of announcements 
+
+The default automatic draw time of the announcement module is ten minutes. Games can set the value of needNotice to the corresponding time in assets/msdkconfig.ini according to their needs. ** (the shortest draw time which the game can set is 5 minutes) **
+
+## Announcement display interface 
+Call WGShowNotice to use a set of UI configured by MSDK to display the current valid announcement. For pop-out announcements, you can set whether they can carry a hoplink. For announcements with a hoplink, click on Details can launch MSDK’s built-in WebView to open the URL of the corresponding content. 
+
+#### Interface declaration:
 	
 	/**
 	 * Display the corresponding type of announcements under the specified announcement column
 	 * @param scene: announcement column ID; can not be empty; the parameter corresponds with the "announcement column" setting made in the announcement management side
 	 */
 
-  	void WGShowNotice(unsigned char *scene); #### Call interface:
+  	void WGShowNotice(unsigned char *scene); 
+#### Call interface:
 
-	String sceneString = "1";	WGPlatform.WGShowNotice(sceneString);	#### Notes: 1. When calling the interface, the announcement column id (scene) used corresponds with **”announcement column” ID set by the announcement management side. Don’t use the announcement ID (msgid) to replace announcement column ID**
+	String sceneString = "1";	WGPlatform.WGShowNotice(sceneString);	
+
+#### Notes: 
+1. When calling the interface, the announcement column id (scene) used corresponds with **”announcement column” ID set by the announcement management side. Don’t use the announcement ID (msgid) to replace announcement column ID**
 2. Starting from 2.4.0, MSDK has begun to adjust the interface. Games accessing versions earlier than 2.4.0 can refer to the following interface documentation:
 
 	
-### The original announcement display interface (the interface has been abandoned from 2.4.0 onwards but is changed to [Announcement display interface] (notice.md# Announcement display interface)) Call WGShowNotice to use a set of UI configured by MSDK to display the current valid announcement. For pop-out announcements, you can set whether they can carry a hoplink. For announcements with a hoplink, click on Details can launch MSDK’s built-in WebView to open the URL of the corresponding content. #### Interface declaration:		/**	 * Display the corresponding type of announcements under the specified announcement column	 * @param type   type of the to-be-displayed announcement	 * 	  eMSG_NOTICETYPE_ALERT: pop-out announcement	 * 	  eMSG_NOTICETYPE_SCROLL: scroll announcement	 * 	  eMSG_NOTICETYPE_ALL: pop-out announcement && scroll announcement 	 * @param scene  announcement column ID; can not be empty; the parameter corresponds with the “announcement column” setting made in the announcement management side	 */
+### The original announcement display interface (the interface has been abandoned from 2.4.0 onwards but is changed to [Announcement display interface] (notice.md# Announcement display interface)) Call WGShowNotice to use a set of UI configured by MSDK to display the current valid announcement. For pop-out announcements, you can set whether they can carry a hoplink. For announcements with a hoplink, click on Details can launch MSDK’s built-in WebView to open the URL of the corresponding content. #### Interface declaration:		/**	 * Display the corresponding type of announcements under the specified announcement column	 * @param type   type of the to-be-displayed announcement	 * 	  eMSG_NOTICETYPE_ALERT: pop-out announcement	 * 	  eMSG_NOTICETYPE_SCROLL: scroll announcement	 * 	  eMSG_NOTICETYPE_ALL: pop-out announcement && scroll announcement 	 * @param scene  announcement column ID; can not be empty; the parameter corresponds with the “announcement column” setting made in the announcement management side	 */
   	void WGShowNotice(eMSG_NOTICETYPE type, unsigned char *scene); #### Call interface：
 	eMSG_NOTICETYPE noticeTypeID = eMSG_NOTICETYPE.eMSG_NOTICETYPE_ALERT;
 	String sceneString = "1";
