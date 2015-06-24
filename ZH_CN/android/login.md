@@ -175,7 +175,7 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 	/**
 	  *  @since 2.0.0
 	  *  此接口用于已经登录过的游戏, 在用户再次进入游戏时使用, 游戏启动时先调用此接口, 此接口会尝试到后台验证票据
-	   *  此接口会通过OnLoginNotify将结果回调给游戏, 本接口只会返回两种flag, eFlag_Local_Invalid和eFlag_Succ,
+	   *  此接口会通过OnLoginNotify将结果回调给游戏, 本接口会返回flag, eFlag_Local_Invalid和eFlag_Succ,及eFlag_WX_RefreshTokenSucc。
 	  *  如果本地没有票据或者本地票据验证失败返回的flag为eFlag_Local_Invalid, 游戏接到此flag则引导用户到授权页面授权即可.
 	  *  如果本地有票据并且验证成功, 则flag为eFlag_Succ, 游戏接到此flag则可以直接使用sdk提供的票据, 无需再次验证.
 	  *  @return void

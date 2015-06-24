@@ -109,6 +109,7 @@
   * [音乐消息分享](wechat.md#音乐消息分享)
   * [后端分享](wechat.md#后端分享)
   * [链接分享](wechat.md#链接分享)
+  * [Deeplink链接跳转](wechat.md#Deeplink链接跳转)
   - - - -
   * # 其他说明
   * [无法拉起微信授权](wechat.md#Android微信登录不了检查步骤)
@@ -175,8 +176,6 @@
   
 [其他模块]()
 
- * [手游宝](qmi.md)
- - - - -
  * [米大师](midas.md)
  - - - -
  * [金刚审计](jg.md)

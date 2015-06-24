@@ -32,23 +32,28 @@
 		- *.jpg：Router 文档中用到的图片
 	- **README.html：MSDK Wiki相关链接**
 
-- **KO_KR：MSDK韩文文档**	
+- **KO_KR：MSDK한국어 설명 문서**	
 
-	- 目录结构同上
-	- **韩文文档由于翻译的原因更新速度会比中文慢一周左右**
+	- 디렉터리 구조는 위와 같습니다	- ** 한국어 문서는 번역 등 원인으로 업데이트 시 중국어 문서에 비해 2주정도 늦을 겁니다 **
 
 - **JP：MSDK日文文档**	
 
-	- 目录结构同上
-	- **日文文档由于翻译的原因更新速度会比中文慢一周左右**	
-
+	- ディレクトリ構造は以上となる。
+	- **日本語ドキュメントは翻訳に時間がかかるため、更新スピードは中国版より約2週間が遅れる。**	
+- **EN：MSDK English Documentation** 	- Catalogue Structure is the same as described above	- **Due to translation reason update of English documentation is about two weeks delay than Chinese documentation**
+	
 ## WIKI链接
+
+- **Github Site**
+
+	- [http://coolbee-studio.github.io/](http://coolbee-studio.github.io/)
 
 - **中文 Wiki 地址：**
 
 	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/android/index.html)
 	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html)
 	- 后台 Wiki：[http://wiki.dev.4g.qq.com/v2/ZH_CN/router/index.html](http://wiki.dev.4g.qq.com/v2/ZH_CN/router/index.html)
+
 - **한국어:**
 
 	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/KO_KR/android/index.html](http://wiki.dev.4g.qq.com/v2/KO_KR/android/index.html)
@@ -61,10 +66,21 @@
 	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/JP/ios/index.html](http://wiki.dev.4g.qq.com/v2/JP/ios/index.html)
 	- Router Wiki：[http://wiki.dev.4g.qq.com/v2/JP/router/index.html](http://wiki.dev.4g.qq.com/v2/JP/router/index.html)
 
+<<<<<<< HEAD
+=======
+- **English:**
+
+	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/EN/android/index.html](http://wiki.dev.4g.qq.com/v2/EN/android/index.html)
+	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/EN/ios/index.html](http://wiki.dev.4g.qq.com/v2/EN/ios/index.html)
+	- Router Wiki：[http://wiki.dev.4g.qq.com/v2/EN/router/index.html](http://wiki.dev.4g.qq.com/v2/EN/router/index.html)
+	
+>>>>>>> pr/12
 ## 站点地图（SiteMap）
 
-- 中文：http://wiki.dev.4g.qq.com/v2/site.html
-- 한국어：http://wiki.dev.4g.qq.com/v2/KO_KR/site.html
+- 中文：[http://wiki.dev.4g.qq.com/v2/site.html](http://wiki.dev.4g.qq.com/v2/site.html)
+- 한국어：[http://wiki.dev.4g.qq.com/v2/KO_KR/site.html](http://wiki.dev.4g.qq.com/v2/KO_KR/site.html)
+- 日本語：[http://wiki.dev.4g.qq.com/v2/JP/site.html](http://wiki.dev.4g.qq.com/v2/JP/site.html)
+- English：[http://wiki.dev.4g.qq.com/v2/EN/site.html](http://wiki.dev.4g.qq.com/v2/EN/site.html)
 	
 ## MDWiki相关介绍：
 

@@ -220,6 +220,9 @@ protected void onNewIntent(Intent intent) {
 	 		env->DeleteLocalRef(jCardRetClass);
 	}
 	
+#### 注意事项：
+
+1. **由于平台规则，该接口调用后，并不能直接使用回调OnAddWXCardNotify中的CardRet的flag来判断插卡是否成功，只能通过解析CardRet中wx_card_list的内容，查看is_succ的值来确定回调是否成功。is_succ为0表示失败，1表示成功。**
 	
 结构化消息分享
 ------
@@ -298,8 +301,8 @@ protected void onNewIntent(Intent intent) {
 #### 注意事项
 
 1. 微信分享需要保证微信版本高于4.0 
-2. `缩略图大小不能超过32k`, 长宽比无限制，超出大小则不能拉起微信.
-3. 分享需要使用到sd卡, 没有sd卡或者sd卡被占用均会照成分享失败
+2. `缩略图数据大小不能超过32k`, 长宽比无限制，超出大小则不能拉起微信。此下图片大小指的是传入接口的图片数据大小，需要注意如果是 jpg 等格式游戏解压后传入的图片数据会比原文件更大。
+3. `2.8.0a`及以上版本微信结构化分享增加了`自动压缩`的功能，如果传入的图片数据大于32KB，msdk会对图片数据压缩到32K以下保证能够成功分享。
 
 
 大图消息分享
@@ -669,6 +672,61 @@ if ("cpp".equals(ModuleManager.LANG)) { // 使用C++调用MSDK, 游戏只需要�
 	WGPlatform.WGSendToWeixinWithUrl(scene, title, desc, url, 
 			mediaTagName, imgData, imgData.length, messageExt);
 }
+```
+
+Deeplink链接跳转
+------
+
+Deeplink 可支持分别跳转至微信游戏中心原生页面，和活动页面，具体表现方案和显示入口可以根据游戏的实际情况来定制。游戏中心原生页面包括：微信游戏中心首页、微信游戏中心详情页、微信游戏中心游戏库等；通过游戏后台参数设定来实现。活动页面包括:游戏的H5页面，通过游戏后台配置跳转地址来实现
+
+#### 接口声明
+
+```
+    /**
+     * 打开微信deeplink（deeplink功能的开通和配置请联系微信游戏中心）
+	 * @param link 具体跳转deeplink，可填写为：
+	 *             INDEX：跳转微信游戏中心首页
+     *             DETAIL：跳转微信游戏中心详情页
+     *             LIBRARY：跳转微信游戏中心游戏库
+     *             具体跳转的url （需要在微信游戏中心先配置好此url）
+     */
+    void WGOpenWeiXinDeeplink(unsigned char* link);
+```
+
+#### 调用示例
+
+```
+		String[] choices = { "游戏中心首页(INDEX)", "游戏中心详情页(DETAIL)", "游戏中心游戏库(LIBRARY)", "跳转url页面" };
+		ContextThemeWrapper context = new ContextThemeWrapper (this.mMainActivity, R.style.DialogTheme);
+		AlertDialog dialog = new AlertDialog.Builder(context).setItems(choices, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String link = "";
+						switch (which) {
+						case 0:
+							link = "INDEX";
+							break;
+						case 1:
+							link = "DETAIL";
+							break;
+						case 2:
+							link = "LIBRARY";
+							break;
+						case 3:
+							link = "http://www.qq.com/";
+							break;
+						}
+						
+
+						if ("java".equals(ModuleManager.LANG)) {
+							WGPlatform.WGOpenWeiXinDeeplink(link);
+						} else {
+							PlatformTest.WGOpenWeiXinDeeplink(link);
+						}
+					}
+
+				}).create();
+		dialog.show();
 ```
 
 Android微信登录不了检查步骤

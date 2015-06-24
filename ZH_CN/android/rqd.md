@@ -77,6 +77,8 @@ App 还原符号表配置
 ---
 **符号还原表配置相关推荐先查看http://www.jikexueyuan.com/course/406.html?hmsr=bugly_androidcrash 中共八章视频教程**，可以很好对符号还原表进行掌握。
 
+**符号表工具**可在 http://bugly.qq.com/whitebook 中下载。
+
 **1、生成Java Progurad还原符号表：**
 
 通过progurad工具混淆时，可以输出还原符号表文件mapping.txt，Bugly根据mapping.txt文件对Java堆栈进行还原。
