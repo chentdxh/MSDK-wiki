@@ -34,13 +34,17 @@
 
 - **KO_KR：MSDK한국어 설명 문서**	
 
-	- 디렉터리 구조는 위와 같습니다	- ** 한국어 문서는 번역 등 원인으로 업데이트 시 중국어 문서에 비해 2주정도 늦을 겁니다 **
+	- 디렉터리 구조는 위와 같습니다
+	- ** 한국어 문서는 번역 등 원인으로 업데이트 시 중국어 문서에 비해 2주정도 늦을 겁니다 **
 
 - **JP：MSDK日文文档**	
 
 	- ディレクトリ構造は以上となる。
 	- **日本語ドキュメントは翻訳に時間がかかるため、更新スピードは中国版より約2週間が遅れる。**	
-- **EN：MSDK English Documentation** 	- Catalogue Structure is the same as described above	- **Due to translation reason update of English documentation is about two weeks delay than Chinese documentation**
+- **EN：MSDK English Documentation** 
+
+	- Catalogue Structure is the same as described above
+	- **Due to translation reason update of English documentation is about two weeks delay than Chinese documentation**
 	
 ## WIKI链接
 
@@ -66,15 +70,12 @@
 	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/JP/ios/index.html](http://wiki.dev.4g.qq.com/v2/JP/ios/index.html)
 	- Router Wiki：[http://wiki.dev.4g.qq.com/v2/JP/router/index.html](http://wiki.dev.4g.qq.com/v2/JP/router/index.html)
 
-<<<<<<< HEAD
-=======
 - **English:**
 
 	- Android Wiki：[http://wiki.dev.4g.qq.com/v2/EN/android/index.html](http://wiki.dev.4g.qq.com/v2/EN/android/index.html)
 	- IOS Wiki：[http://wiki.dev.4g.qq.com/v2/EN/ios/index.html](http://wiki.dev.4g.qq.com/v2/EN/ios/index.html)
 	- Router Wiki：[http://wiki.dev.4g.qq.com/v2/EN/router/index.html](http://wiki.dev.4g.qq.com/v2/EN/router/index.html)
 	
->>>>>>> pr/12
 ## 站点地图（SiteMap）
 
 - 中文：[http://wiki.dev.4g.qq.com/v2/site.html](http://wiki.dev.4g.qq.com/v2/site.html)
