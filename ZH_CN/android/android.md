@@ -63,74 +63,106 @@ MSDK的发布包(zip)主要包含两个重要部分`MSDKLibrary`和`MSDKSample`�
 
 ## Step3: MSDK初始化
 
+**自MSDK 2.8.1开始，游戏初始化MSDK时初始化参数中去除微信APPKEY，增加MSDKKey的初始化。**
+
 MSDK初始化是使用SDK所提供功能可以执行的前提。游戏在应用启动时MainActivity的onCreate方法中调用MSDK初始化函数`WGPlatform.Initialized`初始化MSDK。
 例如：
 
-	public void onCreate(Bundle savedInstanceState) {
-		...
-		//游戏必须使用自己的QQ AppId联调
-		baseInfo.qqAppId = "1007033***";
-		baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
+1. 设置游戏的基本信息：
 
-		//游戏必须使用自己的微信AppId联调
-		baseInfo.wxAppId = "wxcde873f99466f***"; 
-		baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
+2.8.1a以后版本：
+	
+	// TODO GAME 初始化MSDK
+	/***********************************************************
+	*  TODO GAME 接入必须要看， baseInfo值因游戏而异，填写请注意以下说明:      
+	*  	baseInfo值游戏填写错误将导致 QQ、微信的分享，登录失败 ，切记 ！！！     
+	* 		只接单一平台的游戏请勿随意填写其余平台的信息，否则会导致公告获取失败  
+	*      offerId 为必填，一般为手QAppId
+	***********************************************************/
+	MsdkBaseInfo baseInfo = new MsdkBaseInfo();
+	baseInfo.qqAppId = "100703379";
+	baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c734514e"; 
+	baseInfo.wxAppId = "wxcde873f99466f74a";
+	baseInfo.msdkKey = "5d1467a4d2866771c3b289965db335f4";
+	baseInfo.offerId = "100703379";
+	// TODO GAME 自2.7.1a开始游戏可在初始化msdk时动态设置版本号，灯塔和bugly的版本号由msdk统一设置
+	// 1、版本号组成 = versionName + versionCode
+	// 2、游戏如果不赋值给appVersionName（或者填为""）和appVersionCode(或者填为-1)，
+	// msdk默认读取AndroidManifest.xml中android:versionCode="51"及android:versionName="2.7.1"
+	// 3、游戏如果在此传入了appVersionName（非空）和appVersionCode（正整数）如下，则灯塔和bugly上获取的版本号为2.7.1.271
+	baseInfo.appVersionName = "2.8.0";
+	baseInfo.appVersionCode = 280;
+	
+	
+2.8.1a以前版本：
+	
+	//游戏必须使用自己的QQ AppId联调
+	baseInfo.qqAppId = "1007033***";
+	baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
 
-		//游戏必须使用自己的支付offerId联调
-		baseInfo.offerId = "100703***";
+	//游戏必须使用自己的微信AppId联调
+	baseInfo.wxAppId = "wxcde873f99466f***"; 
+	baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
 
-        // 自2.7.1a开始游戏可在初始化msdk时动态设置版本号，灯塔和bugly的版本号由msdk统一设置
-        // 2.7.1a之前的版本不要设置
-        // 1、版本号组成 = versionName + versionCode
-        // 2、游戏如果不赋值给appVersionName（或者填为""）和appVersionCode(或者填为-1)，
-        // msdk默认读取AndroidManifest.xml中android:versionCode="51"及android:versionName="2.7.1"
-        // 3、游戏如果在此传入了appVersionName（非空）和appVersionCode（正整数）如下，则灯塔和bugly上获取的版本号为2.7.1.271
-        baseInfo.appVersionName = "2.7.1";
-        baseInfo.appVersionCode = 271;
+	//游戏必须使用自己的支付offerId联调
+	baseInfo.offerId = "100703***";
 
-		WGPlatform.Initialized(this, baseInfo);
-		// 设置拉起QQ时候需要用户授权的项
-		WGPlatform.WGSetPermission(WGQZonePermissions.eOPEN_ALL); 
+    // 自2.7.1a开始游戏可在初始化msdk时动态设置版本号，灯塔和bugly的版本号由msdk统一设置
+	// 2.7.1a之前的版本不要设置
+	// 1、版本号组成 = versionName + versionCode
+	// 2、游戏如果不赋值给appVersionName（或者填为""）和appVersionCode(或者填为-1)，
+	// msdk默认读取AndroidManifest.xml中android:versionCode="51"及android:versionName="2.7.1"
+	// 3、游戏如果在此传入了appVersionName（非空）和appVersionCode（正整数）如下，则灯塔和bugly上获取的版本号为2.7.1.271
+	baseInfo.appVersionName = "2.7.1";
+	baseInfo.appVersionCode = 271;
+	
+- 初始化MSDK
+		        
+		public void onCreate(Bundle savedInstanceState) {
+			...
+	
+			WGPlatform.Initialized(this, baseInfo);
+			// 设置拉起QQ时候需要用户授权的项
+			WGPlatform.WGSetPermission(WGQZonePermissions.eOPEN_ALL); 
 
-		// 必须保证handleCallback在Initialized之后
-		// launchActivity的onCreat()和onNewIntent()中必须调用
-        // WGPlatform.handleCallback()。否则会造成微信登录无回调
-		WGPlatform.handleCallback(getIntent());
-		...
-	}
+			// 必须保证handleCallback在Initialized之后
+			// launchActivity的onCreat()和onNewIntent()中必须调用
+        	// WGPlatform.handleCallback()。否则会造成微信登录无回调
+			WGPlatform.handleCallback(getIntent());
+			...
+		}
 
+    	protected void onResume() {
+      		super.onResume();
+       	 	WGPlatform.onResume();
+    	}
 
-    protected void onResume() {
-        super.onResume();
-        WGPlatform.onResume();
-    }
+    	@Override
+    	protected void onRestart() {
+    	    super.onRestart();
+    	    WGPlatform.onRestart();
+    	}
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        WGPlatform.onRestart();
-    }
+   		protected void onPause() {
+     	   super.onPause();
+     	   WGPlatform.onPause();
+   	 	}
 
-    protected void onPause() {
-        super.onPause();
-        WGPlatform.onPause();
-    }
+    	@Override
+    	protected void onStop() {
+   	    	super.onStop();
+      	  	WGPlatform.onStop();
+   	 	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        WGPlatform.onStop();
-    }
+    	protected void onDestroy() {
+        	super.onDestroy();
+        	WGPlatform.onDestory(this);
+    	}
 
-    protected void onDestroy() {
-        super.onDestroy();
-        WGPlatform.onDestory(this);
-    }
-
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        WGPlatform.handleCallback(intent);
-    }
+    	protected void onNewIntent(Intent intent) {
+        	super.onNewIntent(intent);
+        	WGPlatform.handleCallback(intent);
+    	}
 
 
 此外，MSDK2.5以下版本需要在MainActivty中加载RQD的动态库，示例代码如下：
