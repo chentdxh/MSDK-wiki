@@ -1,5 +1,13 @@
 变更历史
 ===
+## 2.8.1
+- 【代码变更】
+  1.【MSDKFoundation】
+    * 删除WXAppKey（QQAppKey由于注册信鸽需要暂时保留），新增MSDKKey，游戏需在plist中配置String类型的MSDKKey字段，具体MSDKKey值可在[飞鹰系统](http://dev.ied.com)游戏管理->游戏详情页查询。
+    
+  2.【MSDK】
+    * 本地票据信息修改为加密存储。
+	
 ## 2.8.0
 - 【代码变更】
   1.【MSDK】
