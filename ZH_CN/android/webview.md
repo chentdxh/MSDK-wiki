@@ -1,6 +1,12 @@
 MSDK 内置浏览器相关模块
 ======
 MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各方面优于系统内置Webview, 此Webview中提供了分享到QQ和微信的功能. 游戏需要在游戏内拉起Web页面时, 例如拉起营销活动页面, 论坛, 攻略等页面时. 接入内置浏览器需要完成两步。
+
+
+#### MSDK内置浏览器展示效果
+
+![webview](./webview_res/webview_1.png) ![webview](./webview_res/webview_2.png)
+
 接入配置
 ------
 **MSDK2.7.0a及以后按如下配置:**
@@ -74,11 +80,21 @@ MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各�
 调用示例代码如下:
 
     WGPlatform::GetInstance()->WGOpenUrl(cOpenUrl);
+    
+指定屏幕方向打开浏览器
+------
+调用WGOpenUrl接口传入URL即可使用SDK提供的Webview, WGOpenUrl接口说明如下: 
 
-展示效果如下:
+	/**
+      *打开内置浏览器,此内置Webview从安全性, 性能各方面优于系统内置Webview, 如果手机上安装了QQ浏览器则会使用QQ浏览器的内核, 性能更优. 同时还提供了在内置浏览器中分享到QQ和微信的功能.
+      *@param openUrl 要打开的url
+      *@param screendir 横屏还是竖屏打开浏览器 eMSDK_SCREENDIR_SENSOR 自动感应 eMSDK_SCREENDIR_PORTRAIT 竖屏 eMSDK_SCREENDIR_LANDSCAPE 横屏
+      */
+    void WGOpenUrl(unsigned char * openUrl,eMSDK_SCREENDIR &screendir);
 
-![webview](./webview_res/webview_1.png) ![webview](./webview_res/webview_2.png)
+调用示例代码如下:
 
+    WGPlatform::GetInstance()->WGOpenUrl(cOpenUrl,eMSDK_SCREENDIR_LANDSCAPE);
 
 透传参数说明
 ------

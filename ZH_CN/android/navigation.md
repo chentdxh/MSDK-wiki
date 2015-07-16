@@ -52,11 +52,16 @@
   * [推荐用法](share.md#MSDK 推荐用法)
   * [分享类消息对比](share.md#各种分享类消息对比)
   - - - -
-  * [**加群模块(强烈推荐)**](group.md)
+  * [加群模块](group.md)
   * [接口说明](group.md#名词解释、接口说明)
   * [接入流程](group.md#加群组件接入流程)
   * [手Q加群推荐用法](group.md#手Q加群组件推荐使用方法)
-  
+  - - - -
+  * [游戏场景化模块](gameStatus.md)
+  * [接口说明](gameStatus.md#接口说明)
+  * [游戏常用场景值](gameStatus.md#游戏常用场景值)
+  * [测试验证](gameStatus.md#测试验证)
+
 [接入QQ]()
 
   * # 接入配置

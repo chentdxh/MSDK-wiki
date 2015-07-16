@@ -163,6 +163,33 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 	- 拉起微信时候, 微信会检查应用程序的签名和微信后台配置的签名是否匹配(此签名在申请微信appId时提交过), 如果不匹配则无法唤起已经授权过的微信客户端.
 	- `WXEntryActivity.java` 位置不正确（必须在包名/wxapi 目录下）则不能收到回调.
 
+##处理扫码登录WGQrCodeLogin
+
+#### 概述：
+
+**拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息**
+
+#### 效果展示：
+
+参见demo
+
+
+####接口声明：
+
+	/**
+	 * @param platform 游戏传入的平台类型, 可能值为: ePlatform_QQ, ePlatform_Weixin
+	 * @return void
+	 *   通过游戏设置的全局回调的OnLoginNotify(LoginRet& loginRet)方法返回数据给游戏
+	 */
+	void WGQrCodeLogin(ePlatform platform);
+
+#### 接口调用：
+
+	WGPlatform::GetInstance()->WGQrCodeLogin(ePlatform_Weixin); 
+
+#### 注意事项：
+
+- **目前只支持微信扫码登录**
 
 ##处理自动登录WGLoginWithLocalInfo
 
