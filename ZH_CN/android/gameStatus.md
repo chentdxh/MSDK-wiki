@@ -46,7 +46,7 @@ MSDK 游戏关键场景设置模块主要用于准确定位到游戏的具体场
 	/**
 	 * 设置游戏当前所处的场景结束点
 	 * @param cGameStatus 场景值，MSDK提供的场景值请参考GameStatus的定义，游戏也可以自定义场景参数
-	 * @param succ 游戏对该场景执行结果的定义，例如成功、失败、异常等。
+	 * @param succ 游戏对该场景执行结果的定义，成功为0、失败为-1、异常为-2。
 	 * @param errorCode 游戏该场景异常的错误码，用户标识或者记录该场景失败具体是因为什么原因
 	 */
 	 
@@ -60,6 +60,8 @@ MSDK 游戏关键场景设置模块主要用于准确定位到游戏的具体场
 	WGPlatform::GetInstance()->WGEndGameStatus((unsigned char *)cGameStatus.c_str(),cSucc,cErrorCode);
 
 #### 注意事项：
+
+- **`在接口调用中标识用户离开场景的状态的参数succ的取值为：成功为0、失败为-1、异常为-2。`**
 
 ## 游戏常用场景值
 

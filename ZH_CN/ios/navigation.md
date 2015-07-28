@@ -13,7 +13,6 @@
   * [注意事项](index.md#注意事项)
   - - - -
   * #SDK下载
-  * [外网下载](http://wiki.mg.open.qq.com/index.php?title=%E4%B8%8B%E8%BD%BDMSDK)
   * [内网下载](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD)
 
 
