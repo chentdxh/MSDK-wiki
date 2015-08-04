@@ -191,6 +191,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 | fopenid|string| 分享到的好友openid |
 | access_token|string|登录态 |
@@ -242,7 +243,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ![分享图片](./shareWX.jpg)
 
 
-### 3.2.3/share/wxgame（该接口暂不对外） ### ###
+### 3.2.3/share/wxgame（该接口暂不对外） ###
 
 #### 3.2.3.1 接口说明 ####
 

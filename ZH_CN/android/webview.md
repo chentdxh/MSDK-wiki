@@ -133,14 +133,16 @@ MSDK会在URL后附加的参数如下，__请勿传入重复的参数，会导�
 | msdkEncodeParam | 密文 |
 | version | MSDK版本号，例如：1.6.2a |
 | sig | 请求本身签名 |
-| encode | 编码参数，如1 |
+| encode | 编码参数，如2 |
 | openid | 用户授权后平台返回的惟一标识 |
 
+#### **注意**
+encode参考在2.8.1a之前为1，建议使用拉起浏览器时带入url的参数，而不是硬编码。
 
 ###3、举例说明
 假设浏览器拉起URL：http://apps.game.qq.com/ams/gac/index.html， 实际截包会看到访问的URL如下：
 
-`http://apps.game.qq.com/ams/gac/index.html?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&msdkEncodeParam=***&version=1.6.2i&encode=1`
+`http://apps.game.qq.com/ams/gac/index.html?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&msdkEncodeParam=***&version=1.6.2i&encode=2`
 
 其中msdkEncodeParam 传输的实际上是下面参数加密得到的密文（url encode）：
 
@@ -156,13 +158,13 @@ vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-r
 
 1、在MSDK1.8.1a及之后，加密传参的方案为：（下面URL访问的是MSDK测试环境）
 
-`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v2&version=1.8.1i&encode=1`
+`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v2&version=1.8.1i&encode=2`
 
 直接将第一步中得到msdkEncodeParam 里的密文值以Post方式，放在body以Post方式传输，注意不需要加key“msdkEncodeParam=”。
 
 2、MSDK1.8.1a之前，加密传参方案如下：（该方案终端已不再使用，但后台需实现以兼容老版本）
 
-`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&version=1.6.2i&encode=1`
+`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&version=1.6.2i&encode=2`
  
 将msdkEncodeParam 里的密文URL Decode，放在body以Post方式传输，注意不需要加key“msdkEncodeParam=”。截包如下：
 
@@ -170,11 +172,11 @@ vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-r
 
 3.1 假设浏览器拉起URL：www.qq.com，实际截包会看到访问的URL如下：
 
-    http://www.qq.com?algorithm=v2&version=2.0.6a&timestamp=1423538227203&appid=100703379&sig=427291da31b56b59739be6da61d433ec&encode=1&msdkEncodeParam=BAD8B1625CB04523B06AAF6739ACB3CEA96F54393831AF5C6890E92EE61CF1A29F493710592DD84B47D4217BA9FA9DAFB8025CEB27E45EC958689A794E8BD33CF2544CC5D00FCE03AEF7B23EE2BFCA4332F5D69547477A3E93E44F3270F19664D5499CA2990BE5BA9E232036197B184F1411B76CF95537AC07E3D6A27F054AD3F26648B18554F9C1
+    http://www.qq.com?algorithm=v2&version=2.0.6a&timestamp=1423538227203&appid=100703379&sig=427291da31b56b59739be6da61d433ec&encode=2&msdkEncodeParam=BAD8B1625CB04523B06AAF6739ACB3CEA96F54393831AF5C6890E92EE61CF1A29F493710592DD84B47D4217BA9FA9DAFB8025CEB27E45EC958689A794E8BD33CF2544CC5D00FCE03AEF7B23EE2BFCA4332F5D69547477A3E93E44F3270F19664D5499CA2990BE5BA9E232036197B184F1411B76CF95537AC07E3D6A27F054AD3F26648B18554F9C1
 
 3.2 用Fiddler简易测试下，则需要拼装的url为：
 
-    http://msdktest.qq.com/comm/decrypv1/?sig=427291da31b56b59739be6da61d433ec&timestamp=1423538227203&appid=100703379&algorithm=v2&version=2.0.6a&encode=1
+    http://msdktest.qq.com/comm/decrypv1/?sig=427291da31b56b59739be6da61d433ec&timestamp=1423538227203&appid=100703379&algorithm=v2&version=2.0.6a&encode=2
 
    其中Post body为：
           

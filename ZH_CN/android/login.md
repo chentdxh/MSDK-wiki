@@ -369,14 +369,14 @@ MSDK的登录回调来自以下几个场景：
 
 为了保证登录数据上报正确, 游戏接入时候必须在在自己的`launchActivity`的`onResume`中调用`WGPlatform.onResume`, `onPause`中调用`WGPlatform.onPause`,`onRestart`可调用`WGPlatform.onRestart`,`onStop`中调用`WGPlatform.onStop`,	`onDestroy`中调用`WGPlatform.onDestroy`
 
-### 微信票据自动刷新
+## 微信票据自动刷新
 
 1. MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新,MSDK会自动刷新完成(时间间隔为30分钟), 并通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail（已经包含在onLoginNotify的回调中）。
 - `游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程。`
 - **在MSDK2.7.0a以前，如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。此时游戏需要自行处理微信票据过期的逻辑。具体可以参考：**[微信票据刷新接口](login.md#微信票据刷新：WGRefreshWXToken)
 - **MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流程，对票据进行定时刷新，请务必将assets/msdkconfig.ini中WXTOKEN_REFRESH按如下设置WXTOKEN_REFRESH=true或者删除不填（即默认是开启的）。**
 
-##微信票据刷新：WGRefreshWXToken
+## 微信票据刷新：WGRefreshWXToken
 
 #### 概述：
 
@@ -473,14 +473,6 @@ QQ平台：
 
 无
 
-## 常见问题
-
-1. 支付时提示paytoken过期，则需要拉起登录界面重新授权后方能支付。paytoken过期以后必须重新授权。
-
-2. `未装手Q时用webQQ登录一直提示"网络异常"，在webQQ登录页面(或提示下载手Q页面)返回游戏时Crash。`
-如果游戏是用Unity直接打出Apk包，出现此问题，需要把MSDK的jar包中的assets中的内容解压放入Android/assets中。如果使用其他方式打包需要保证MSDK的jar包中的so文件和资源文件打入Apk包中。
-
-
 ##MSDK2.7.0a及以后的票据自动刷新流程
 **概述**
 
@@ -496,3 +488,7 @@ MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流�
   
   ![login_new](./new_login_2.jpg)
 
+## 登录常见问题
+
+1. `未装手Q时用webQQ登录一直提示"网络异常"，在webQQ登录页面(或提示下载手Q页面)返回游戏时Crash。`
+如果游戏是用Unity直接打出Apk包，出现此问题，需要把MSDK的jar包中的assets中的内容解压放入Android/assets中。如果使用其他方式打包，需要注意打包脚本中适当处理MSDK的jar包中的so文件和资源文件，如果还有问题可尝试把MSDK的jar包中的assets中的内容解压放入游戏工程中的assets目录。
