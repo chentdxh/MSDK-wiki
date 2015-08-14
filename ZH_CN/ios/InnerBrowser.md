@@ -1,12 +1,38 @@
 内置浏览器
 ===
 
-##概述
- - 该功能在1.6.1版本以后提供，需要XCode5.0以上版本进行编译。
-调用以下代码，打开指定的url。
+##打开内置浏览器
+ - ###概述
+该功能在1.6.1版本以后提供，需要XCode5.0以上版本进行编译。
+
+```
+/**
+ *  @param openUrl 要打开的url
+ */
+void WGOpenUrl(unsigned char * openUrl);
+```
+示例代码：
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 plat->WGOpenUrl((unsigned char*)[url UTF8String]);
+```
+---
+
+##指定屏幕方向打开浏览器
+ - ###概述
+该功能在2.9.0版本以后提供，需要在plist中声明App所需的屏幕方向。
+
+```
+/**
+ *  @param openUrl 要打开的url
+ *  @param screenDir 内置浏览器支持的屏幕方向
+ */
+void WGOpenUrl(unsigned char * openUrl, eMSDK_SCREENDIR screenDir);
+```
+示例代码：
+```
+WGPlatform* plat = WGPlatform::GetInstance();
+plat->WGOpenUrl((unsigned char*)[url UTF8String], eMSDK_SCREENDIR_LANDSCAPE);
 ```
 ---
 
@@ -33,7 +59,7 @@ plat->WGOpenUrl((unsigned char*)[url UTF8String]);
 |msdkEncodeParam|	密文|	　|
 |version|	MSDK版本号|	例如1.6.2i|
 |sig|	请求本身的签名|	|
-|encode|	编码参数|	1|
+|encode|	编码参数|	1(2.8.1及以后版本需传2，否则会导致解密失败)|
 |openid|	用户授权后平台返回的唯一标识 | | 
 
  

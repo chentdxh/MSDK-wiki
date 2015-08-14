@@ -76,7 +76,9 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | QQAppID  | String |  各游戏不同 |手Q的Appid|所有|
 | QQAppKey  | String |  各游戏不同 |手Q的AppKey|所有|
 | WXAppID  | String |  各游戏不同 |微信的Appid|所有|
-| WXAppKey  | String |  各游戏不同 |微信的AppKey|所有|
+| WXAppKey  | String |  各游戏不同 |微信的AppKey，2.8.1版本开始不需再配置|所有|
+| MSDKKey  | String |  各游戏不同 |2.8.1及以上版本需配置，可在飞鹰系统查询|所有|
+| AutoRefreshToken  | Boolean |  各游戏不同 |是否启用自动刷新票据，Yes-启用 No（或不配置）-禁用|所有|
 | CHANNEL_DENGTA  | String |  1001 |iOS系统渠道号|统计|
 | MSDK_PUSH_SWITCH  | String |  ON |此为推送功能的开关，若不使用MSDK推送则不需要配置|推送|
 | MSDK_XGPUSH_URL  | String |  信鸽推送URL，可以不配置 |信鸽推送URL，不配置则使用默认值，正式上线前必须删除该项配置|推送|
@@ -84,7 +86,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | NeedNotice  | Boolean |  是否启用公告功能 |Yes-启用 No（或不配置）-禁用|公告|
 | Noticetime  | Number |  公告自动拉取的时间间隔（秒） |默认15分钟|公告|  
 | NSLocationWhenInUseUsageDescription  | NSString |  用于iOS8下LBS定位功能 |值可为空|LBS| 
-| MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0-2.6.3版本，2.7.0版本开始内置浏览器分享开关由MSDK管理端下发，游戏可根据需要申请打开或关闭) |内置浏览器|
+| MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0-2.6.6版本，2.7.0版本开始内置浏览器分享开关由MSDK管理端下发，游戏可根据需要申请打开或关闭) |内置浏览器|
  
   *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
   

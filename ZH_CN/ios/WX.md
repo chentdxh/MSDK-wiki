@@ -41,7 +41,7 @@ eFlag_WX_LoginFail      = 2004,     //微信授权失败
 - ###示例代码
 调用代码如下:
 ```
-MyObserver* ob = new MyObserver(); 
+MyObserver* ob = MyObserver::GetInstance(); 
 plat->WGSetObserver(ob);//设置回调对象
 plat->WGLogin(ePlatform_Weixin);
 ```
@@ -99,6 +99,38 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
  - 微信版本4.0及以上
  
 ---
+
+##微信扫码登录
+ - ###概述
+拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息。
+
+```
+/**
+ * @param platform 游戏传入的平台类型, 可能值为: ePlatform_QQ, ePlatform_Weixin
+ * @return void
+ * 通过游戏设置的全局回调的OnLoginNotify(LoginRet& loginRet)方法返回数据给游戏
+ */
+void WGQrCodeLogin(ePlatform platform);
+```
+>描述: 登录统一接口传入_ePlatform. ePlatform_Weixin调用微信授权。
+参数: 
+   -  传入_ePlatform. ePlatform_Weixin调用微信客户端授权
+设置observer的情况下，授权或失败都通过OnLoginNotify（LoginRet ret）回调给游戏。回调结果ret.flag说明如下：
+
+```
+eFlag_WX_UserCancel     = 2002,     //用户取消微信授权
+eFlag_WX_UserDeny       = 2003,     //用户拒绝微信授权
+eFlag_WX_LoginFail      = 2004,     //微信授权失败
+```
+
+- ###示例代码
+调用代码如下:
+```
+MyObserver* ob = MyObserver::GetInstance(); 
+plat->WGSetObserver(ob);//设置回调对象
+plat->WGQrCodeLogin(ePlatform_Weixin);
+```
+回调代码同WGLogin(ePlatform_Weixin);
 
 ## 微信关系链接口
  - ###查询微信个人信息

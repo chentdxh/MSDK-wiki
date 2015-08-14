@@ -14,8 +14,12 @@
 	1. 在登录按钮的点击事件的处理函数中调用`WGLogin`完成授权登录。具体方法[点击查看](#处理授权登录WGLogin)。
 - **处理自动登录**：
 	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
-	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
-		- 对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差
+	- 处理唤醒后的自动登录。
+		
+		- MSDK 2.7.0a以前的版本，游戏需要在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录。对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差。
+	
+		- MSDK 2.7.0以后版本游戏不再需要在onResume里面做特殊处理。只需要在onResume调用WGPlatform对应的OnResume即可。
+
 - **处理用户注销**：
 	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登录。具体方法[点击查看](#处理用户注销WGLogout)
 - **处理MSDK的登录回调**：
@@ -39,7 +43,7 @@
 
    - 1、MSDK2.7.0a及以后，调用WGLoginWithLocalInfo()地方改为WGLogin(EPlatform.ePlatform_None)，当然目前仍旧兼容WGLoginWithLocalInfo，但后续会将该接口去掉。
 
-   - 2、MSDK2.7.0a及以后，在游戏启动和回到前台会进行定时刷新票据，因此游戏可在刚启动时在onResume中进行自动登录调用即可。票据自动刷新流程[点击查看](#MSDK2.7.0a及以后的票据自动刷新流程)
+   - 2、MSDK2.7.0a及以后，在游戏启动和回到前台MSDK会进行定时刷新票据，因此游戏只需要在初始化结束以后调用自动登陆接口，从后台切换到前台时由MSDK处理。具体可以查看票据自动刷新流程[点击查看](#MSDK2.7.0a及以后的票据自动刷新流程)
 
 - **MSDK微信票据过期自动刷新机制**：
 

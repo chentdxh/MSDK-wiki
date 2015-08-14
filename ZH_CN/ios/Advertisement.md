@@ -8,12 +8,12 @@
 ---
 
 ##广告接口
- - 调用WGShowAD将使用MSDK配置的一套界面显示当前有效的公告，调用WGHideScrollNotice隐藏展示的滚动公告。
+ - 调用WGShowAD将使用MSDK配置的一套界面显示当前有效的广告。
  
 ```
  void WGPlatform::WGShowAD(const _eADType& scene) const;
 ```
->描述: 显示指定scene当前有效的公告。通过参数type的确定展示哪种公告，如下：
+>描述: 显示指定scene当前有效的广告。通过参数type的确定展示哪种广告，如下：
 
 ```
 typedef enum _eADType
@@ -42,7 +42,7 @@ plat->WGShowAD(Type_Pause);
 ```
 
  - 根据“Get Started-Step5”设置WGAdObserver后，用户点击按钮的事件会回调在observer的OnADNotify函数，示例代码：
- 
+
 ```
 void MyAdObserver::OnADNotify(ADRet& adRet) 
 {
