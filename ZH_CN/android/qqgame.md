@@ -15,11 +15,7 @@ MSDK游戏大厅接入模块
 在游戏的`onCreate`和`onNewIntent`里用以下方法判断游戏拉起是否来源于大厅，如果是，则不调用`handleCallback`。如果不是，调用`handleCallback`处理其余平台的拉起。代码如下：
 
 ```
-Intent intent = this.getIntent();
-if (intent != null && intent.getExtras() != null) {
-	Bundle b = intent.getExtras();
-	Set<String> keys = b.keySet();
-	if(keys.contains("KEY_START_FROM_HALL")){
+if (WGPlatform.wakeUpFromHall(this.getIntent())) {
     //拉起平台为大厅
 	Logger.d("Wakeup Plantform is Hall");
 } else {
@@ -40,6 +36,20 @@ if (intent != null && intent.getExtras() != null) {
 接入游戏大厅首先需要有游戏大厅的入口, 需要将游戏配置到游戏大厅中, 这一部分需要找游戏大厅的相关人员完成. 游戏在大厅有入口之后, 从大厅可以拉起游戏, 拉起游戏时SDK会换取游戏需要的票据(OpenId+accessToken+paytoken)存到本地, 游戏在接收到`OnWakeupNotify`之后可以根据接收到的`WakeupRet`的`platform`字段和来判断是否来自大厅拉起, 确认是大厅拉起以后可以调用`WGGetLoginRecord`接口读取存在本地的登录票据, 拿到这些票据以后即可完成登录.
 
 ### 接入配置
+
+带登录态拉起游戏需要处理 Intent ，在在游戏的`onCreate`和`onNewIntent`里加入以下代码：
+
+```
+if (WGPlatform.wakeUpFromHall(this.getIntent())) {
+    //拉起平台为大厅
+	Logger.d("Wakeup Plantform is Hall");
+	WGPlatform.handleCallback(this.getIntent()); 
+} else {
+	//拉起平台不是大厅
+	Logger.d("Wakeup Plantform is not Hall");
+	WGPlatform.handleCallback(this.getIntent()); // 接收平台回调
+}
+```
 
 接入大厅游戏的几点配置要求
 

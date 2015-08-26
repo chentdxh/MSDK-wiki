@@ -155,3 +155,16 @@ Android APP开发者通常会利用proguard工具做代码混淆，由于MTA的�
 SO库拷贝注意事项
 ------
 不能使用Android Library Project的游戏，需要复制MSDKLibrary下的libs。在MSDK2.6.1a（含）及之后注意拷贝libtpnsWatchdog.so, libtpnsSecurity.so。
+
+
+本地推送功能使用
+------
+本地推送功能使用的是信鸽接口MSDK没有对齐就行封装。
+     XGLocalMessage msg = new XGLocalMessage();
+     msg.setType(1);
+     msg.setContent("本地推送测试");
+     msg.setTitle("测试");
+     msg.setDate("20150817");
+     msg.setHour("08");
+     msg.setMin("30");
+     XGPush4Msdk.addLocalNotification(mainActivity, msg);

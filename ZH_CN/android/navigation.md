@@ -128,6 +128,11 @@
   * [打开浏览器](webview.md#打开浏览器)
   * [透传参数说明](webview.md#透传参数说明)
   * [加解密登录态](webview.md#加解密登录态)
+  - - - -
+  * #Javascript接口
+  * [Javascript接口概述](webview.md#Javascript接口概述)
+  * [Javascript封装层](webview.md#Javascript封装层)
+  * [Javascript分享接口](webview.md#Javascript分享接口)
   
 [数据上报]()
 
@@ -220,6 +225,7 @@
   * [获取MSDK版本](tool.md#获取MSDK版本)
   * [获取安装渠道](tool.md#获取安装渠道)
   * [获取注册渠道](tool.md#获取注册渠道)
+  * [Url添加加密票据](tool.md#Url添加加密票据)
   * [本地日志](tool.md#本地日志)
  
 [游戏接入常见问题]()

@@ -107,6 +107,23 @@ MSDK 基础工具类
 
 	WGPlatform::GetInstance()->WGGetRegisterChannelId();
 
+Url添加加密票据
+---
+
+通过内置浏览器打开的第一个页面的Url中会添加经过MSDK加密的票据(参考[内置浏览器](webview.md#透传参数说明))，2.10.0a版本后增加了**Url添加加密票据**接口。使用此接口可在传入的Url后自动添加经过MSDK加密的票据，可满足游戏使用自定义浏览器通过Url安全获取票据的需求。加密后的票据如何解密请参考内置浏览器文档的[加解密登录态](webview.md#加解密登录态)。
+
+#### 接口声明：
+
+	/**
+     * @param openUrl 需要增加加密参数的url
+     */
+    const std::string WGGetEncodeUrl(unsigned char * openUrl);
+
+ 接口调用示例：
+
+ 	std::string encodeUrl = WGPlatform::GetInstance()->WGGetEncodeUrl("http://www.qq.com");
+
+
 本地日志
 ------
 
@@ -121,3 +138,5 @@ MSDK 基础工具类
 | 1 | logcat打印 |
 | 2 | 打印到本地文件，不在logcat打印 |
 | 3 | logcat和本地文件同时打印 |	
+
+

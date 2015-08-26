@@ -516,7 +516,7 @@ NSString *path = [[QQViewController testResourcePath] stringByAppendingPathCompo
 NSData* data = [NSData dataWithContentsOfFile:path];
 plat->WGSendToWeixinWithUrl(WechatScene_Session, (unsigned char*)[title UTF8String], (unsigned char*)[desc UTF8String],(unsigned char*)[url UTF8String], (unsigned char*)mediaTag,(unsigned char*)[data bytes],(int)[data length], (unsigned char*)ext);
 ```
-回调代码事例：
+回调代码示例：
 ```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
@@ -647,3 +647,324 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 |朋友圈分享|	分享到朋友圈|	4.2以上|
 |异帐号提示|	微信登录帐号通知MSDK|	5.0以上|
 |朋友圈跳转|	朋友圈消息多出一个按钮，可以跳转到排行榜，游戏详情页或直接唤起游戏|	5.1以上|
+
+---
+
+## 创建公会微信群
+- ###概述
+游戏公会/联盟内，公会会长可在游戏内创建公会所属的微信聊天群。调用接口：WGCreateWXGroup。绑定信息通过回调OnCreateWXGroupNotify告知游戏。自MSDK2.10.0i开始提供此功能。
+
+```
+	/**
+    * 创建微信群聊
+    * @param unionID 公会ID
+    * @param displayName 玩家名称(群里展示)
+    * @param chatRoomName 公会名称(群名称)
+    */
+    void WGCreateWXGroup(
+                         unsigned char* unionID,
+                         unsigned char* displayName,
+                         unsigned char* chatRoomName
+                         );
+```
+>描述:　游戏内创建公会微信群，调用结果会通过WGGroupObserver的OnCreateWXGroupNotify回调给游戏，一般会返回一个建群的链接，游戏用内置浏览器打开该链接即可实现加建群。
+
+- 示例代码
+调用代码示例：
+```
+MyObserver *ob = MyObserver::GetInstance();
+WGPlatform::GetInstance()->WGSetGroupObserver(ob);
+std::string unionID = "1"";
+std::string displayName = "用户在聊天群的自定义昵称";
+std::string chatRoomName = "聊天群名称";    
+WGPlatform::GetInstance()->WGCreateWXGroup(
+        (unsigned char *)unionID.c_str(),
+        (unsigned char *)displayName.c_str(),
+        (unsigned char *)chatRoomName.c_str());
+```
+回调代码示例：
+```
+void MyObserver::OnCreateWXGroupNotify(GroupRet& groupRet)
+{
+    if (groupRet.flag == 0 && groupRet.wxGroupInfo.chatRoomURL.length() > 0)
+    {
+        WGPlatform::GetInstance()->WGOpenUrl((unsigned char*)groupRet.wxGroupInfo.chatRoomURL.c_str());
+    }
+    else
+    {
+        NSLog(@"flag:%d errorCode:%d desc:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding]);
+        switch (groupRet.errorCode)
+        {
+            case -10000:
+                // 系统错误
+                NSLog(@"系统错误，请重试");
+                break;
+            case -10001:
+                // 该游戏没有建群权限
+                NSLog(@"系统错误，游戏没有建群权限，请重试");
+                break;
+            case -10002:
+                //参数检查错误
+                NSLog(@"系统错误，参数检查错误，请检查参数后重试");
+                break;
+            case -10005:
+                //群ID已存在
+                NSLog(@"系统错误，微信群已存在，请检查后重试");
+                break;
+            case -10006:
+                //建群数量超过上限
+                NSLog(@"系统错误，建群数量超过上限，请检查后重试");
+                break;
+            case -10007:
+                //群ID不存在
+                NSLog(@"系统错误，群ID不存在，请检查后重试");
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+###注意事项
+- 1.调用建群接口并不会直接创建微信工会群，该接口会在回调中返回创建微信公会群的URL。
+- 2.游戏在收到回调后取到回调中的URL，然后用浏览器打开改URL，然后由用户触发建群的动作。如果用户并没有点击建群按钮，公会微信群并不能创建成功。
+- 3.游戏可以使用MSDK的内置浏览器或者系统浏览器来打开建群的URL。
+
+---
+
+## 加入公会微信群
+- ###概述
+游戏公会/联盟内，当公会会长创建了公会的微信群以后，其余成员可在游戏内直接加入公会对应的微信聊天群。调用接口：WGJoinWXGroup。绑定信息通过回调OnJoinWXGroupNotify告知游戏。自MSDK2.10.0i开始提供此功能。
+
+```
+	/**
+     * 加入微信群聊
+     * @param unionID 公会ID
+     * @param displayName 玩家名称(群里展示)
+     */
+    void WGJoinWXGroup(
+                       unsigned char* unionID,
+                       unsigned char* displayName
+                       );
+```
+>描述:　游戏内加入公会微信群，调用结果会通过WGGroupObserver的OnJoinWXGroupNotify回调给游戏，游戏用内置浏览器打开该链接即可实现加建群。
+
+- 示例代码
+调用代码示例：
+```
+MyObserver *ob = MyObserver::GetInstance();
+WGPlatform::GetInstance()->WGSetGroupObserver(ob);
+std::string unionID = "1"";
+std::string displayName = "用户在聊天群的自定义昵称";  
+WGPlatform::GetInstance()->WGJoinWXGroup(
+    (unsigned char *)unionID.c_str(),
+    (unsigned char *)displayName.c_str());
+```
+回调代码示例：
+```
+void MyObserver::OnJoinWXGroupNotify(GroupRet& groupRet)
+{
+    if (groupRet.flag == 0 && groupRet.wxGroupInfo.chatRoomURL.length() > 0)
+    {
+        WGPlatform::GetInstance()->WGOpenUrl((unsigned char*)groupRet.wxGroupInfo.chatRoomURL.c_str());
+    }
+    else
+    {
+        NSLog(@"flag:%d errorCode:%d desc:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding]);
+        switch (groupRet.errorCode)
+        {
+            case -10000:
+                // 系统错误
+                NSLog(@"系统错误，请重试");
+                break;
+            case -10001:
+                // 该游戏没有建群权限
+                NSLog(@"系统错误，游戏没有建群权限，请重试");
+                break;
+            case -10002:
+                //参数检查错误
+                NSLog(@"系统错误，参数检查错误，请检查参数后重试");
+                break;
+            case -10005:
+                //群ID已存在
+                NSLog(@"系统错误，微信群已存在，请检查后重试");
+                break;
+            case -10006:
+                //建群数量超过上限
+                NSLog(@"系统错误，建群数量超过上限，请检查后重试");
+                break;
+            case -10007:
+                //群ID不存在
+                NSLog(@"系统错误，群ID不存在，请检查后重试");
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+###注意事项
+- 1.调用加群接口并不会直接加入微信工会群，该接口会在回调中返回加入微信公会群的URL。
+- 2.游戏在收到回调后取到回调中的URL，然后用浏览器打开改URL，然后由用户触发加群的动作。如果用户并没有点击加群按钮，用户无法加入对应的微信聊天群。
+- 3.游戏可以使用MSDK的内置浏览器或者系统浏览器来打开加群的URL。
+
+---
+
+## 查询公会微信群信息
+- ###概述
+当玩家打开公会界面的时候，或者创建群以后，需要查询微信群的信息，调用接口WGQueryWXGroupInfo可以查询到当前工会微信群的基本信息。查询结果会通过回调OnQueryGroupInfoNotify告知游戏。自MSDK2.10.0i开始提供此功能。
+
+```
+	/**
+     * 查询微信群聊成员信息
+     * @param unionID 公会ID
+     * @param openIdLists 公会成员openid,以","分隔
+     */
+    void WGQueryWXGroupInfo(
+                            unsigned char* unionID,
+                            unsigned char* openIdLists
+                            );
+```
+>描述:　游戏内查询公会微信群信息，用于检查是否创建微信公会群以及对应用户是否加入群，调用结果会通过WGGroupObserver的OnQueryGroupInfoNotify回调给游戏。
+
+- 示例代码
+调用代码示例：
+```
+MyObserver *ob = MyObserver::GetInstance();
+WGPlatform::GetInstance()->WGSetGroupObserver(ob);
+std::string unionID = "1"";
+std::string openidLists = "oGRTijkv0hcYByVPBH0JbOrEkcOA,oGRTijkv0hcYByVBrK0JbOrEkcOB";
+WGPlatform::GetInstance()->WGQueryWXGroupInfo(
+            (unsigned char *)unionID.c_str(),
+            (unsigned char *)openidLists.c_str());
+```
+回调代码示例：
+```
+void MyObserver::OnQueryGroupInfoNotify(GroupRet& groupRet)
+{
+    if (groupRet.flag == 0)
+    {
+        NSLog(@"flag:%d errorCode:%d desc:%@ openIdLists:%@ memberCount:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding], [NSString stringWithCString:groupRet.wxGroupInfo.openIdList.c_str() encoding:NSUTF8StringEncoding], [NSString stringWithCString:groupRet.wxGroupInfo.memberNum.c_str() encoding:NSUTF8StringEncoding]);
+    }
+    else
+    {
+        NSLog(@"flag:%d errorCode:%d desc:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding]);
+        switch (groupRet.errorCode)
+        {
+            case -10000:
+                // 系统错误
+                NSLog(@"系统错误，请重试");
+                break;
+            case -10001:
+                // 该游戏没有建群权限
+                NSLog(@"系统错误，游戏没有建群权限，请重试");
+                break;
+            case -10002:
+                //参数检查错误
+                NSLog(@"系统错误，参数检查错误，请检查参数后重试");
+                break;
+            case -10005:
+                //群ID已存在
+                NSLog(@"系统错误，微信群已存在，请检查后重试");
+                break;
+            case -10006:
+                //建群数量超过上限
+                NSLog(@"系统错误，建群数量超过上限，请检查后重试");
+                break;
+            case -10007:
+                //群ID不存在
+                NSLog(@"系统错误，群ID不存在，请检查后重试");
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+###注意事项
+- 1.调用该接口的参数中，openIdLists为需要查询是否在群里的用户的openID列表，当需要同时查询多个用户的时候，openID之间用","隔开。
+- 2.调用该接口会返回游戏微信公会群相关的内容。当查询成功以后，会返回公会群人数，以及查询的openIdLists中已经在群里的用户的openIDList。
+- 3.如果游戏尚未建立公会群或者没有公会群相关的权限，该接口都会以对应的错误码返回。
+
+---
+
+## 分享结构化消息到公会微信群
+- ###概述
+游戏公会/联盟内，用户可以直接分享结构化消息到微信公会群。游戏可以基于该接口做一些拉活的方案。调用接口为WGSendToWXGroup，结果会通过分享通用的OnShareNotify回调给游戏。自MSDK2.10.0i开始提供此功能。
+
+```
+	/**
+     * 发送微信群消息
+     * @param msgType 消息类型：
+     1:open
+     2:link(未实现)
+     3:voice(未实现)
+     4:text(未实现)
+     * @param subType 子类型：
+     1:邀请(填1)
+     2:炫耀,
+     3:赠送
+     4:索要
+     * @param unionID 公会ID
+     * @param title 标题
+     * @param desc 描述
+     * @param mediaTagName 请根据实际情况填入下列值的一个, 此值会传到微信供统计用
+     "MSG_INVITE";                   // 邀请
+     "MSG_SHARE_MOMENT_HIGH_SCORE";    //分享本周最高到朋友圈
+     "MSG_SHARE_MOMENT_BEST_SCORE";    //分享历史最高到朋友圈
+     "MSG_SHARE_MOMENT_CROWN";         //分享金冠到朋友圈
+     "MSG_SHARE_FRIEND_HIGH_SCORE";     //分享本周最高给好友
+     "MSG_SHARE_FRIEND_BEST_SCORE";     //分享历史最高给好友
+     "MSG_SHARE_FRIEND_CROWN";          //分享金冠给好友
+     "MSG_friend_exceed"         // 超越炫耀
+     "MSG_heart_send"            // 送心
+     * @param imgUrl 图片CDN url
+     * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
+     * @param msdkExtInfo 游戏自定义透传字段，通过分享结果shareRet.extInfo返回给游戏
+     */
+    void WGSendToWXGroup(
+                         const int& msgType,
+                         const int& subType,
+                         unsigned char* unionID,
+                         unsigned char* title,
+                         unsigned char* desc,
+                         unsigned char* mediaTagName,
+                         unsigned char* imgUrl,
+                         unsigned char* messageExt,
+                         unsigned char* msdkExtInfo
+                        );
+```
+
+>描述:　分享结构化消息到微信公会群。
+
+- 示例代码
+调用代码示例：
+```
+int msgType = 1;
+int subType = 1;
+std::string unionID = "1";
+std::string title = "后端分享到公会微信群-title";
+std::string desc = "后端分享给微信好友-desc";
+std::string mediaTagName = "MSG_INVITE";
+std::string imgUrl = "http://blog.bihe0832.com/public/img/head.jpg";
+std::string messageExt = "message Ext";
+std::string msdkExtInfo = "msdkExtInfo";
+WGPlatform::GetInstance()->WGSendToWXGroup(
+        msgType,
+        subType,
+        (unsigned char *)unionID.c_str(),
+        (unsigned char *)title.c_str(),
+        (unsigned char *)desc.c_str(),
+        (unsigned char *)mediaTagName.c_str(),
+        (unsigned char *)imgUrl.c_str(),
+        (unsigned char *)messageExt.c_str(),
+        (unsigned char *)msdkExtInfo.c_str());
+```
+
+###注意事项
+- 1.该接口与分享结构化消息给同玩好友的接口功能类似，只是该功能是分享结构化消息到微信群。
+- 2.接口参数中messageExt为透传字段，当用户通过消息拉起游戏时，会通过OnWakeUpNotify中ret.messageExt回传给游戏。
+- 3.接口参数中msgType为分享的消息类型，目前传1。
+- 4.接口参数中subType 分享类型，邀请填1，炫耀填2，赠送填3，索要填4。
+
+---
