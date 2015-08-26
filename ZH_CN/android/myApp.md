@@ -117,127 +117,136 @@ protected void onDestroy() {
 	游戏自行实现，以下仅供参考
 
 	class SaveUpdateDemoObserver extends WGSaveUpdateObserver{
-	    @Override
-	    public void OnCheckNeedUpdateInfo(long newApkSize, String newFeature, long patchSize,
-	            final int status, String updateDownloadUrl, final int updateMethod) {
-	        Logger.d("called");
-	        String statusDesc = "";
-	        switch (status) {
-	            case TMSelfUpdateUpdateInfo.STATUS_OK:
-	                // 查询更新成功
-	                statusDesc = "Check success!";
-	                break;
-	            case TMSelfUpdateUpdateInfo.STATUS_CHECKUPDATE_RESPONSE_IS_NULL:
-	                // 查询响应为空
-	                statusDesc = "Response is null!";
-	                break;
-	            case TMSelfUpdateUpdateInfo.STATUS_CHECKUPDATE_FAILURE:
-	                // 查询更新失败
-	                statusDesc = "CheckNeedUpdate FAILURE!";
-	                break;
-	        }
-	        if(status == TMSelfUpdateUpdateInfo.STATUS_OK) {
-		        switch(updateMethod) {
-		        	case TMSelfUpdateUpdateInfo.UpdateMethod_NoUpdate:
-		        		// 无更新包
-		        		statusDesc += "But no update package.";
-		        		break;
-		        	case TMSelfUpdateUpdateInfo.UpdateMethod_Normal:
-		        		// 有全量更新包
-		        		statusDesc += "Common package is available.";
-		        		break;
-		        	case TMSelfUpdateUpdateInfo.UpdateMethod_ByPatch:
-		        		// 有省流量更新包
-		        		statusDesc += "Save update package is available.";
-		        		break;
-		        	default :
-		        	    statusDesc += "Happen error!";
-		        	    break;
-		        }
-	        }
-	        Logger.d(statusDesc);
-	        MsdkCallback.sendResult(statusDesc);
-	    }
-	
-	    @Override
-	    public void OnDownloadAppProgressChanged(final long receiveDataLen, final long totalDataLen) {
-	    	// 下载游戏进度由此回调，游戏可根据回调的参数做进度表展示
-	        Logger.d("totalData:" + totalDataLen + "receiveData:" + receiveDataLen);
-	        MsdkCallback.mainActivity.runOnUiThread(new Runnable() {
-	
-				@Override
-				public void run() {
-					MainActivity.mProgressDialog.setMax((int)(totalDataLen/1024));
-		            MainActivity.mProgressDialog.setProgress((int)(receiveDataLen/1024));
-				}
-	        });
-	    }
-	
-	    @Override
-	    public void OnDownloadAppStateChanged(int state, int errorCode, String errorMsg) {
-	        // 下载状态由此回调
-	        String result = "";
-	        switch (state) {
-	            case TMAssistantDownloadTaskState.DownloadSDKTaskState_SUCCEED:
-	                // 应用宝内的游戏下载任务完成, 更新完成继续游戏
-	                result = "state: succeed";
-	            case TMAssistantDownloadTaskState.DownloadSDKTaskState_DOWNLOADING:
-	                // 应用宝内的游戏下载中, 游戏提示等待动画或者结合OnDownloadAppProgressChanged显示下载进度
-	                result = "state: downloading";
-	                break;
-	            case TMAssistantDownloadTaskState.DownloadSDKTaskState_WAITING:
-	                // 应用宝内的游戏下载任务等待中, 提示用户等待
-	                result = "state: waiting";
-	                break;
-	            case TMAssistantDownloadTaskState.DownloadSDKTaskState_PAUSED:
-	                result = "state: paused";
-	                break;
-	            case TMAssistantDownloadTaskState.DownloadSDKTaskState_FAILED:
-	                // 详细错误码在errorCode中, 错误码定义在TMAssistantDownloadSDKErrorCode中以DownloadSDKErrorCode开头的属性中
-	                result = "state: failed";
-	                break;
-	            case TMAssistantDownloadTaskState.DownloadSDKTaskState_DELETE:
-	                result = "state: delete";
-	                break;
-	            default :
-	                result = "state: " + state;
-	        } 
-	        result += "\nerrorCode:" + errorCode + "\nerrorMsg:" + errorMsg; 
-	        Logger.d(result);
-	        if(state != TMAssistantDownloadTaskState.DownloadSDKTaskState_DOWNLOADING &&
-	                state != TMAssistantDownloadTaskState.DownloadSDKTaskState_WAITING &&
-	                state != TMAssistantDownloadTaskState.DownloadSDKTaskState_PAUSED)
-	            if (MainActivity.mProgressDialog != null && MainActivity.mProgressDialog.isShowing())
-	                MainActivity.mProgressDialog.dismiss();
-	            MsdkCallback.sendResult(result);
-	    }
-	    
-	    /**
-	     * 省流量更新(WGStartSaveUpdate)，当没有安装应用宝时，会先下载应用宝, 此为下载应用宝包的进度回调
-	     * @param url 当前任务的url
-	     * @param receiveDataLen 已经接收的数据长度
-	     * @param totalDataLen 全部需要接收的数据长度（如果无法获取目标文件的总长度，此参数返回 －1）
-	     */
-	    @Override
-	    public void OnDownloadYYBProgressChanged(String url, final long receiveDataLen, final long totalDataLen) {
-	    	// 下载应用宝进度由此回调，游戏可根据回调的参数做进度表展示
-	    	Logger.d("totalData:" + totalDataLen + "receiveData:" + receiveDataLen);
-	    }
-	    
-	    /**
-	     * @param url 指定任务的url
-	     * @param state 下载状态: 取值 TMAssistantDownloadSDKTaskState.DownloadSDKTaskState_*
-	     * @param errorCode 错误码
-	     * @param errorMsg 错误描述，有可能为null
-	     */
-	    @Override
-	    public void OnDownloadYYBStateChanged(final String url, final int state, final int errorCode, final String errorMsg) {
-	         Logger.d("called");
-	         String result = "OnDownloadYYBStateChanged " + "\nstate:" + state + 
-	         		"\nerrorCode:" + errorCode + "\nerrorMsg:" + errorMsg; 
-	         Logger.d(result);
-	         MsdkCallback.sendResult(result);
-	    }
+	     @Override
+        public void OnCheckNeedUpdateInfo(long newApkSize, String newFeature, long patchSize,
+                final int status, String updateDownloadUrl, final int updateMethod) {
+            Logger.d("called");
+            String statusDesc = "";
+            switch (status) {
+                case TMSelfUpdateUpdateInfo.STATUS_OK:
+                    // 查询更新成功
+                    statusDesc = "Check success!";
+                    break;
+
+                case TMSelfUpdateUpdateInfo.STATUS_CHECKUPDATE_RESPONSE_IS_NULL:
+                    // 查询响应为空
+                    statusDesc = "Response is null!";
+                    break;
+
+                case TMSelfUpdateUpdateInfo.STATUS_CHECKUPDATE_FAILURE:
+                    // 查询更新失败
+                    statusDesc = "CheckNeedUpdate FAILURE!";
+                    break;
+            }
+            if(status == TMSelfUpdateUpdateInfo.STATUS_OK) {
+    	        switch(updateMethod) {
+    	        	case TMSelfUpdateUpdateInfo.UpdateMethod_NoUpdate:
+    	        		// 无更新包
+    	        		statusDesc += "But no update package.";
+    	        		break;
+    	        	case TMSelfUpdateUpdateInfo.UpdateMethod_Normal:
+    	        		// 有全量更新包
+    	        		statusDesc += "Common package is available.";
+    	        		break;
+    	        	case TMSelfUpdateUpdateInfo.UpdateMethod_ByPatch:
+    	        		// 有省流量更新包
+    	        		statusDesc += "Save update package is available.";
+    	        		break;
+    	        	default :
+    	        	    statusDesc += "Happen error!";
+    	        	    break;
+    	        }
+            }
+            Logger.d(statusDesc);
+            MsdkCallback.sendResult(statusDesc);
+        }
+
+        @Override
+        public void OnDownloadAppProgressChanged(final long receiveDataLen, final long totalDataLen) {
+        	// 下载游戏进度由此回调，游戏可根据回调的参数做进度表展示
+            Logger.d("totalData:" + totalDataLen + "receiveData:" + receiveDataLen);
+            MsdkCallback.mainActivity.runOnUiThread(new Runnable() {
+
+    			@Override
+    			public void run() {
+    				MainActivity.mProgressDialog.setMax((int)(totalDataLen/1024));
+    	            MainActivity.mProgressDialog.setProgress((int)(receiveDataLen/1024));
+    			}
+            	
+            });
+            
+        }
+
+    	//@param state 下载状态，类型为TMAssistantDownloadTaskState.DownloadSDKTaskState_* (跳应用宝进行自更新时返回此类型值) 或  TMSelfUpdateTaskState(使用sdk自更新时返回此类型值)
+    	//@param errorCode 错误码，类型为TMAssistantDownloadErrorCode(跳应用宝进行自更新时返回此类型值) 或  TMSelfUpdateErrorCode(使用sdk自更新时返回此类型值)
+    	//@param errorMsg 错误信息
+        @Override
+        public void OnDownloadAppStateChanged(int state, int errorCode, String errorMsg) {
+            // TODO GAME 下载状态由此回调，这里的事例为拉起应用宝完成省流量更新的回调，游戏内自更新的状态请使用TMSelfUpdateTaskState中的回调
+            String result = "";
+            switch (state) {
+                case TMAssistantDownloadTaskState.DownloadSDKTaskState_SUCCEED:
+                    // 应用宝内的游戏下载任务完成, 更新完成继续游戏
+                    result = "state: succeed";
+                case TMAssistantDownloadTaskState.DownloadSDKTaskState_DOWNLOADING:
+                    // 应用宝内的游戏下载中, 游戏提示等待动画或者结合OnDownloadAppProgressChanged显示下载进度
+                    result = "state: downloading";
+                    break;
+                case TMAssistantDownloadTaskState.DownloadSDKTaskState_WAITING:
+                    // 应用宝内的游戏下载任务等待中, 提示用户等待
+                    result = "state: waiting";
+                    break;
+                case TMAssistantDownloadTaskState.DownloadSDKTaskState_PAUSED:
+                    result = "state: paused";
+                    break;
+                case TMAssistantDownloadTaskState.DownloadSDKTaskState_FAILED:
+                    // 详细错误码在errorCode中, 错误码定义在TMAssistantDownloadSDKErrorCode中以DownloadSDKErrorCode开头的属性中
+                    result = "state: failed";
+                    break;
+                case TMAssistantDownloadTaskState.DownloadSDKTaskState_DELETE:
+                    result = "state: delete";
+                    break;
+                default :
+                    result = "state: " + state;
+            } 
+            
+            result += "\nerrorCode:" + errorCode + "\nerrorMsg:" + errorMsg; 
+            Logger.d(result);
+            if(state != TMAssistantDownloadTaskState.DownloadSDKTaskState_DOWNLOADING &&
+                    state != TMAssistantDownloadTaskState.DownloadSDKTaskState_WAITING &&
+                    state != TMAssistantDownloadTaskState.DownloadSDKTaskState_PAUSED)
+                if (MainActivity.mProgressDialog != null && MainActivity.mProgressDialog.isShowing())
+                    MainActivity.mProgressDialog.dismiss();
+                MsdkCallback.sendResult(result);
+        }
+        
+        /**
+         * 省流量更新(WGStartSaveUpdate)，当没有安装应用宝时，会先下载应用宝, 此为下载应用宝包的进度回调
+         * @param url 当前任务的url
+         * @param receiveDataLen 已经接收的数据长度
+         * @param totalDataLen 全部需要接收的数据长度（如果无法获取目标文件的总长度，此参数返回 －1）
+         */
+        @Override
+        public void OnDownloadYYBProgressChanged(String url, final long receiveDataLen, final long totalDataLen) {
+        	// 下载应用宝进度由此回调，游戏可根据回调的参数做进度表展示
+        	Logger.d("totalData:" + totalDataLen + "receiveData:" + receiveDataLen);
+        }
+        
+        /**
+         * @param url 指定任务的url
+         * @param state 下载状态: 取值 TMAssistantDownloadTaskState.DownloadSDKTaskState_*
+         * @param errorCode 错误码
+         * @param errorMsg 错误描述，有可能为null
+         */
+
+        @Override
+        public void OnDownloadYYBStateChanged(final String url, final int state, final int errorCode, final String errorMsg) {
+             Logger.d("called");
+             String result = "OnDownloadYYBStateChanged " + "\nstate:" + state + 
+             		"\nerrorCode:" + errorCode + "\nerrorMsg:" + errorMsg; 
+             Logger.d(result);
+             MsdkCallback.sendResult(result);
+        }
 	}
 
 - **回调设置**
@@ -246,6 +255,10 @@ protected void onDestroy() {
 
 		// 应用宝更新回调类，游戏自行实现
 		WGPlatform.WGSetSaveUpdateObserver(new SaveUpdateDemoObserver()); 
+		
+-  **注意事项**
+	
+	在回调`OnDownloadAppStateChanged中`，使用不同的更新方式，回调的错误码并不一样。通过应用宝更新时，state为：`TMAssistantDownloadTaskState.DownloadSDKTaskState_*`；使用sdk自更新时,state为：`TMSelfUpdateTaskState`。因此游戏需要根据自己选择的更新方式处理对应的错误码。
 
 ### 第三步: 调用接口检查是否有更新，并根据回调处理更新。
 

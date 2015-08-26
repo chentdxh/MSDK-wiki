@@ -2,7 +2,18 @@
 
 [gimmick:theme (inverse: true)](cerulean)
 
-[MSDK iOS介绍](index.md)
+[MSDK iOS介绍]()
+
+  * #MSDK iOS介绍
+  * [功能介绍](index.md#功能介绍)
+  * [安装包结构](index.md#安装包结构)
+  * [包含内容](index.md#包含内容)
+  * [模块介绍](index.md#模块介绍)
+  * [名词解释](index.md#名词解释)
+  * [注意事项](index.md#注意事项)
+  - - - -
+  * #SDK下载
+  * [内网下载](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD)
 
 
 [极速接入]()
@@ -117,6 +128,16 @@
   * [示例代码](ShareMusic.md#示例代码)  
   
 [常量查询](const.md)
+
+[工具接口]()
+
+  * [检查手Q/微信是否安装](tool.md#检查手Q/微信是否安装)
+  * [获取手Q/微信版本](tool.md#获取手Q/微信版本)
+  * [获取MSDK版本](tool.md#获取MSDK版本)  
+  * [获取安装渠道](tool.md#获取安装渠道)  
+  * [获取注册渠道](tool.md#获取注册渠道)  
+  * [Url添加加密票据](tool.md#Url添加加密票据)  
+  * [控制台日志](tool.md#控制台日志)
 
 [变更历史](version.md)
  

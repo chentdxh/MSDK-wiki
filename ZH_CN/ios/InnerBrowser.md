@@ -1,12 +1,38 @@
 内置浏览器
 ===
 
-##概述
- - 该功能在1.6.1版本以后提供，需要XCode5.0以上版本进行编译。
-调用以下代码，打开指定的url。
+##打开内置浏览器
+ - ###概述
+该功能在1.6.1版本以后提供，需要XCode5.0以上版本进行编译。
+
+```
+/**
+ *  @param openUrl 要打开的url
+ */
+void WGOpenUrl(unsigned char * openUrl);
+```
+示例代码：
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 plat->WGOpenUrl((unsigned char*)[url UTF8String]);
+```
+---
+
+##指定屏幕方向打开浏览器
+ - ###概述
+该功能在2.9.0版本以后提供，需要在plist中声明App所需的屏幕方向。
+
+```
+/**
+ *  @param openUrl 要打开的url
+ *  @param screenDir 内置浏览器支持的屏幕方向
+ */
+void WGOpenUrl(unsigned char * openUrl, eMSDK_SCREENDIR screenDir);
+```
+示例代码：
+```
+WGPlatform* plat = WGPlatform::GetInstance();
+plat->WGOpenUrl((unsigned char*)[url UTF8String], eMSDK_SCREENDIR_LANDSCAPE);
 ```
 ---
 
@@ -33,7 +59,7 @@ plat->WGOpenUrl((unsigned char*)[url UTF8String]);
 |msdkEncodeParam|	密文|	　|
 |version|	MSDK版本号|	例如1.6.2i|
 |sig|	请求本身的签名|	|
-|encode|	编码参数|	1|
+|encode|	编码参数|	1(2.8.1及以后版本需传2，否则会导致解密失败)|
 |openid|	用户授权后平台返回的唯一标识 | | 
 
  
@@ -326,6 +352,94 @@ var button2 = document.getElementById('buttons').appendChild(document.createElem
 
 ---
 
+##Javascript分享接口
+- ###概述
+2.10.0i及以后版本的内置浏览器增加了对 Javascript 接口的支持。
+
+- ###封装层
+
+```
+// msdk javascript封装代码，游戏需要将此 copy 自己的页面
+    // ******START******
+    var msdkiOSHandler
+
+    function connectWebViewJavascriptBridge(callback) {
+        if (window.WebViewJavascriptBridge) {
+            callback(WebViewJavascriptBridge)
+        } else {
+            document.addEventListener('WebViewJavascriptBridgeReady', function() {
+                callback(WebViewJavascriptBridge)
+            }, false)
+        }
+    }
+
+    connectWebViewJavascriptBridge(function(bridge) {
+        bridge.init(function(message, responseCallback) {
+            var data = {
+                'Javascript Responds': 'Wee!'
+            }
+            responseCallback(data)
+        })
+        msdkiOSHandler = bridge.callHandler
+    })
+
+    function isiOS() {
+        var agent = navigator.userAgent
+        return !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    }
+
+    // 统一分享接口
+    function msdkShare(jsonData) {
+        if (isiOS()) {
+            msdkiOSHandler('OpenShare', jsonData, null)
+        } else {
+            alert(jsonData)
+        }
+    }
+    // ******END******
+```
+开发者需要将上面的JS代码复制到需要调用 MSDK JS接口的网页，同时此网页需要用 MSDK 内置浏览器打开。Android，iOS平台都可通过调用 msdkShare(jsonData) 完成分享，无需指定平台。
+
+- ###分享接口
+JS层使用统一的分享接口，分享类别和参数通过 json 格式的字符串指定，分享回调统一回调到在初始化MSDK时注册的原生接口 OnShareNotify(ShareRet ret)。目前支持手Q/微信平台除后端分享的所有分享接口，具体如下：
+
+| 分享类型 | 分享位置 | 是否支持JS接口 | 调用接口  |
+|: ----- :|: ----- :|: ----- :|: ----- :|
+| QQ结构化消息分享    | 会话/空间     | 支持 | [WGSendToQQ](qq.md#结构化消息分享)            |
+| 微信结构化消息分享  | 会话          | 支持 | [WGSendToWX](wechat.md#结构化消息分享)        |
+| QQ音乐消息分享      | 会话/空间     | 支持 | [WGSendToQQWithMusic](qq.md#音乐消息分享)     |
+| 微信音乐消息分享    | 会话/朋友圈   | 支持 | [WGSendToWXWithMusic](wechat.md#音乐消息分享) |
+| QQ纯图分享          | 会话/空间     | 支持 | [WGSendToQQWithPhoto](qq.md#大图消息分享)     |
+| 微信纯图分享        | 会话/朋友圈   | 支持 | [WGSendToWXWithPhoto](wechat.md#大图消息分享) |
+| QQ后端分享          | QQ手公共号    | 否   | [WGSendToQQGameFriend](qq.md#后端分享)        |
+| 微信后端分享        | 会话          | 否   | [WGSendToWXGameFriend](wechat.md#后端分享)    |
+| 微信链接消息分享    | 会话/朋友圈   | 支持 | [WGSendToWeixinWithUrl](wechat.md#链接分享)   |
+
+分享参数 **jsonData** 示例如下：
+
+```
+var QQStructuredShare2zone='{"MsdkMethod":"WGSendToQQ","scene":"1","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
+```
+参数 `MsdkMethod` 指定分享的类型，对应关系参照上表。后面几个参数的 key 参考对应分享的 C++ 接口声明的参数，json 的 value 统一使用字符串。分享参数的具体意义请点击表中对应的原生接口名查看。
+需要`注意`的是，JS接口分享的图片(除音乐分享外)默认为当面网页内容的截图(不可更改)，因此原生接口声明的参数中关于图片的参数(如 imgUrl，imgUrlLen，thumbImageData等)不需要填写在 **jsonData**中。手Q/微信 的音乐分享则必须提供一个网络图片的Url为 key:**imgUrl** 的 value，以用此图片完成分享。
+
+```
+	/**
+     * @param jsonData json格式的分享参数
+     * 分享回调在平台层的 OnShareNotify
+     */
+    function msdkShare(jsonData)
+```
+
+示例代码：
+
+```
+// 分享数据, Android iOS 都通过接口 msdkShare 实现分享
+    var QQStructuredShare2zone='{"MsdkMethod":"WGSendToQQ","scene":"1","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
+    <p><input type="button" value="QQ结构化消息分享To空间" onclick="msdkShare(QQStructuredShare2zone)" /></p>
+    ......
+```
+具体Demo示例可参考[该网页](http://wekf.qq.com/msdk/index.html)源码
 
 ##常见问题
 部分游戏导入framework后会有找不到framework的情况，例如是无法打开内置浏览器，日志输出“no MSDKWebViewService exist”，此时需要在Other link flags增加“-ObjC “或 “-framework MSDKFoundation -framework MSDK -framework MSDKMarketing -framework MSDKXG”，导入相关framework。

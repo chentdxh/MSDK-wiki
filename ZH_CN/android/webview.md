@@ -1,6 +1,12 @@
 MSDK 内置浏览器相关模块
 ======
 MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各方面优于系统内置Webview, 此Webview中提供了分享到QQ和微信的功能. 游戏需要在游戏内拉起Web页面时, 例如拉起营销活动页面, 论坛, 攻略等页面时. 接入内置浏览器需要完成两步。
+
+
+#### MSDK内置浏览器展示效果
+
+![webview](./webview_res/webview_1.png) ![webview](./webview_res/webview_2.png)
+
 接入配置
 ------
 **MSDK2.7.0a及以后按如下配置:**
@@ -74,11 +80,21 @@ MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各�
 调用示例代码如下:
 
     WGPlatform::GetInstance()->WGOpenUrl(cOpenUrl);
+    
+指定屏幕方向打开浏览器
+------
+调用WGOpenUrl接口传入URL即可使用SDK提供的Webview, WGOpenUrl接口说明如下: 
 
-展示效果如下:
+	/**
+      *打开内置浏览器,此内置Webview从安全性, 性能各方面优于系统内置Webview, 如果手机上安装了QQ浏览器则会使用QQ浏览器的内核, 性能更优. 同时还提供了在内置浏览器中分享到QQ和微信的功能.
+      *@param openUrl 要打开的url
+      *@param screendir 横屏还是竖屏打开浏览器 eMSDK_SCREENDIR_SENSOR 自动感应 eMSDK_SCREENDIR_PORTRAIT 竖屏 eMSDK_SCREENDIR_LANDSCAPE 横屏
+      */
+    void WGOpenUrl(unsigned char * openUrl,eMSDK_SCREENDIR &screendir);
 
-![webview](./webview_res/webview_1.png) ![webview](./webview_res/webview_2.png)
+调用示例代码如下:
 
+    WGPlatform::GetInstance()->WGOpenUrl(cOpenUrl,eMSDK_SCREENDIR_LANDSCAPE);
 
 透传参数说明
 ------
@@ -117,14 +133,16 @@ MSDK会在URL后附加的参数如下，__请勿传入重复的参数，会导�
 | msdkEncodeParam | 密文 |
 | version | MSDK版本号，例如：1.6.2a |
 | sig | 请求本身签名 |
-| encode | 编码参数，如1 |
+| encode | 编码参数，如2 |
 | openid | 用户授权后平台返回的惟一标识 |
 
+#### **注意**
+encode参考在2.8.1a之前为1，建议使用拉起浏览器时带入url的参数，而不是硬编码。
 
 ###3、举例说明
 假设浏览器拉起URL：http://apps.game.qq.com/ams/gac/index.html， 实际截包会看到访问的URL如下：
 
-`http://apps.game.qq.com/ams/gac/index.html?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&msdkEncodeParam=***&version=1.6.2i&encode=1`
+`http://apps.game.qq.com/ams/gac/index.html?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&msdkEncodeParam=***&version=1.6.2i&encode=2`
 
 其中msdkEncodeParam 传输的实际上是下面参数加密得到的密文（url encode）：
 
@@ -140,13 +158,13 @@ vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-r
 
 1、在MSDK1.8.1a及之后，加密传参的方案为：（下面URL访问的是MSDK测试环境）
 
-`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v2&version=1.8.1i&encode=1`
+`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v2&version=1.8.1i&encode=2`
 
 直接将第一步中得到msdkEncodeParam 里的密文值以Post方式，放在body以Post方式传输，注意不需要加key“msdkEncodeParam=”。
 
 2、MSDK1.8.1a之前，加密传参方案如下：（该方案终端已不再使用，但后台需实现以兼容老版本）
 
-`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&version=1.6.2i&encode=1`
+`http://msdktest.qq.com/comm/decrypv1/?sig=***&timestamp=**&appid=***&openid=***&algorithm=v1&version=1.6.2i&encode=2`
  
 将msdkEncodeParam 里的密文URL Decode，放在body以Post方式传输，注意不需要加key“msdkEncodeParam=”。截包如下：
 
@@ -154,11 +172,11 @@ vXrr62qKiSw2otDBgCzzKZZfeBOSv9fplYsIPD844sNIDeZgG3IyarYcGCNe8XuYKHncialLBq0qj9-r
 
 3.1 假设浏览器拉起URL：www.qq.com，实际截包会看到访问的URL如下：
 
-    http://www.qq.com?algorithm=v2&version=2.0.6a&timestamp=1423538227203&appid=100703379&sig=427291da31b56b59739be6da61d433ec&encode=1&msdkEncodeParam=BAD8B1625CB04523B06AAF6739ACB3CEA96F54393831AF5C6890E92EE61CF1A29F493710592DD84B47D4217BA9FA9DAFB8025CEB27E45EC958689A794E8BD33CF2544CC5D00FCE03AEF7B23EE2BFCA4332F5D69547477A3E93E44F3270F19664D5499CA2990BE5BA9E232036197B184F1411B76CF95537AC07E3D6A27F054AD3F26648B18554F9C1
+    http://www.qq.com?algorithm=v2&version=2.0.6a&timestamp=1423538227203&appid=100703379&sig=427291da31b56b59739be6da61d433ec&encode=2&msdkEncodeParam=BAD8B1625CB04523B06AAF6739ACB3CEA96F54393831AF5C6890E92EE61CF1A29F493710592DD84B47D4217BA9FA9DAFB8025CEB27E45EC958689A794E8BD33CF2544CC5D00FCE03AEF7B23EE2BFCA4332F5D69547477A3E93E44F3270F19664D5499CA2990BE5BA9E232036197B184F1411B76CF95537AC07E3D6A27F054AD3F26648B18554F9C1
 
 3.2 用Fiddler简易测试下，则需要拼装的url为：
 
-    http://msdktest.qq.com/comm/decrypv1/?sig=427291da31b56b59739be6da61d433ec&timestamp=1423538227203&appid=100703379&algorithm=v2&version=2.0.6a&encode=1
+    http://msdktest.qq.com/comm/decrypv1/?sig=427291da31b56b59739be6da61d433ec&timestamp=1423538227203&appid=100703379&algorithm=v2&version=2.0.6a&encode=2
 
    其中Post body为：
           
@@ -331,3 +349,147 @@ PS：正式环境请使用http://msdk.qq.com/comm/decrypv1/。
 3、将传入的字符串encodeParam先后用php_url_decode和php_url_decode_special解码，得到的就是密文
 
 ![webview](./webview_res/webview_7.png)
+
+
+Javascript接口概述
+---
+
+2.10.0a及以后版本的内置浏览器增加了对 Javascript 接口的支持。目前 Android 版 MSDK 提供 Javascript 分享接口；iOS 版除了分享接口，还可以通过JS在Safiri中打开指定URL，通过JS打开iOS图库、相机获取照片（参考[iOS MSDK 内置浏览器](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html#!InnerBrowser.md)）。
+
+Javascript封装层
+---
+
+```javascript
+    // msdk javascript封装代码，游戏需要将此 copy 自己的页面
+    // ******START******
+    var uniqueId = 1
+    var msdkiOSHandler
+
+    function log(message, data) {
+        var log = document.getElementById('log')
+        var el = document.createElement('div')
+        el.className = 'logLine'
+        el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+        if (log.children.length) {
+            log.insertBefore(el, log.children[0])
+        } else {
+            log.appendChild(el)
+        }
+    }
+
+    window.onerror = function(err) {
+        log('window.onerror: ' + err)
+    }
+
+    function connectWebViewJavascriptBridge(callback) {
+        if (window.WebViewJavascriptBridge) {
+            callback(WebViewJavascriptBridge)
+        } else {
+            document.addEventListener('WebViewJavascriptBridgeReady', function() {
+                callback(WebViewJavascriptBridge)
+            }, false)
+        }
+    }
+
+    connectWebViewJavascriptBridge(function(bridge) {
+        bridge.init(function(message, responseCallback) {
+            log('JS got a message', message)
+            var data = {
+                'Javascript Responds': 'Wee!'
+            }
+            log('JS responding with', data)
+            responseCallback(data)
+        })
+        msdkiOSHandler = bridge.callHandler
+    })
+
+    function isiOS() {
+        var agent = navigator.userAgent
+        return !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    }
+
+    // 统一分享接口
+    function msdkShare(jsonData) {
+        if (isiOS()) {
+            msdkiOSHandler('OpenShare', jsonData, null)
+        } else {
+            alert(jsonData)
+        }
+    }
+    // ******END******
+```
+
+开发者需要将上面的JS代码复制到需要调用 MSDK JS接口的网页，同时此网页需要用 MSDK 内置浏览器打开。Android，iOS平台都可通过调用 `msdkShare(jsonData)` 完成分享，无需指定平台；iOS 版本 MSDK 提供的额外接口可通过 `msdkiOSHandler` 调用，可参考 iOS 部分的文档和 [JSDemo 示例](http://wekf.qq.com/msdk/index.html)。
+
+Javascript分享接口
+---
+
+JS层使用统一的分享接口，分享类别和参数通过 json 格式的字符串指定，分享回调统一回调到在初始化MSDK时注册的原生接口 `OnShareNotify(ShareRet ret)`。目前支持手Q/微信平台除后端分享的所有分享接口，具体如下：
+
+| 分享类型 | 分享位置 | 是否支持JS接口 | 调用接口  |
+|: ----- :|: ----- :|: ----- :|: ----- :|
+| QQ结构化消息分享    | 会话/空间     | 支持 | [WGSendToQQ](qq.md#结构化消息分享)            |
+| 微信结构化消息分享  | 会话          | 支持 | [WGSendToWX](wechat.md#结构化消息分享)        |
+| QQ音乐消息分享      | 会话/空间     | 支持 | [WGSendToQQWithMusic](qq.md#音乐消息分享)     |
+| 微信音乐消息分享    | 会话/朋友圈   | 支持 | [WGSendToWXWithMusic](wechat.md#音乐消息分享) |
+| QQ纯图分享          | 会话/空间     | 支持 | [WGSendToQQWithPhoto](qq.md#大图消息分享)     |
+| 微信纯图分享        | 会话/朋友圈   | 支持 | [WGSendToWXWithPhoto](wechat.md#大图消息分享) |
+| QQ后端分享          | QQ手公共号    | 否   | [WGSendToQQGameFriend](qq.md#后端分享)        |
+| 微信后端分享        | 会话          | 否   | [WGSendToWXGameFriend](wechat.md#后端分享)    |
+| 微信链接消息分享    | 会话/朋友圈   | 支持 | [WGSendToWeixinWithUrl](wechat.md#链接分享)   |
+
+分享参数 **jsonData** 示例如下：
+
+```javascript
+var QQStructuredShare2zone='{"MsdkMethod":"WGSendToQQ","scene":"1","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
+```
+参数 `MsdkMethod` 指定分享的类型，对应关系参照上表。后面几个参数的 key 参考对应分享的 C++ 接口声明的参数，json 的 value 统一使用字符串。分享参数的具体意义请点击表中对应的原生接口名查看。
+需要`注意`的是，JS接口分享的图片(除音乐分享外)默认为当面网页内容的截图(不可更改)，因此原生接口声明的参数中关于图片的参数(如 imgUrl，imgUrlLen，thumbImageData等)不需要填写在 **jsonData**中。手Q/微信 的音乐分享则必须提供一个网络图片的Url为 key:**imgUrl** 的 value，以用此图片完成分享。
+
+#### 接口声明
+    
+    /**
+     * @param jsonData json格式的分享参数
+     * 分享回调在平台层的 OnShareNotify
+     */
+    function msdkShare(jsonData)
+
+#### 接口调用
+
+下面是 Javascript 接口参数示例：
+
+```
+    // 分享数据, Android iOS 都通过接口 msdkShare 实现分享
+    var QQStructuredShare2zone='{"MsdkMethod":"WGSendToQQ","scene":"1","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
+    var QQStructuredShare2friend='{"MsdkMethod":"WGSendToQQ","scene":"2","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
+
+    var QQMusicShare2zone='{"MsdkMethod":"WGSendToQQWithMusic","scene":"1","title":"QQ JS 音乐分享","desc":"from js share","musicUrl":"http://y.qq.com/i/song.html?songid=1135734&source=qq","musicDataUrl":"http://wekf.qq.com/cry.mp3","imgUrl":"http://imgcache.qq.com/music/photo/mid_album_300/g/l/002ma2S64Gjtgl.jpg"}';
+    var QQMusicShare2friend='{"MsdkMethod":"WGSendToQQWithMusic","scene":"2","title":"QQ JS 音乐分享","desc":"from js share","musicUrl":"http://y.qq.com/i/song.html?songid=1135734&source=qq","musicDataUrl":"http://wekf.qq.com/cry.mp3","imgUrl":"http://imgcache.qq.com/music/photo/mid_album_300/g/l/002ma2S64Gjtgl.jpg"}';
+
+    var QQPhotoShare2zone='{"MsdkMethod":"WGSendToQQWithPhoto","scene":"1"}';
+    var QQPhotoShare2friend='{"MsdkMethod":"WGSendToQQWithPhoto","scene":"2"}';
+
+
+    var WXStructuredShare='{"MsdkMethod":"WGSendToWeixin","title":"WX JS 结构化分享","desc":"from js share","mediaTagName":"MSG_INVITE","messageExt":"JS messageExt"}';
+
+    var WXMusicShare2zone='{"MsdkMethod":"WGSendToWeixinWithMusic","scene":"1","title":"WX JS 音乐分享","desc":"from js share","musicUrl":"http://y.qq.com/i/song.html?songid=1135734&source=qq","musicDataUrl":"http://wekf.qq.com/cry.mp3","mediaTagName":"MSG_INVITE","messageExt":"JS messageExt","messageAction":"WECHAT_SNS_JUMP_APP"}';
+    var WXMusicShare2friend='{"MsdkMethod":"WGSendToWeixinWithMusic","scene":"0","title":"WX JS 音乐分享","desc":"from js share","musicUrl":"http://y.qq.com/i/song.html?songid=1135734&source=qq","musicDataUrl":"http://wekf.qq.com/cry.mp3","mediaTagName":"MSG_INVITE","messageExt":"JS messageExt","messageAction":"WECHAT_SNS_JUMP_APP"}';
+
+    var WXPhotoShare2zone='{"MsdkMethod":"WGSendToWeixinWithPhoto","scene":"1","mediaTagName":"MSG_INVITE","messageExt":"JS messageExt","messageAction":"WECHAT_SNS_JUMP_APP"}';
+    var WXPhotoShare2friend='{"MsdkMethod":"WGSendToWeixinWithPhoto","scene":"0","mediaTagName":"MSG_INVITE","messageExt":"JS messageExt","messageAction":"WECHAT_SNS_JUMP_APP"}';
+
+    var WXUrlShare2zone='{"MsdkMethod":"WGSendToWeiXinWithUrl","scene":"1","title":"WX JS 链接分享","desc":"from js share","url":"http://www.baidu.com","mediaTagName":"MSG_INVITE","messageExt":"js 自定义"}';
+    var WXUrlShare2friend='{"MsdkMethod":"WGSendToWeiXinWithUrl","scene":"0","title":"WX JS 链接分享","desc":"from js share","url":"http://www.baidu.com","mediaTagName":"MSG_INVITE","messageExt":"js 自定义"}';
+```
+
+接口调用示例：
+
+
+    <p><input type="button" value="QQ结构化消息分享To空间" onclick="msdkShare(QQStructuredShare2zone)" /></p>
+    <p><input type="button" value="QQ结构化消息分享To会话" onclick="msdkShare(QQStructuredShare2friend)" /></p>
+
+    <p><input type="button" value="微信音乐分享To朋友圈" onclick="msdkShare(WXMusicShare2zone)" /></p>
+    <p><input type="button" value="微信音乐分享To会话" onclick="msdkShare(WXMusicShare2friend)" /></p>
+    ......
+
+

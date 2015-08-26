@@ -28,6 +28,10 @@
 | WGQueryQQGroupKey| 查询公会QQ群加群key | 查询公会绑定的QQ群的信息 | [WGQueryQQGroupKey](group.md#获取加入QQ群的key) |
 | WGJoinQQGroup| 进入公会QQ群 | 加入公会QQ群 | [WGJoinQQGroup](group.md#加入QQ群) |
 | WGUnbindQQGroup| 解绑公会QQ群 | 解绑公会与QQ群的绑定关系 | [WGUnbindQQGroup](group.md#加入QQ群) |
+| WGCreateWXGroup| 创建公会微信群 | 创建公会对应的微信群 | [WGCreateWXGroup](group.md#创建公会微信群) |
+| WGJoinWXGroup| 加入公会微信群 | 加入公会对应的微信群 | [WGJoinWXGroup](group.md#加入公会微信群) |
+| WGQueryWXGroupInfo| 查询公会微信群信息 | 查询公会对应的微信群的信息 | [WGQueryWXGroupInfo](group.md#查询公会微信群信息) |
+| WGSendToWXGroup| 分享结构化消息到公会微信群 | 分享结构化消息到公会微信群 | [WGSendToWXGroup](group.md#分享结构化消息到公会微信群) |
 
 ## 加群组件接入流程
 
@@ -68,14 +72,241 @@
 
 ## 微信加群组件推荐使用方法
 
-（开发中，敬请期待）
+### 推荐流程
+
+下面的流程图给出了游戏调用微信相关的加群组件的流程。
+
+![推荐流程](group_wx.png)
+
+### 注意事项
+
+1. 相比较接入QQ群组件，游戏接入微信公会群目前没有特殊要求。
 
 ## 加组件回调设置
+
+- 从MGSDK2.10.0开始，MSDK将加群绑群的全局回调增加微信加群组件相关的内容。设置方法[点击查看](group.md#MSDK2.10.0以上版本加群回调)
 
 - 从MGSDK2.8.0开始，MSDK将加群绑群的全局回调调整为：`WGGroupObserver`，同时支持手Q加群组件和即将推出的微信加群组件。设置方法[点击查看](group.md#MSDK2.8.0以上版本加群回调)
 
 - 从MGSDK2.7.0开始，MSDK加群绑群增加了单独的全局回调：`WGQQGroupObserver`。通过该全局回调游戏可以在绑群、查询群信息、解绑群时收到对应的回调信息。设置方法[点击查看](group.md#MSDK2.8.0及以前版本加群回调)
 
+### MSDK2.10.0以上版本加群回调
+
+#### Java层回调：
+
+- **回调实现事例：**
+
+		class MsdkGroupCallback implements WGGroupObserver {
+
+			@Override
+			public void OnQueryGroupInfoNotify(GroupRet groupRet) {
+				//TODO GAME 增加查询群信息的回调
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(EPlatform.ePlatform_Weixin.val() == groupRet.platform){
+					//TODO GAME 查询微信群信息的回调
+					if(CallbackFlag.eFlag_Succ == groupRet.flag){
+						MsdkCallback.sendResult("查询成功，提交列表中的以下成员已经在群:"+groupRet.getWXGroupInfo().openIdList);
+					}else{
+						handleWXGroupNotifyErrorCode(groupRet);
+					}
+				}else if(EPlatform.ePlatform_QQ.val() == groupRet.platform){
+					//TODO GAME 查询QQ群信息的回调
+					if(CallbackFlag.eFlag_Succ == groupRet.flag){
+						//游戏可以在会长公会界面显解绑按钮，非工会会长显示进入QQ群按钮
+						MsdkCallback.sendResult("查询成功。\n群昵称为："+groupRet.getQQGroupInfo().groupName 
+								+"\n群openID:"+groupRet.getQQGroupInfo().groupOpenid 
+								+"\n加群Key为："+groupRet.getQQGroupInfo().groupKey);
+					}else{
+						if(2002 == groupRet.errorCode){
+							//游戏可以在会长公会界面显示绑群按钮，非会长显示尚未绑定
+							MsdkCallback.sendResult("查询失败，当前公会没有绑定记录！");
+						}else if(2003 == groupRet.errorCode){
+							//游戏可以在用户公会界面显示加群按钮
+							MsdkCallback.sendResult("查询失败，当前用户尚未加入QQ群，请先加入QQ群！");
+						}else if(2007 == groupRet.errorCode){
+							//游戏可以在用户公会界面显示加群按钮
+							MsdkCallback.sendResult("查询失败，QQ群已经解散或者不存在！");
+						}else{
+							//游戏可以引导用户重试
+							MsdkCallback.sendResult("查询失败，系统错误，请重试！");
+						}
+					}
+				}else{
+					Logger.d("查询失败，平台错误，请重试！");
+					MsdkCallback.sendResult("查询失败，平台错误，请重试！");
+				}
+			}
+
+			@Override
+			public void OnBindGroupNotify(GroupRet groupRet) {
+				//TODO GAME 增加绑定QQ群的回调
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					//游戏可以去查询绑定的公会的相关信息。
+					//由于目前手QSDK尚不支持，因此无论绑定是否成功，MSDK都会给游戏一个成功的回调，游戏收到回调以后需要调用查询接口确认绑定是否成功
+					MsdkCallback.sendResult("绑定成功。");
+				}else{
+					//游戏可以引导用户重试
+					MsdkCallback.sendResult("绑定失败，系统错误，请重试！");
+				}
+			}
+
+			@Override
+			public void OnUnbindGroupNotify(GroupRet groupRet) {
+				//TODO GAME 增加解绑QQ群的回调
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					//解绑成功，游戏可以提示用户解绑成功，并在工会会长界面显示绑群按钮，非会长界面显示尚未绑定按钮
+					MsdkCallback.sendResult("解绑成功。");
+				}else{
+					if(2001 == groupRet.errorCode){
+						//解绑用的群openID没有群绑定记录，游戏重新调用查询接口查询绑定情况
+						MsdkCallback.sendResult("解绑失败，当前QQ群没有绑定记录！");
+					}else if(2003 == groupRet.errorCode){
+						//用户登录态过期，重新登陆
+						MsdkCallback.sendResult("解绑失败，用户登录态过期，请重新登陆！");
+					}else if(2004 == groupRet.errorCode){
+						//操作太过频繁，让用户稍后尝试
+						MsdkCallback.sendResult("解绑失败，操作太过频繁，让用户稍后尝试！");
+					}else if(2005 == groupRet.errorCode){
+						//解绑参数错误，游戏重新调用查询接口查询绑定情况
+						MsdkCallback.sendResult("解绑失败，操解绑参数错误！");
+					}else{
+						//游戏可以引导用户重试
+						MsdkCallback.sendResult("解绑失败，系统错误，请重试！");
+					}
+				}
+			}
+
+			@Override
+			public void OnQueryQQGroupKeyNotify(GroupRet groupRet) {
+				//TODO GAME 增加查询QQ群信息的回调
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					//成功获取到加群用的key，可以进一步使用key加入QQ群
+					MsdkCallback.sendResult("查询成功。\n加群Key为："+groupRet.getQQGroupInfo().groupKey);
+				}else{
+					//游戏可以引导用户重试
+					MsdkCallback.sendResult("查询失败，请重试！");
+				}
+			}
+
+			@Override
+			public void OnJoinWXGroupNotify(GroupRet groupRet) {
+				// TODO GAME 增加加入微信群信息的回调
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					MsdkCallback.sendResult("获取加群链接成功。");
+					WGPlatform.WGOpenUrl(groupRet.getWXGroupInfo().chatRoomURL);
+				}else{
+					handleWXGroupNotifyErrorCode(groupRet);
+				}	
+				
+			}
+
+			@Override
+			public void OnCreateWXGroupNotify(GroupRet groupRet) {
+				// TODO GAME 增加创建微信群信息的回调
+				Logger.d("flag:"+ groupRet.flag + ";errorCode："+ groupRet.errorCode + ";desc:" + groupRet.desc);
+				if(CallbackFlag.eFlag_Succ == groupRet.flag){
+					MsdkCallback.sendResult("获取建群链接成功。");
+					WGPlatform.WGOpenUrl(groupRet.getWXGroupInfo().chatRoomURL);
+				}else{
+					handleWXGroupNotifyErrorCode(groupRet);
+				}						
+			}
+			
+			public void handleWXGroupNotifyErrorCode(GroupRet groupRet){
+				if(CallbackFlag.eFlag_Succ != groupRet.flag){
+					switch (groupRet.errorCode) {
+					
+					case -10001:
+						// 该游戏没有建群权限
+						MsdkCallback.sendResult("系统错误，游戏没有建群权限，请重试");
+						break;
+					case -10002:
+						//参数检查错误
+						MsdkCallback.sendResult("系统错误，参数检查错误，请检查参数后重试");
+						break;
+					case -10005:
+						//群ID已存在
+						MsdkCallback.sendResult("系统错误，微信群已存在，请检查后重试");
+						break;
+					case -10006:
+						//建群数量超过上限
+						MsdkCallback.sendResult("系统错误，建群数量超过上限，请检查后重试");
+						break;
+					case -10007:
+						//群ID不存在
+						MsdkCallback.sendResult("系统错误，群ID不存在，请检查后重试");
+						break;
+					default:
+						MsdkCallback.sendResult("系统错误，("+groupRet.errorCode+")，请重试");
+						break;
+					}
+				}
+				
+			}
+		}
+
+- **回调设置：**
+
+		 //加群绑群回调
+	     WGPlatform.WGSetGroupObserver(new MsdkGroupCallback());
+	     
+#### C++层回调：
+
+- **回调实现事例（这里只是简单事例，详细请参考java层回调）：**	     
+	     
+	     class GroupCallback: public WGGroupObserver {
+
+			virtual void OnQueryGroupInfoNotify(GroupRet& groupRet){
+				// 游戏在此处添加查询群信息返回以后的逻辑
+				LOGD("GroupCallback OnQueryGroupInfoNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+			}
+			virtual void OnBindGroupNotify(GroupRet& groupRet){
+				//游戏在此处添加绑定群以后的逻辑,目前openSDK不支持，MSDK只能返回接口调用成功
+				LOGD("GroupCallback OnBindGroupNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+			}
+			virtual void OnUnbindGroupNotify(GroupRet& groupRet){
+				// 游戏在此处添加调用解绑接口以后的返回结果
+				LOGD("GroupCallback OnUnbindGroupNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+			}
+
+			virtual void OnQueryGroupKeyNotify(GroupRet& groupRet){
+				// 游戏在此处添加查询群信息返回以后的逻辑
+				LOGD("GroupCallback OnQueryGroupKeyNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+			}
+
+			virtual void OnJoinWXGroupNotify(GroupRet& groupRet){
+				//游戏在此处添加绑定群以后的逻辑,目前openSDK不支持，MSDK只能返回接口调用成功
+				LOGD("WXGroupCallback OnJoinWXGroupNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+				if(eFlag_Succ == groupRet.flag){
+					unsigned char * cOpenUrl = (unsigned char *) groupRet.mWXGroupInfo.chatRoomURL.c_str();
+					WGPlatform::GetInstance()->WGOpenUrl(cOpenUrl);
+				}else{
+					LOGD("WXGroupCallback OnJoinWXGroupNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+				}
+
+			}
+
+			virtual void OnCreateWXGroupNotify(GroupRet& groupRet){
+				//游戏在此处添加绑定群以后的逻辑,目前openSDK不支持，MSDK只能返回接口调用成功
+				LOGD("WXGroupCallback OnCreateWXGroupNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+				if(eFlag_Succ == groupRet.flag){
+					unsigned char * cOpenUrl = (unsigned char *) groupRet.mWXGroupInfo.chatRoomURL.c_str();
+					WGPlatform::GetInstance()->WGOpenUrl(cOpenUrl);
+				}else{
+					LOGD("WXGroupCallback OnJoinWXGroupNotify;flag:%d;errorCode:%d;desc:%s",groupRet.flag,groupRet.errorCode,groupRet.desc.c_str());
+				}
+			}
+
+		};
+		GroupCallback group_callback;
+
+- **回调设置：**
+	
+			WGPlatform::GetInstance()->WGSetGroupObserver(&group_callback);		
 ### MSDK2.8.0以上版本加群回调
 
 #### Java层回调：
@@ -308,9 +539,197 @@
 		WGPlatform::GetInstance()->WGSetQQGroupObserver(&qqGroup_callback);
 		
 
+## 创建公会微信群
+
+游戏公会/联盟内，公会会长可在游戏内创建公会所属的微信聊天群。调用接口：`WGCreateWXGroup`。绑定信息通过回调`OnCreateWXGroupNotify`告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
+
+#### 版本情况：
+
+- 自MSDK 2.10.0a 开始提供此功能。
+
+#### 接口声明：
+	
+	/**
+	 * 游戏内创建公会微信群，调用结果会通过WGGroupObserver的OnCreateWXGroupNotify回调给游戏，
+	 * 		一般会返回一个建群的链接，游戏用内置浏览器打开该链接即可实现加建群。
+	 * @param unionid 工会ID
+	 * @param chatRoomName 聊天群名称
+	 * @param chatRoomNickName 用户在聊天群的自定义昵称
+	 */
+	void WGCreateWXGroup(
+			unsigned char* unionid,
+			unsigned char* chatRoomName,
+			unsigned char* chatRoomNickName
+	);
+
+#### 接口调用：
+接口调用示例：
+
+	std::string cunionid = "1"";
+	std::string cchatRoomName = "聊天群名称";
+	std::string cchatRoomNickName = "用户在聊天群的自定义昵称";	WGPlatform::GetInstance()->WGCreateWXGroup(
+			(unsigned char *)cunionid.c_str(),(unsigned char *)cchatRoomName.c_str(),(unsigned char *)cchatRoomNickName.c_str());
+			
+#### 注意事项：
+
+1. 调用建群接口并不会直接创建微信工会群，该接口会在回调中返回创建微信公会群的URL。
+
+- 游戏在收到回调后取到回调中的URL，然后用浏览器打开改URL，然后由用户触发建群的动作。**如果用户并没有点击建群按钮，公会微信群并不能创建成功**。
+
+- 游戏可以使用MSDK的内置浏览器或者系统浏览器来打开建群的URL。
+
+## 加入公会微信群
+
+游戏公会/联盟内，当公会会长创建了公会的微信群以后，其余成员可在游戏内直接加入公会对应的微信聊天群。调用接口：`WGJoinWXGroup`。绑定信息通过回调`OnJoinWXGroupNotify`告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
+
+####版本情况：
+
+- 自MSDK 2.10.0a 开始提供此功能。
+
+#### 接口声明：
+	
+	
+	/**
+	 * 游戏内加入公会微信群，调用结果会通过WGGroupObserver的OnJoinWXGroupNotify回调给游戏，
+	 * 		一般会返回一个加群的链接，游戏用内置浏览器打开该链接即可实现加加群。
+	 * @param unionid 工会ID
+	 * @param chatRoomNickName 用户在聊天群的自定义昵称
+	 */
+	void WGJoinWXGroup(
+			unsigned char* unionid,
+			unsigned char* chatRoomNickName
+	);
+
+
+#### 接口调用：
+接口调用示例：
+
+	std::string cunionid = "1"";
+	std::string cchatRoomNickName = "用户在聊天群的自定义昵称";
+	WGPlatform::GetInstance()->WGJoinWXGroup(
+		(unsigned char *)cunionid.c_str(),(unsigned char *)cchatRoomNickName.c_str());
+
+#### 注意事项：
+
+1. 调用加群接口并不会直接加入微信工会群，该接口会在回调中返回加入微信公会群的URL。
+
+- 游戏在收到回调后取到回调中的URL，然后用浏览器打开改URL，然后由用户触发加群的动作。**如果用户并没有点击加群按钮，用户无法加入对应的微信聊天群**。
+
+- 游戏可以使用MSDK的内置浏览器或者系统浏览器来打开加群的URL。
+
+## 查询公会微信群信息
+
+当玩家打开公会界面的时候，或者创建群以后，需要查询微信群的信息，调用接口`WGQueryWXGroupInfo`可以查询到当前工会微信群的基本信息。查询结果会通过回调`OnQueryGroupInfoNotify`告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
+
+####版本情况：
+
+- 自MSDK 2.10.0a 开始提供此功能。
+
+#### 接口声明：
+	
+	/**
+	 * 游戏内查询公会微信群信息，用于检查是否创建微信公会群以及对应用户是否加入群
+	 * 		调用结果会通过WGGroupObserver的OnQueryGroupInfoNotify回调给游戏，
+	 * @param unionid 工会ID
+	 * @param openIdList 待检查是否在群里的用户
+	 */
+	void WGQueryWXGroupInfo(
+			unsigned char* unionid,
+			unsigned char* openIdList
+	);
+
+#### 接口调用：
+接口调用示例：
+
+	std::string cunionid = “1”;
+	std::string copenidList = "oGRTijkv0hcYByVPBH0JbOrEkcOA";
+	WGPlatform::GetInstance()->WGQueryWXGroupInfo(
+				(unsigned char *)cunionid.c_str(),(unsigned char *)copenidList.c_str());
+
+#### 注意事项：
+
+1. 调用该接口的参数中，openIdList为需要查询是否在群里的用户的openID列表，当需要同时查询多个用户的时候，openID之间用","隔开。
+
+- 调用该接口会返回游戏微信公会群相关的内容。当查询成功以后，会返回公会群人数，以及查询的openList中已经在群里的用户的openList.
+
+- 如果游戏尚未建立公会群或者没有公会群相关的权限，该接口都会以对应的错误码返回。
+
+## 分享结构化消息到公会微信群
+
+游戏公会/联盟内，用户可以直接分享结构化消息到微信公会群。游戏可以基于该接口做一些拉活的方案。调用接口为`WGSendToWXGroup`，结果会通过分享通用的`OnShareNotify`回调给游戏。
+
+####版本情况：
+
+- 自MSDK 2.10.0a 开始提供此功能。
+
+#### 接口声明：
+	
+	/**
+	 * 分享结构化消息到微信公会群
+	 * @param msgType 消息类型，目前传1
+	 * @param subType 分享类型，邀请填1，炫耀填2，赠送填3，索要填4
+	 * @param unionid 工会ID
+	 * @param title 分享的标题
+	 * @param description 分享的简介
+	 * @param messageExt 游戏分享是传入字符串，通过此消息拉起游戏会通过 OnWakeUpNotify(WakeupRet ret)中ret.messageExt回传给游戏
+	 * @param mediaTagName 请根据实际情况填入下列值的一个, 此值会传到微信供统计用, 在分享返回时也会带回此值, 可以用于区分分享来源
+				MSG_INVITE                //邀请
+			 	 MSG_FRIEND_EXCEED       //超越炫耀
+			 	 MSG_HEART_SEND          //送心
+			 	 MSG_SHARE_FRIEND_PVP    //PVP对战
+	* @param imageUrl 分享缩略图URL
+	* @param msdkExtInfo 游戏自定义透传字段，通过分享结果shareRet.extInfo返回给游戏
+	*/
+
+	void WGSendToWXGroup(
+		int msgType,
+		int subType,
+		unsigned char* unionid,
+		unsigned char* title,
+		unsigned char* description,
+		unsigned char* messageExt,
+		unsigned char* mediaTagName,
+		unsigned char* imgUrl,
+		unsigned char* msdkExtInfo
+	);
+#### 接口调用：
+接口调用示例：
+
+	int cmsgType = 1;
+	int csubType = 1;
+	std::string cunionid = "1";
+	std::string ctitle = "后端分享到公会微信群-title";
+	std::string cdescription = "后端分享给微信好友-desc";
+	std::string cmessageExt = "message Ext";
+	std::string cmediaTagName = "MSG_INVITE";
+	std::string cimgUrl = "http://blog.bihe0832.com/public/img/head.jpg";
+	std::string cmsdkExtInfo = "msdkExtInfo";
+
+	WGPlatform::GetInstance()->WGSendToWXGroup(
+			cmsgType,
+			csubType,
+			(unsigned char *)cunionid.c_str(),
+			(unsigned char *)ctitle.c_str(),
+			(unsigned char *)cdescription.c_str(),
+			(unsigned char *)cmessageExt.c_str(),
+			(unsigned char *)cmediaTagName.c_str(),
+			(unsigned char *)cimgUrl.c_str(),
+			(unsigned char *)cmsdkExtInfo.c_str());
+
+#### 注意事项：
+
+1. 该接口与分享结构化消息给同玩好友的接口功能类似，只是该功能是分享结构化消息到微信群。
+
+- 接口参数中`messageExt`为透传字段，当用户通过消息拉起游戏时，会通过`OnWakeUpNotify`中`ret.messageExt`回传给游戏
+
+- 接口参数中`msgType`为分享的消息类型，目前传1
+
+- 接口参数中`subType` 分享类型，邀请填1，炫耀填2，赠送填3，索要填4
+
+
 ## 绑定QQ群
 
-游戏公会/联盟内，公会会长可在游戏内拉取会长自己创建的群，绑定某个群作为该公会的公会群。调用接口：WGBindQQGroup。绑定信息通过回调告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
+游戏公会/联盟内，公会会长可在游戏内拉取会长自己创建的群，绑定某个群作为该公会的公会群。调用接口：WGBindQQGroup。绑定信息通过回调`OnBindGroupNotify`告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
 
 ####版本情况：
 
@@ -366,7 +785,7 @@
 
 ## 查询QQ群绑定信息
 
-当玩家打开公会界面的时候，或者绑定群以后，需要查询绑定信息，调用接口可以查询到当前工会绑定群的基本信息。调用接口`WGQueryQQGroupInfo`。查询结果通过回调告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
+当玩家打开公会界面的时候，或者绑定群以后，需要查询绑定信息，调用接口可以查询到当前工会绑定群的基本信息。调用接口`WGQueryQQGroupInfo`。查询结果通过`OnQueryGroupInfoNotify`回调告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
 
 ####版本情况：
 
@@ -401,7 +820,7 @@
 
 ## 获取加入QQ群的key
 
-当玩家打开公会界面的时候，非工会群玩家查询工会群信息失败以后，可以调用该接口获取假如工会群的groupKey。调用接口`WGQueryQQGroupKey`。查询结果通过回调告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
+当玩家打开公会界面的时候，非工会群玩家查询工会群信息失败以后，可以调用该接口获取假如工会群的groupKey。调用接口`WGQueryQQGroupKey`。查询结果通过回调`OnQueryQQGroupKeyNotify`告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
 
 ####版本情况：
 
@@ -425,7 +844,7 @@
 
 ## 加入QQ群
 
-玩家在游戏中直接加入QQ群调用接口：WGJoinQQGroup。
+玩家在游戏中直接加入QQ群调用接口：WGJoinQQGroup，该接口没有回调给游戏。
 
 ####版本情况：
 
@@ -459,7 +878,7 @@
 
 ## 解绑QQ群
 
-公会会长可以解除公会与QQ群的绑定。调用接口`WGUnbindQQGroup`。解绑结果通过回调告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
+公会会长可以解除公会与QQ群的绑定。调用接口`WGUnbindQQGroup`。解绑结果通过回调`OnUnbindGroupNotify`告知游戏。回调设置请参考[加群绑群回调设置](group.md#加群绑群回调设置)
 
 ####版本情况：
 

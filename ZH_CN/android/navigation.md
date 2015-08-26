@@ -52,11 +52,16 @@
   * [推荐用法](share.md#MSDK 推荐用法)
   * [分享类消息对比](share.md#各种分享类消息对比)
   - - - -
-  * [**加群模块(强烈推荐)**](group.md)
+  * [加群模块](group.md)
   * [接口说明](group.md#名词解释、接口说明)
   * [接入流程](group.md#加群组件接入流程)
   * [手Q加群推荐用法](group.md#手Q加群组件推荐使用方法)
-  
+  - - - -
+  * [游戏场景化模块](gameStatus.md)
+  * [接口说明](gameStatus.md#接口说明)
+  * [游戏常用场景值](gameStatus.md#游戏常用场景值)
+  * [测试验证](gameStatus.md#测试验证)
+
 [接入QQ]()
 
   * # 接入配置
@@ -123,6 +128,11 @@
   * [打开浏览器](webview.md#打开浏览器)
   * [透传参数说明](webview.md#透传参数说明)
   * [加解密登录态](webview.md#加解密登录态)
+  - - - -
+  * #Javascript接口
+  * [Javascript接口概述](webview.md#Javascript接口概述)
+  * [Javascript封装层](webview.md#Javascript封装层)
+  * [Javascript分享接口](webview.md#Javascript分享接口)
   
 [数据上报]()
 
@@ -215,6 +225,7 @@
   * [获取MSDK版本](tool.md#获取MSDK版本)
   * [获取安装渠道](tool.md#获取安装渠道)
   * [获取注册渠道](tool.md#获取注册渠道)
+  * [Url添加加密票据](tool.md#Url添加加密票据)
   * [本地日志](tool.md#本地日志)
  
 [游戏接入常见问题]()
@@ -223,4 +234,4 @@
   * [公告无法展示](notice.md#游戏公告不能正常展示检查步骤)
   * [手Q加群加好友常见问题](qq.md#加群加好友常见问题)
   * [异帐号常见问题](diff-account.md)
-  * [登录常见问题](login.md#常见问题)
+  * [登录常见问题](login.md#登录常见问题)

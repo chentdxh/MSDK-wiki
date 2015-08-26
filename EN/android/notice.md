@@ -11,7 +11,9 @@ The announcement system is the in-game information notification system provided 
 - Multiple user range selection: full announcement, regional operating system, specified number (WeChat number, WeChat number) 
 - A variety of announcement forms: pop-up announcement, scroll announcement - Rich announcement contents: text, image, web page, etc.
 
-### Terminology| Term | Description |
+### Terminology
+
+| Term | Description |
 | ------------- |:-------------:|
 |Announcement column | SDK announcement module marks announcement fields at different locations. The game will choose one field from the fields when it configures the announcement. It is scene parameter when the client calls the announcement display interface |
 |Pop-out announcement | Display an announcement in the pop-up form, and support text, image and web forms. In case of multiple announcements to display, the next announcement will pop up after the user closes the current announcement. <BR> Pop-out announcement can add a hoplink (skip link). Click on the hoplink can open the corresponding link with the built-in Webview |
@@ -77,9 +79,9 @@ This section is mainly to set permissions related to the announcement UI of MSDK
     </service>
     <!-- TODO Notice  Announcement configuration  END -->
 
-**Note: The game can set the screen orientation of the announcement activity (android:screenOrientation's value) in accordance with the orientation of the screen. 
+**Note: The game can set the screen orientation of the announcement activity (android:screenOrientation's value) in accordance with the orientation of the screen. **
 
-**Switch configuration
+Switch configuration
 --- 
 MSDK provides switches for game to control whether to enable MSDK announcement and control the timed draw time-frequency of announcements.
 #### Whether to enable announcement
@@ -115,7 +117,10 @@ Call WGShowNotice to use a set of UI configured by MSDK to display the current v
 	String sceneString = "1";
 	WGPlatform.WGShowNotice(noticeTypeID, sceneString);	
 #### Notes:
-When calling the interface, the announcement column id (scene) used corresponds with **”announcement column” ID set by the announcement management side. Don’t use the announcement ID (msgid) to replace announcement column ID**  Hide scroll announcement interface --- Calling WGHideScrollNotice can hide the displaying scroll announcement. #### Interface declaration:
+When calling the interface, the announcement column id (scene) used corresponds with **”announcement column” ID set by the announcement management side. Don’t use the announcement ID (msgid) to replace announcement column ID
+
+##Hide scroll announcement interface 
+ Calling WGHideScrollNotice can hide the displaying scroll announcement. #### Interface declaration:
 
 	/**	 * Hide the displaying scroll announcement	 */
 
@@ -164,7 +169,11 @@ Calling WGGetNoticeData can return a list of currently valid announcement data o
 1. When calling the interface, the announcement column id (scene) used corresponds with **”announcement column” ID set by the announcement management side. Don’t use the announcement ID (msgid) to replace announcement column ID**
 2. Starting from 2.4.0, MSDK has begun to adjust the interface. Games accessing versions earlier than 2.4.0 can refer to the following interface documentation:
 
-### The original announcement acquisition interface (the interface has been abandoned from 2.4.0 onwards but is changed to [Announcement acquisition interface] (notice.md# Announcement acquisition interface)) Calling WGGetNoticeData can return a list of currently valid announcement data of specified types.#### Interface declaration:：
+### The original announcement acquisition interface (the interface has been abandoned from 2.4.0 onwards but is changed to [Announcement acquisition interface] (notice.md)
+
+##Announcement acquisition interface
+  Calling WGGetNoticeData can return a list of currently valid announcement data of specified types.
+#### Interface declaration:：
 	/**	 * From the local database, read the specified type of currently valid announcements under the specified scene  	 * @param type: type of the to-be-displayed announcement. The type is eMSG_NOTICETYPE, and specific value is as follows:	 * 	  eMSG_NOTICETYPE_ALERT: pop-out announcement  	 * 	  eMSG_NOTICETYPE_SCROLL: scroll announcement  	 * @param sence the parameter corresponds with the “announcement column” setting made in the announcement management side 	 * @return NoticeInfo array; NoticeInfo structure is as follows: 		typedef struct 		{ 			std::string msg_id;			// announcement id 			std::string open_id;		//the user’s open_id 			std::string msg_url;		// the announcement’s hoplink 			eMSG_NOTICETYPE msg_type;	// announcement type, eMSG_NOTICETYPE 			std::string msg_scene;		// announcement column used for the announcement display, the management backend configuration 			std::string start_time;		// valid start time of the announcement 			std::string end_time;		// valid end time of the announcement 			eMSG_CONTENTTYPE content_type;	// announcement content and type, eMSG_CONTENTTYPE
  			//webpage announcement’s special field
 			std::string content_url;     //webpage announcement URL 			//image announcement’s special field 			std::vector<PicInfo> picArray;    //image array 			//text announcement’s special field 			std::string msg_title;		// announcement title 			std::string msg_content;	// announcement content 			}NoticeInfo; 	 */ 		  	 std::vector<NoticeInfo> WGGetNoticeData(eMSG_NOTICETYPE type,unsigned char *scene);
@@ -172,7 +181,12 @@ Calling WGGetNoticeData can return a list of currently valid announcement data o
 	eMSG_NOTICETYPE noticeTypeID = eMSG_NOTICETYPE.eMSG_NOTICETYPE_ALERT;
 	String sceneString = "1"; 	Vector<NoticeInfo> noticeInfos = new Vector<NoticeInfo>();
     noticeInfos = WGPlatform.WGGetNoticeData(noticeTypeID, sceneString);    
-#### Notes: When calling the interface, the announcement column id (scene) used corresponds with **”announcement column” ID set by the announcement management side. Don’t use the announcement ID (msgid) to replace announcement column ID**        Check steps for game announcements which cannot be normally displayed---1. Can the announcement module be enabled?：
+
+#### Notes: When calling the interface, the announcement column id (scene) used corresponds with **”announcement column” ID set by the announcement management side. Don’t use the announcement ID (msgid) to replace announcement column ID**
+
+##Check steps for game announcements which cannot be normally displayed
+
+1. Can the announcement module be enabled?：
 	**Check if the value of needNotice in assets/msdkconfig.ini in the game is true. If not, change it to true and then debug again; if yes, continue to check. ** Check method:
 	- Check the MSDK log. If the following line of log exists, this indicates that the announcement module is closed:：
 	

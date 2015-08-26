@@ -55,6 +55,7 @@ eFlag_Succ                     //成功
 
 #### 示例代码
 - 授权调用代码如下：
+
 ```
 WGPlatform* plat = WGPlatform::GetInstance();//初始化MSDK
 MyObserver* ob = new MyObserver();
@@ -63,6 +64,7 @@ plat->WGSetPermission(eOPEN_ALL);//设置授权权限
 plat->WGLogin(ePlatform_QQ);//调用手Q客户端或web授权
 ```
 - 授权回调代码如下：
+
 ```
 void MyObserver::OnLoginNotify(LoginRet& loginRet)
 {
@@ -100,6 +102,7 @@ else
 }
 ```
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
+
 ```
 [MSDKService setMSDKDelegate:self];
 MSDKAuthService *authService = [[MSDKAuthService alloc] init];
@@ -107,6 +110,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 [authService login:ePlatform_QQ];
 ```
 - 回调代码如下：
+
 ```
 -(void)OnLoginWithLoginRet:(MSDKLoginRet *)ret
 {
@@ -132,6 +136,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 - 成功则在拉起游戏，携带openId、accessToken、payToken、pf和pfKey。
 
 - 快速登录和异帐号结果在wakeupRet的flag中返回，相关的flag说明如下：
+
 ```
 eFlag_Succ: 
 不存在异账号，成功唤起。这种情况下的拉起App的URL不携带票据，和之前版本的拉起一致。
@@ -151,6 +156,7 @@ eFlag_NeedSelectAccount：
 
 
 - 用户选择后，需要调用WGSwitchUser接口进行异帐号后续逻辑处理。（两个选项都需要调用下面这个接口，详见示例代码）
+
 ```
 bool WGSwitchUser(bool flag);
 ```
@@ -164,6 +170,7 @@ bool WGSwitchUser(bool flag);
 ###示例代码
 
 - 在拉起app时增加设置回调的代码
+
 ```
 -(BOOL)application:(UIApplication*)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
@@ -178,7 +185,9 @@ bool WGSwitchUser(bool flag);
     return [WGInterface HandleOpenURL:url];
 }
 ```
+
 - 拉起回调代码示例如下:
+
 ```
 void MyObserver::OnWakeupNotify (WakeupRet& wakeupRet)
 {
@@ -237,7 +246,6 @@ eFlag_AccountRefresh == wakeupRet.flag)
     }
     WGPlatform* plat = WGPlatform::GetInstance();
     plat->WGSwitchUser(switchFlag);
- }
 ```
 
 ### 注意事项
@@ -249,6 +257,7 @@ eFlag_AccountRefresh == wakeupRet.flag)
 - ###查询个人信息
 #### 概述
 用户通过手Q授权后只能获取到openId和accessToken，此时游戏需要用户昵称，性别，头像等其他信息。手Q授权成功后可调用WGQueryQQMyInfo获取个人信息。
+
 ```
 bool WGQueryQQMyInfo();
 ```
@@ -281,12 +290,14 @@ OnRelationNotify(RelationRet &relationRet)
 ```
 
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
+
 ```
 [MSDKService setMSDKDelegate:self];
 MSDKRelationService *service = [[MSDKRelationService alloc] init];
 [service queryMyInfo];
 ```
 - 回调代码如下：
+
 ```
 -(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
 {
@@ -297,6 +308,7 @@ MSDKRelationService *service = [[MSDKRelationService alloc] init];
  ###查询同玩好友信息
 ####概述
 - 游戏授权后需要查询用户同玩好友的昵称，性别，头像、openid等信息，可以调用WGQueryQQGameFriendsInfo获取。
+
 ```
 bool WGQueryQQGameFriendsInfo();
 ```
@@ -308,10 +320,14 @@ bool WGQueryQQGameFriendsInfo();
 RelationRet结构体中PersonInfo的province和city字段手Q为空，小、中、大三幅图片尺寸为：40、40、100（像素）。
 
 - 调用示例代码：
+
 ```
 WGPlatform *plat = WGPlatform::GetInstance();
 plat->WGQueryQQGameFriendsInfo();
-回调示例代码：
+```
+- 回调示例代码：
+
+``` 
 OnRelationNotify(RelationRet &relationRet)
 {
     NSLog(@"relation callback");
@@ -325,12 +341,14 @@ OnRelationNotify(RelationRet &relationRet)
 }
 ```
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
+
 ```
 [MSDKService setMSDKDelegate:self];
 MSDKRelationService *service = [[MSDKRelationService alloc] init];
 [service queryMyGameFriendsInfo];
 ```
 - 回调代码如下：
+
 ```
 -(void)OnRelationWithRelationRet:(MSDKRelationRet *)ret
 {
@@ -349,6 +367,7 @@ MSDKRelationService *service = [[MSDKRelationService alloc] init];
 
  ###唤起手Q客户端分享
 - 唤起手机QQ(iphone版)或通过网页，在手Q内部选择分享的好友或空间。手Q会话中点击此会话会打开传入的url，通常此url配置成游戏在手Q游戏中心的详情页。Qzone中点击此消息会大图展示图片。网页分享体验较差，不推荐使用，游戏可以弹框提示用户安装手Q。
+
 ```
 void WGSendToQQ(const eQQScene[Int 转为 eQQScene]& scene, unsigned char* title,  unsigned char* desc,   unsigned char* url,  unsigned char* imgData, const int& imgDataLen);
 ```
@@ -366,6 +385,7 @@ void WGSendToQQ(const eQQScene[Int 转为 eQQScene]& scene, unsigned char* title
 分享成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(常量查询)
 
 - 调用代码示例：
+
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob = new MyObserver();
@@ -386,6 +406,7 @@ plat->WGSendToQQ(
 ```
 
 - 回调代码示例：
+
 ```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
@@ -405,6 +426,7 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
 ```
 
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
+
 ```
 [MSDKService setMSDKDelegate:self];
 MSDKShareService *service = [[MSDKShareService alloc] init];
@@ -416,6 +438,7 @@ imgData:NULL
 imgDataLen:0];
 ```
 - 回调代码如下：
+
 ```
 -(void)OnShareWithShareRet:(MSDKShareRet *)ret
 {
@@ -426,6 +449,7 @@ imgDataLen:0];
 ###直接分享到好友（不需要唤起手Q客户端）
 ####概述
 - 不会唤起手Q客户端直接发送的指定的同玩好友，同玩好友的openId可以通过WGQueryQQGameFriendsInfo接口获取。此分享消息在pc QQ上不显示。
+
 ```
 bool WGSendToQQGameFriend(int act, unsigned char* fopenid, unsigned char *title, unsigned char *summary, unsigned char *targetUrl, unsigned char *imgUrl, unsigned char* previewText, unsigned char* gameTag, unsigned char* extMsdkInfo[1.7.0i])
 ```
@@ -455,7 +479,8 @@ MSG_HEART_SEND          //送心
 分享结束会通过OnShareCallBack(ShareRet ret)回调给游戏。Ret.flag表示不同的分享结果，具体见eFlag(常量查询)
 
 
- - 调用代码示例：
+- 调用代码示例：
+
 ```
 unsigned char* openid = (unsigned char*)"86EA9CA0C965B7EE9793E7D0B29161B8";
 unsigned char* picUrl = (unsigned char*)"XXXXX";
@@ -476,7 +501,8 @@ plat->WGSendToQQGameFriend(
                                game_tag
                                );
 ```
-回调代码示例：
+- 回调代码示例：
+
 ```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
@@ -492,6 +518,7 @@ void MyObserver::OnShareNotify(ShareRet& shareRet)
 ```
 
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
+
 ```
 [MSDKService setMSDKDelegate:self];
 MSDKShareService *service = [[MSDKShareService alloc] init];
@@ -505,6 +532,7 @@ previewText:(unsigned char *)"WGShare_WGSendToQQGameFriend_LONG_URL_PreviewText"
 gameTag:(unsigned char *)"MSG_INVITE"];
 ```
 - 回调代码如下：
+
 ```
 -(void)OnShareWithShareRet:(MSDKShareRet *)ret
 {
@@ -520,6 +548,7 @@ gameTag:(unsigned char *)"MSG_INVITE"];
 ##手Q大图分享
 ###概述
 调用WGSendToQQWithPhoto会唤起手Q，在手Q内部选择分享的好友或空间进行大图分享。手Q中点击此分享消息会全屏预览图片。
+
 ```
 void WGSendToQQWithPhoto(const eQQScene[Int 转 eQQScene]& scene, unsigned char* imgData, const int& imgDataLen)
 ```
@@ -533,6 +562,7 @@ QQScene_session：唤起手Q没有空间，只能分享到好友
  - 分享成功或失败都会通过OnShareNotify(ShareRet ret)回调给游戏。ret.flag表示不同的分享结果，具体见eFlag(常量查询)
  ###示例代码
 - 调用代码示例：
+
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob = new MyObserver();
@@ -543,6 +573,7 @@ NSData* data = [NSData dataWithContentsOfFile:path];
 plat->WGSendToQQWithPhoto(1,(unsigned char*)[data bytes], [data length]);
 ```
  - 回调代码示例：
+
 ```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
@@ -566,6 +597,7 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
 ```
 
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
+
 ```
 UIImage *image = [UIImage imageNamed:@"422.png"];
 NSData *data = UIImageJPEGRepresentation(image, 1.0);
@@ -576,6 +608,7 @@ imgData:(unsigned char*)[data bytes]
 imgDataLen:(int)[data length]];
 ```
 - 回调代码如下：
+
 ```
 -(void)OnShareWithShareRet:(MSDKShareRet *)ret
 {
@@ -591,6 +624,7 @@ imgDataLen:(int)[data length]];
 ##手Q接入注意事项
  - ###手Q功能对应支持版本
 通过`WGGetIphoneQQVersion()`方法可以获取手Q版本号。
+
 ```
 int WGGetIphoneQQVersion();
 [MSDKInfoService getIphoneQQVersion];//2.4.0i及之后版本
@@ -625,6 +659,7 @@ int WGGetIphoneQQVersion();
  以下接口2.0.2i以后提供，需要手Q5.1版本以上，且App id已经在手Q后台审核通过并上线：
 WGAddGameFriendToQQ:可以在游戏内选择其它玩家，调用该接口添加为好友；
 WGBindQQGroup:工会会长可以选择自己创建的群，绑定某个群作为该工会的工会群
+
 ```
 void WGAddGameFriendToQQ(
 unsigned char* cFopenid, unsigned char* cDesc, unsigned char* cMessage)
@@ -650,6 +685,7 @@ void  WGBindQQGroup (unsigned char* cUnionid, unsigned char* cUnion_name,
   
  - ###示例代码 
 - 调用代码示例：
+
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 //加好友
@@ -667,6 +703,7 @@ plat->WGAddGameFriendToQQ((unsigned char*)"D2DEFFFBE310779E88CD067C9D3329E5", (u
     plat->WGBindQQGroup((unsigned char*)"1", (unsigned char*)"1", (unsigned char*)"test", (unsigned char*)[orgSigStr UTF8String]);
 ```
 - 回调代码示例：
+
 ```
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
@@ -690,6 +727,7 @@ else if(eFlag_QQ_NotInstall == shareRet.flag)
 ```
 
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
+
 ```
 //加好友
 MSDKRelationService *service = [[MSDKRelationService alloc] init];
@@ -712,6 +750,7 @@ zoneId:zoneId
 appDisplayName:@"MSDKSampleTest"];
 ```
 - 回调代码如下：
+
 ```
 -(void)OnShareWithShareRet:(MSDKShareRet *)ret
 {

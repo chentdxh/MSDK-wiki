@@ -7,7 +7,6 @@
 ## 接入登录具体工作（开发必看）
 
 **游戏开发可以按照下面提供的步骤完成MSDK登录模块的接入，降低接入成本和遗漏的处理逻辑。强烈推荐认真了解，并且所有逻辑都要处理到！！！**
-`特别强调：`2.7.0a以上的版本**`返回到游戏登录界面之前一定要调用 WGLogout`** 方法，清除本地票据否则会造成各种登录异常。
 
 1. 设置需要用户授权的权限：
 	- 游戏在MSDK初始化以后要调用手Q权限设置的接口设置需要用户授权给游戏的平台权限。具体方法[点击查看](#设置需要用户授权的权限WGSetPermission)。
@@ -15,8 +14,12 @@
 	1. 在登录按钮的点击事件的处理函数中调用`WGLogin`完成授权登录。具体方法[点击查看](#处理授权登录WGLogin)。
 - **处理自动登录**：
 	1. 在主Activity的onCreate里面MSDK初始化以后调用`WGLoginWithLocalInfo`完成游戏被拉起时的自动登录。具体方法[点击查看](#处理自动登录WGLoginWithLocalInfo)。
-	- 在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录
-		- 对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差
+	- 处理唤醒后的自动登录。
+		
+		- MSDK 2.7.0a以前的版本，游戏需要在主Activity的onResume里面判断游戏切换到后台的时间，如果超过30分钟，自动调用`WGLoginWithLocalInfo`完成自动登录。对于如何判断游戏切换到后台的时间，游戏可以参考MSDK的demo的做法，在切换的时候记录一个时间戳，返回以后计算时间差。
+	
+		- MSDK 2.7.0以后版本游戏不再需要在onResume里面做特殊处理。只需要在onResume调用WGPlatform对应的OnResume即可。
+
 - **处理用户注销**：
 	- 在注销按钮的点击事件的处理函数中调用WGLogout完成授权登录。具体方法[点击查看](#处理用户注销WGLogout)
 - **处理MSDK的登录回调**：
@@ -34,11 +37,13 @@
 	
 **`自MSDK2.7.0a以后对登录流程进行了改造，部分调用作了调整，特殊需要注意的地方罗列如下，强烈推荐认真了解！！！`**
 
+- `特别强调：`2.7.0a以上的版本**`返回到游戏登录界面之前一定要调用 WGLogout`** 方法，清除本地票据否则会造成各种登录异常。
+
 - **处理自动登录**：
 
    - 1、MSDK2.7.0a及以后，调用WGLoginWithLocalInfo()地方改为WGLogin(EPlatform.ePlatform_None)，当然目前仍旧兼容WGLoginWithLocalInfo，但后续会将该接口去掉。
 
-   - 2、MSDK2.7.0a及以后，在游戏启动和回到前台会进行定时刷新票据，因此游戏可在刚启动时在onResume中进行自动登录调用即可。票据自动刷新流程[点击查看](#MSDK2.7.0a及以后的票据自动刷新流程)
+   - 2、MSDK2.7.0a及以后，在游戏启动和回到前台MSDK会进行定时刷新票据，因此游戏只需要在初始化结束以后调用自动登陆接口，从后台切换到前台时由MSDK处理。具体可以查看票据自动刷新流程[点击查看](#MSDK2.7.0a及以后的票据自动刷新流程)
 
 - **MSDK微信票据过期自动刷新机制**：
 
@@ -163,6 +168,33 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 	- 拉起微信时候, 微信会检查应用程序的签名和微信后台配置的签名是否匹配(此签名在申请微信appId时提交过), 如果不匹配则无法唤起已经授权过的微信客户端.
 	- `WXEntryActivity.java` 位置不正确（必须在包名/wxapi 目录下）则不能收到回调.
 
+##处理扫码登录WGQrCodeLogin
+
+#### 概述：
+
+**拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息**
+
+#### 效果展示：
+
+参见demo
+
+
+####接口声明：
+
+	/**
+	 * @param platform 游戏传入的平台类型, 可能值为: ePlatform_QQ, ePlatform_Weixin
+	 * @return void
+	 *   通过游戏设置的全局回调的OnLoginNotify(LoginRet& loginRet)方法返回数据给游戏
+	 */
+	void WGQrCodeLogin(ePlatform platform);
+
+#### 接口调用：
+
+	WGPlatform::GetInstance()->WGQrCodeLogin(ePlatform_Weixin); 
+
+#### 注意事项：
+
+- **目前只支持微信扫码登录**
 
 ##处理自动登录WGLoginWithLocalInfo
 
@@ -341,14 +373,14 @@ MSDK的登录回调来自以下几个场景：
 
 为了保证登录数据上报正确, 游戏接入时候必须在在自己的`launchActivity`的`onResume`中调用`WGPlatform.onResume`, `onPause`中调用`WGPlatform.onPause`,`onRestart`可调用`WGPlatform.onRestart`,`onStop`中调用`WGPlatform.onStop`,	`onDestroy`中调用`WGPlatform.onDestroy`
 
-### 微信票据自动刷新
+## 微信票据自动刷新
 
 1. MSDK2.0.0版本开始, 会再游戏运行期间定时验证并刷新微信票据, 如果需要刷新,MSDK会自动刷新完成(时间间隔为30分钟), 并通过OnLoginNotify通知游戏, flag为eFlag_WX_RefreshTokenSucc和eFlag_WX_RefreshTokenFail（已经包含在onLoginNotify的回调中）。
 - `游戏接到新的票据以后需要同步更新游戏客户端保存的票据和服务器的票据, 以保证之后能使用新票据完成后续流程。`
 - **在MSDK2.7.0a以前，如果游戏不需要微信票据自动刷新功能，在`assets\msdkconfig.ini`中，将`WXTOKEN_REFRESH`设为`false`即可。此时游戏需要自行处理微信票据过期的逻辑。具体可以参考：**[微信票据刷新接口](login.md#微信票据刷新：WGRefreshWXToken)
 - **MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流程，对票据进行定时刷新，请务必将assets/msdkconfig.ini中WXTOKEN_REFRESH按如下设置WXTOKEN_REFRESH=true或者删除不填（即默认是开启的）。**
 
-##微信票据刷新：WGRefreshWXToken
+## 微信票据刷新：WGRefreshWXToken
 
 #### 概述：
 
@@ -445,14 +477,6 @@ QQ平台：
 
 无
 
-## 常见问题
-
-1. 支付时提示paytoken过期，则需要拉起登录界面重新授权后方能支付。paytoken过期以后必须重新授权。
-
-2. `未装手Q时用webQQ登录一直提示"网络异常"，在webQQ登录页面(或提示下载手Q页面)返回游戏时Crash。`
-如果游戏是用Unity直接打出Apk包，出现此问题，需要把MSDK的jar包中的assets中的内容解压放入Android/assets中。如果使用其他方式打包需要保证MSDK的jar包中的so文件和资源文件打入Apk包中。
-
-
 ##MSDK2.7.0a及以后的票据自动刷新流程
 **概述**
 
@@ -468,3 +492,7 @@ MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流�
   
   ![login_new](./new_login_2.jpg)
 
+## 登录常见问题
+
+1. `未装手Q时用webQQ登录一直提示"网络异常"，在webQQ登录页面(或提示下载手Q页面)返回游戏时Crash。`
+如果游戏是用Unity直接打出Apk包，出现此问题，需要把MSDK的jar包中的assets中的内容解压放入Android/assets中。如果使用其他方式打包，需要注意打包脚本中适当处理MSDK的jar包中的so文件和资源文件，如果还有问题可尝试把MSDK的jar包中的assets中的内容解压放入游戏工程中的assets目录。

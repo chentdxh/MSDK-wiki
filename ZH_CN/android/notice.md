@@ -101,6 +101,9 @@ MSDK 提供开关供游戏控制是否开启MSDK公告以及公告定时拉取�
 
 公告模块默认自动拉取时间为十分钟, 游戏可以根据需要在assets/msdkconfig.ini中将noticeTime一项的值设置为对应的时间。**（游戏可以设置的最短拉取时间为5分钟）**
 
+
+        
+        
 ##展示公告接口
 
 调用WGShowNotice将使用MSDK配置的一套界面显示当前有效的公告。对于弹出公告，还可以设置是否带有跳转链接，对于带有跳转链接的公告，点击详情会拉起MSDK内置浏览器打开对应的详情URL。
@@ -260,6 +263,13 @@ MSDK 提供开关供游戏控制是否开启MSDK公告以及公告定时拉取�
 			WeGame NoticeManager.init	 notice module init start!
 
 	- 反编译游戏包，查找assets目录下的msdkconfig.ini文件，检查是否配置needNotice一项，并确认needNotice的值是否为true.
+
+- 查看公告环境是否对应：
+
+	**`MSDK正式环境和测试环境的公告数据并不互通，因此游戏需要确认公告管理段配置的环境与客户端配置的域名是否一致。`**
+	
+	- 管理端的正式环境对应客户端域名：`http://msdk.qq.com`
+	- 管理段的测试环境对应客户端域名：`http://msdktest.qq.com`
 
 - 查看调用接口是否有有效内容：
 
