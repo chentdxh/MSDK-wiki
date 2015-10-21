@@ -25,6 +25,7 @@ Android系统权限说明
 
 ```
 <!-- 获取位置信息权限，LBS功能需要 -->
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 <!-- 通过蓝牙模块权限来获取设备名称，登录上报数据时需要 -->

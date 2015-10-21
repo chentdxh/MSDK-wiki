@@ -26,13 +26,15 @@ MSDK根据游戏常用的开发常见，给出了各种场景下推荐使用的�
 | QQ音乐消息分享 		| 会话/空间 	| 能 | 需要   | WGSendToQQWithMusic  | [点击查看](qq.md#音乐消息分享)|
 | 微信音乐消息分享 		| 会话/朋友圈	| 能 | 需要   | WGSendToWXWithMusic  | [点击查看](wechat.md#音乐消息分享)|
 | QQ纯图分享 			| 会话/空间 	| 能 | 需要   | WGSendToQQWithPhoto  | [点击查看](qq.md#大图消息分享)|
-| 微信纯图分享 			| 会话/朋友圈 	| 能 | 需要   | WGSendToWXWithPhoto  | [点击查看](wechat.md#大图消息分享)|
+| 微信纯图分享 			| 会话/朋友圈 	| 能 | 需要   | WGSendToWXWithPhoto, WGSendToWXWithPhotoPath  | [点击查看](wechat.md#大图消息分享)|
 | QQ后端分享 			| QQ手公共号	| 否 | 不需要 | WGSendToQQGameFriend | [点击查看](qq.md#后端分享)|
 | 微信后端分享 			| 会话 			| 否 | 不需要 | WGSendToWXGameFriend | [点击查看](wechat.md#后端分享)|
 
 ### 分享消息点击效果
 
-这里仅列出所有分享消息共有的特性和点击效果，具体的差异可以参考下方的说明文档
+这里仅列出所有分享消息共有的特性和点击效果，具体的差异可以参考下方的说明文档。
+
+![分享效果示例](./share_demo.png "分享效果示例")
 
 ### 手Q
 
@@ -144,13 +146,17 @@ MSDK根据游戏常用的开发常见，给出了各种场景下推荐使用的�
 
 ### 注意事项：
 
-1. 微信大图分享图片不应超过10MB.
+1. 微信图片数据使用安卓系统的binder传递，因此图片大小有限制，过大会导致分享失败。
+    A) WGSendToWeixinWithPhoto，使用此接口分享图片数据应小于1MB。
+    B) WGSendToWeixinWithPhotoPath，使用此接口分享建议图片小于3MB。
 2. 纯图分享使用的是本地图片，要将图片存放于第三方应用有权限可读取到的位置，如sdcard分区。
 
 ### 接口说明：
 
 * 手Q纯图消息：点击查看[WGSendToQQWithPhoto](qq.md#大图消息分享)接口说明
-* 微信纯图消息：点击查看[WGSendToWXWithPhoto](wechat.md#大图消息分享)接口说明
+* 微信纯图消息：
+A) 点击查看[WGSendToWXWithPhoto](wechat.md#大图消息分享)接口说明
+B) 点击查看[WGSendToWeixinWithPhotoPath](wechat.md#大图消息分享)接口说明
 
 ## 后端分享
 
@@ -166,7 +172,7 @@ MSDK根据游戏常用的开发常见，给出了各种场景下推荐使用的�
 
 手Q后端分享给好友的消息位于**“QQ手游”**服务号中。
 
-* 点击分享消息中消息体，会跳转到targetUrl（调用接口中对应的参数），如果targetUrl设置为游戏对应游戏中心详情页url（由运营经理提供）可拉起游戏。
+* 点击分享消息会直接拉起游戏，行为和点击小尾巴类似。
 
 #### 微信
 

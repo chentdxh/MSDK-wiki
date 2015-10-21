@@ -1,6 +1,31 @@
 
 MSDK iOS 介绍
 =======
+声明：由于iOS9 SDK编译的包存在一些问题，各游戏暂时先不要使用iOS9 SDK打包编译发布外网版本，我们将敦促各平台尽快发布支持iOS9编译的SDK，待MSDK合入发布后第一时间通知到各游戏。需要使用iOS9编译测试的游戏需使用Xcode7.0及其以上版本编译，且需在plist中添加如下代码以确保可正常拉起手Q、微信授权和分享：
+
+```
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>mqq</string>
+        <string>mqqapi</string>
+        <string>wtloginmqq2</string>
+        <string>mqqopensdkapiV3</string>
+        <string>mqqopensdkapiV2</string>
+        <string>mqqwpa</string>
+        <string>mqqOpensdkSSoLogin</string>
+        <string>mqzone</string>
+        <string>weixin</string>
+        <string>wechat</string>
+    </array>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+```
+[点击查看手Q声明](http://mp.weixin.qq.com/s?__biz=MzA5ODM5MTg2Mw==&mid=214044032&idx=1&sn=92bb118b8c59c42a007e88c4bac67d70&scene=23&srcid=0918M1sRoUMPy6aCdkl8D3Kt#rd)
+
+[点击查看微信声明](https://mp.weixin.qq.com/s?__biz=MjM5NDAxMDg4MA==&mid=209197031&idx=1&sn=665bf03f4e93f2034f8a4e64400427a4&scene=1&srcid=0916oWMFOUSOGhNNwIdRuPZ4&key=2877d24f51fa5384860ce26e432d879fdaa779ddd66375e90e3104597b5b265a7a807b8df7e9e4c3df16e2c6e76d7b9b&ascene=0&uin=MjQ2OTkwNTMyMA%3D%3D)
 
 ### [SDK下载](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD) [极速上手](iOSPlugin.md)
 

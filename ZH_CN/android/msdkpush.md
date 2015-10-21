@@ -159,12 +159,48 @@ SO库拷贝注意事项
 
 本地推送功能使用
 ------
-本地推送功能使用的是信鸽接口MSDK没有对齐就行封装。
-     XGLocalMessage msg = new XGLocalMessage();
-     msg.setType(1);
-     msg.setContent("本地推送测试");
-     msg.setTitle("测试");
-     msg.setDate("20150817");
-     msg.setHour("08");
-     msg.setMin("30");
-     XGPush4Msdk.addLocalNotification(mainActivity, msg);
+添加本地推送功能:用户可以在指定的时间点进行本地预制的消息推送
+     调用示例：
+
+     LocalMessage msg;
+     msg.title = "测试";
+     msg.type = 1;
+     msg.content = "本地消息推送测试";
+     msg.date = "20150914";
+     msg.hour = "15";
+     msg.min = "59";
+     long jid = WGPlatform::GetInstance()->WGAddLocalNotification(msg);
+
+
+关于LocalMessage其他字段以及方法的说明
+
+     void setType(int type) 			设置和获取消息类型type： 1:通知，2:消息
+     void setTitle(String title)		设置和获取消息标题title： 消息标题
+     void setContent(String content)		设置和获取消息内容content 消息內容
+     void setCustomContent(String content)	设置和获取消息消息自定义内容
+     void setDate(String date)		        设置和获取弹出通知的日期，格式为”yyyyMMdd”
+     void setHour(String hour)		        设置和获取弹出通知的日期的小时数
+     void setMin(String min)			设置和获取弹出通知的日期的分钟数
+     void setAction_type(int action_type)	设置和获取动作类型，1打开activity或app本身，2打开浏览器，3打开Intent ，4通过包名打开应用。默认为1
+     void setActivity(String activity)	        设置和获取打开指定Activity,例如：com.qq.xgdemo.AboutActivity。当动作类型为1或4时有效
+     void setUrl(String url)			设置和获取打开url,例如：http://www.qq.com。当动作类型为2时有效
+     void setIntent(String intent)		设置打开intent,例如(10086拨号界面)intent:10086#Intent;scheme=tel;action=android.intent.action.DIAL;S.key=value;end当动作类型为3时有效
+     void setPackageName(String packageName)    设置和获取拉起别的应用的包名当动作类型为4时有效
+     void setBuilderId(long builderId)	        设置和获取消息样式，默认为0或不设置。详见自定义本地通知样式章节说明
+     void setRing(int ring)			设置和获取是否响铃(0否，1是,默认1)
+     void setVibrate(int vibrate)		设置和获取是否振动(0否，1是,默认1)
+     void setLights(int lights)		        设置和获取是否呼吸灯(0否，1是,默认1)
+     void setIcon_type(int icon_type) 	        设置和获取通知栏图标是应用内图标还是上传图标(0是应用内图标，1是上传图标,默认0)。详见自定义本地通知样式章节说明
+     void setStyle_id(int style_id)		设置和获取Web端设置是否覆盖编号build_id的通知样式，默认1，0否，1是
+     void setRing_raw(String ring_raw)	        设置和获取指定应用内的声音（ring.mp3）,例如:ring
+     void setIcon_res(String icon_res) 	        设置和获取应用内图标文件名（xg.png）或者下载图标的url地址,例如:xg或者图片url
+     void setSmall_icon(String small_icon) 	设置和获取指定状态栏的小图片(xg.png),例如：xg
+
+
+清除所有本地推送通知：用户可以清除本地所有已经添加的还没有执行的推送通知
+     调用示例：
+
+     WGPlatform::GetInstance()->WGClearLocalNotifications();
+
+
+更多详情可以参考信鸽官方文档：http://developer.xg.qq.com/index.php/Android_SDK#.E6.9C.AC.E5.9C.B0.E9.80.9A.E7.9F.A5

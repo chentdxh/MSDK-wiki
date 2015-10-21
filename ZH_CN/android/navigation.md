@@ -4,11 +4,11 @@
 
 [SDK介绍]()
 
-  * # 
+  * #
   * [模块介绍](index.md)
   * [名词解释](index.md)
   * [版本历史](version.md)
-  - - - - 
+  - - - -
   * # SDK下载
   * [外网下载](http://wiki.mg.open.qq.com/index.php?title=%E4%B8%8B%E8%BD%BDMSDK)
   * [内网下载](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD)
@@ -16,12 +16,13 @@
 [SDK接入]()
 
   * # 快速接入
-  * [包结构说明](android.md)
-  * [引入MSDK包](android.md)
-  * [配置说明](android.md)
-  * [MSDK初始化](android.md)
-  * [设置全局回调](android.md)
-  - - - - 
+  * [包结构说明](android.md#包结构说明)
+  * [引入MSDK包](android.md#Step1:引入MSDK包)
+  * [配置说明](android.md#Step2:配置说明)
+  * [MSDK初始化](android.md#Step3:MSDK初始化)
+  * [设置全局回调](android.md#Step4:设置全局回调)
+  * [单步调试程序](android.md#单步调试程序)
+  - - - -
   * # 版本更新
   * [Android Library Project类游戏更新](update.md#Android Library Project类游戏更新)
   * [非Android Library Project类游戏更新](update.md#非Android Library Project类游戏更新)
@@ -77,6 +78,7 @@
   * [查询同玩好友信息](qq.md#查询同玩好友信息)
   - - - -
   * # 消息分享
+  * [分享展示效果](qq.md#分享展示效果)
   * [结构化消息分享](qq.md#结构化消息分享)
   * [大图消息分享](qq.md#大图消息分享)
   * [音乐消息分享](qq.md#音乐消息分享)
@@ -94,7 +96,7 @@
   * # 其他说明
   * [手Q功能对应支持版本](qq.md#)
   * [游戏中心详情页](qq.md#)
-  
+
 [接入微信]()
 
   * # 接入配置
@@ -109,6 +111,7 @@
   * [查询好友信息](wechat.md#查询好友信息)
   - - - -
   * # 消息分享
+  * [分享展示效果](wechat.md#分享展示效果)
   * [结构化消息分享](wechat.md#结构化消息分享)
   * [大图消息分享](wechat.md#大图消息分享)
   * [音乐消息分享](wechat.md#音乐消息分享)
@@ -133,7 +136,7 @@
   * [Javascript接口概述](webview.md#Javascript接口概述)
   * [Javascript封装层](webview.md#Javascript封装层)
   * [Javascript分享接口](webview.md#Javascript分享接口)
-  
+
 [数据上报]()
 
   * # 灯塔
@@ -146,7 +149,7 @@
    - - - -
   * # 用户反馈
   * [用户反馈](feedback.md)
-  
+
 [公告]()
 
   * # 接入指引
@@ -164,17 +167,17 @@
   - - - -
   * # 常见问题
   * [游戏公告不能正常展示检查步骤](notice.md#游戏公告不能正常展示检查步骤)
- 
+
 [PUSH]()
 
   * [接入配置](msdkpush.md#接入配置)
   * [已接入信鸽的应用解决方案](msdkpush.md#已接入信鸽的应用解决方案)
-  
+
 [LBS]()
 
   * [获取附近的人](lbs.md#获取附近的人)
   * [清空位置信息](lbs.md#清空位置信息)
-  
+
 [应用宝]()
 
   * # 抢号
@@ -183,7 +186,7 @@
   * # 更新
   * [省流量更新](myApp.md#省流量更新开关配置)
   * [省流量更新-2.7.0a以下版本](myApp.md#MSDK2.7.0a以下版本省流量接入)
-  
+
 [其他模块]()
 
  * [米大师](midas.md)
@@ -203,7 +206,7 @@
  * # 常量定义
  * [平台类型ePlatform](const.md#平台类型ePlatform)
  * [回调标识eFlag](const.md#回调标识eFlag)
- - - - - 
+ - - - -
  * # 数据结构
  * [eTokenType](const.md#eTokenType)
  * [TokenRet](const.md#TokenRet)
@@ -220,14 +223,14 @@
   * [检查手Q/微信是否安装](tool.md#检查手Q/微信是否安装)
   * [获取手Q/微信版本](tool.md#获取手Q/微信版本)
   * [检查接口在用户安装手Q/微信上是否支持](tool.md#检查接口在用户安装手Q/微信上是否支持)
-  - - - - 
+  - - - -
   * #MSDK相关
   * [获取MSDK版本](tool.md#获取MSDK版本)
   * [获取安装渠道](tool.md#获取安装渠道)
   * [获取注册渠道](tool.md#获取注册渠道)
   * [Url添加加密票据](tool.md#Url添加加密票据)
   * [本地日志](tool.md#本地日志)
- 
+
 [游戏接入常见问题]()
 
   * [无法拉起微信授权](wechat.md#Android微信登录不了检查步骤)

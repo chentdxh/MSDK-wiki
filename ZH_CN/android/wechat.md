@@ -50,8 +50,10 @@ public void onCreate(Bundle savedInstanceState) {
 
     //游戏必须使用自己的微信AppId联调
     baseInfo.wxAppId = "wxcde873f99466f***"; 
-    baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
 
+	//游戏必须使用自己的msdkKey联调
+	baseInfo.msdkKey = "5d1467a4d2866771c3b289965db3****";
+	
     //游戏必须使用自己的支付offerId联调
     baseInfo.offerId = "100703***";
 	...
@@ -223,7 +225,11 @@ protected void onNewIntent(Intent intent) {
 #### 注意事项：
 
 1. **由于平台规则，该接口调用后，并不能直接使用回调OnAddWXCardNotify中的CardRet的flag来判断插卡是否成功，只能通过解析CardRet中wx_card_list的内容，查看is_succ的值来确定回调是否成功。is_succ为0表示失败，1表示成功。**
-	
+
+分享展示效果
+---
+核心模块中的[`分享模块`](share.md)图文并茂的总结了QQ/微信分享的展示效果和点击效果，在接入分享功能前强烈建议先阅读[`分享模块`](share.md)文档。
+
 结构化消息分享
 ------
 

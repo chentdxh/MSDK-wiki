@@ -384,7 +384,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5） ***
 
-### 2.3.4.3输出参数说明 ###
+#### 2.3.4.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |: -----|
@@ -448,10 +448,10 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ### 2.3.5 /relation/get_groupopenid ###
 
-#### 2.3.4.1接口说明 ####
+#### 2.3.5.1接口说明 ####
  　获取QQ公会绑群相关信息
 
-#### 2.3.4.2输入参数说明 ####
+#### 2.3.5.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
@@ -465,7 +465,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5） ***
 
-### 2.3.4.3输出参数说明 ###
+#### 2.3.5.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |: -----|
@@ -475,19 +475,19 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | groupOpenid|和游戏公会ID绑定的QQ群的groupOpenid，获取群成员信息、解绑群的时候作为输入参数|
 | platCode|平台错误码,当ret非0时关注|
 
-#### 2.3.4.4 接口调用说明 ####
+#### 2.3.5.4 接口调用说明 ####
 
 
 | 参数名称| 描述|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/get_groupopenid/ |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.3.4.5 请求示例 ####
+#### 2.3.5.5 请求示例 ####
 
-	POST /relation/get_groupopenid/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	POST /relation/get_groupopenid/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
 	Host:$domain
 	Content-Type: application/x-www-form-urlencoded
 	Content-Length: 198
@@ -510,7 +510,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "ret": 0
 	}
 
-#### 2.3.4.6 错误返（platCode）回码说明 ####
+#### 2.3.5.6 错误返（platCode）回码说明 ####
 | 错误码| 含义说明 |
 | ------------- |:-----|
 |2001 	|参数错误。|
@@ -520,12 +520,12 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
 
 
-### 2.3.5 /relation/get_groupinfo ###
+### 2.3.6 /relation/get_groupinfo ###
 
-#### 2.3.5.1接口说明 ####
+#### 2.3.6.1接口说明 ####
  　QQ获取游戏公会绑定QQ群基本信息
 
-#### 2.3.5.2输入参数说明 ####
+#### 2.3.6.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
@@ -537,7 +537,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5） ***
 
-### 2.3.5.3输出参数说明 ###
+#### 2.3.6.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |: -----|
@@ -555,19 +555,19 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | adminOpenids|管理员openid。如果管理员有多个的话，用“,”隔开，例如:0000000000000000000000002329FBEF,0000000000000000000000002329FAFF|
 
 
-#### 2.3.5.4 接口调用说明 ####
+#### 2.3.6.4 接口调用说明 ####
 
 
 | 参数名称| 描述|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/get_groupinfo/ |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.3.5.5 请求示例 ####
+#### 2.3.6.5 请求示例 ####
 
-	POST /relation/get_groupinfo/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	POST /relation/get_groupinfo/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
 	Host:$domain
 	Content-Type: application/x-www-form-urlencoded
 	Content-Length: 198
@@ -594,7 +594,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "ret": 0
 	}
 
-#### 2.3.5.6 错误返（platCode）回码说明 ####
+#### 2.3.6.6 错误返（platCode）回码说明 ####
 | 错误码| 含义说明 |
 | ------------- |:-----|
 |2001 	|参数错误。 |
@@ -605,12 +605,12 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2100	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。|  
 
 
-### 2.3.6 /relation/unbind_group ###
+### 2.3.7 /relation/unbind_group ###
 
-#### 2.3.6.1接口说明 ####
+#### 2.3.7.1接口说明 ####
  　QQ游戏公会解绑QQ群息
 
-#### 2.3.6.2输入参数说明 ####
+#### 2.3.7.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
@@ -623,7 +623,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5） ***
 
-### 2.3.6.3输出参数说明 ###
+#### 2.3.7.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |: -----|
@@ -633,19 +633,19 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | platCode|平台错误码,当ret非0时关注|
 
 
-#### 2.3.6.4 接口调用说明 ####
+#### 2.3.7.4 接口调用说明 ####
 
 
 | 参数名称| 描述|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/unbind_group/ |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.3.6.5 请求示例 ####
+#### 2.3.7.5 请求示例 ####
 
-	POST /relation/unbind_group/?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	POST /relation/unbind_group/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
 	Host:$domain
 	Content-Type: application/x-www-form-urlencoded
 	Content-Length: 198
@@ -665,7 +665,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "ret": 0
 	}
 
-#### 2.3.6.6 错误返（platCode）回码说明 ####
+#### 2.3.7.6 错误返（platCode）回码说明 ####
 | 错误码| 含义说明 |
 | ------------- |:-----|
 |2001 	|查不到该QQ群openid的绑定记录。 |
@@ -675,12 +675,12 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2006 	|参数错误。|
 |2007-2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。|  
 
-### 2.3.7 /relation/get_group_detail ###
+### 2.3.8 /relation/get_group_detail ###
 
-#### 2.3.7.1接口说明 ####
+#### 2.3.8.1接口说明 ####
  　QQ游戏公会绑群详细信息接口
 
-#### 2.3.7.2输入参数说明 ####
+#### 2.3.8.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
@@ -695,7 +695,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5） ***
 
-### 2.3.7.3输出参数说明 ###
+#### 2.3.8.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |: -----|
@@ -715,19 +715,19 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | joinGroupKey|加群用的group_key|
 
 
-#### 2.3.7.4 接口调用说明 ####
+#### 2.3.8.4 接口调用说明 ####
 
 
 | 参数名称| 描述|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/get_group_detail |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.3.7.5 请求示例 ####
+#### 2.3.8.5 请求示例 ####
 
-	POST /relation/get_group_detail?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	POST /relation/get_group_detail?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
 	Host:$domain
 	Content-Type: application/x-www-form-urlencoded
 	Content-Length: 198
@@ -759,7 +759,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "zoneid": "35"
 	}
 
-#### 2.3.7.6 错误返（platCode）回码说明 ####
+#### 2.3.8.6 错误返（platCode）回码说明 ####
 | 错误码| 含义说明 |
 | ------------- |:-----|
 |2001 	|参数错误。|
@@ -768,12 +768,12 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |2004 	|该群与appid没有绑定关系。|
 |2010 	|系统错误，请通过企业QQ联系技术支持，调查问题原因并获得解决方案。| 
 
-### 2.3.8 /relation/get_group_key ###
+### 2.3.9 /relation/get_group_key ###
 
-#### 2.3.8.1接口说明 ####
+#### 2.3.9.1接口说明 ####
  　QQ游戏公会获取加群用的groupKey接口（目前只针对android）
 
-#### 2.3.8.2输入参数说明 ####
+#### 2.3.9.2输入参数说明 ####
 
 | 参数名称| 类型|描述|
 | ------------- |:-------------:|:-----|
@@ -785,7 +785,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5） ***
 
-### 2.3.8.3输出参数说明 ###
+#### 2.3.9.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |: -----|
@@ -797,19 +797,19 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 
 
-#### 2.3.8.4 接口调用说明 ####
+#### 2.3.9.4 接口调用说明 ####
 
 
 | 参数名称| 描述|
 | ------------- |:-----|
 | url|http://msdktest.qq.com/relation/get_group_key |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1&opua=**|
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
 | 格式|JSON |
 | 请求方式|POST  |
 
-#### 2.3.8.5 请求示例 ####
+#### 2.3.9.5 请求示例 ####
 
-	POST /relation/get_group_key?timestamp=*&appid=**&sig=***&openid=**&encode=1&opua=AndroidSDK_17_maguro_4.2.2 HTTP/1.0
+	POST /relation/get_group_key?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
 	Host:$domain
 	Content-Type: application/x-www-form-urlencoded
 	Content-Length: 198
@@ -832,12 +832,12 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 
 
-### 2.3.9 /relation/get_vip_rich_info ###
+### 2.3.10 /relation/get_vip_rich_info ###
 
-#### 2.3.9.1接口说明 ####
+#### 2.3.10.1接口说明 ####
 　　　查询手Q会员详细信息（充值时间&到期时间）
 
-#### 2.3.9.2输入参数说明 ####
+#### 2.3.10.2输入参数说明 ####
 
 
 | 参数名称| 类型|描述|
@@ -849,7 +849,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 ***（请注意输入参数的类型，参考1.5）***
 
-#### 2.3.9.3输出参数说明 ####
+#### 2.3.10.3输出参数说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -867,7 +867,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | is_svip|标识是否QQ超级会员（0：不是； 1：是）|
 
 
-#### 2.3.9.4 接口调用说明 ####
+#### 2.3.10.4 接口调用说明 ####
 
 | 参数名称| 描述|
 | ------------- |:-----|
@@ -876,7 +876,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | 格式|JSON |
 | 请求方式|POST  |
 
-### 2.3.9.5 请求示例 ###
+#### 2.3.10.5 请求示例 ####
 
 	POST http://msdktest.qq.com/relation/get_vip_rich_info/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
 	
@@ -902,6 +902,72 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 		"is_svip":"1"
 	}
 
+### 2.3.11 /relation/qq_gain_chest ###
+
+#### 2.3.11.1接口说明 ####
+　　　生成手Q宝箱
+
+#### 2.3.11.2输入参数说明 ####
+
+
+| 参数名称| 类型|描述|
+| ------------- |:-------------:|:-----|
+| appid|string| 应用在平台的唯一id |
+| openid|string|用户在某个应用的唯一标识 |
+| accessToken|string|第三方调用凭证，通过获取凭证接口获得 |
+| pf|string|宝箱发送者平台信息 |
+| actid|int|活动号（活动上线前由产品提供） |
+| num|int|物品的总数量(物品总量应大于人数，保证至少一人有一件物品，如果传入的物品总数小于人数，则物品总数取值等于人数) |
+| peoplenum|int|人数 |
+| type|int|宝箱类型，填0 |
+
+
+
+***（请注意输入参数的类型，参考1.5）***
+
+#### 2.3.11.3输出参数说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| ret|返回码  0：正确，其它：失败 |
+| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
+| platCode|手Q平台错误码，1001：无登录态或登录态过期；1002：无数据|
+| boxid|宝箱id|
+
+
+
+#### 2.3.11.4 接口调用说明 ####
+
+| 参数名称| 描述|
+| ------------- |:-----|
+| url|http://msdktest.qq.com/relation/qq_gain_chest/ |
+| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
+| 格式|JSON |
+| 请求方式|POST  |
+
+#### 2.3.11.5 请求示例 ####
+
+	POST http://msdktest.qq.com/relation/qq_gain_chest/?timestamp=1381288134&appid=100703379&sig=3f308f92212f75cd8d682215cb3fa8**&openid=F4382318AFBBD94F856E866043C3472E&encode=1
+	
+	{
+	    "appid": "100703379",
+	    "accessToken": "E16A9965C446956D89303747C632C27B**",
+	    "openid": "F4382318AFBBD94F856E866043C3472E",
+		"pf":"qq_m_qq-0-iap-1001-qq-11043**00-BC7AA8D7DA6**",
+		"actid":92,
+		"num":5,
+		"peoplenum":4,
+		"type":0//默认填写0
+	}
+	
+	//返回结果
+	{
+	  	"ret":0,
+		"msg":"",
+		"platCode":"",
+		"boxid":"xxxx"
+	}
+
 
 
 
@@ -909,107 +975,6 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 ##  2.4.profile服务  ##
 
 　　提供查询QQ账号VIP信息服务。
-
-### 2.4.1 /profile/load_vip(该接口于2015年6月30日停止服务，获取会员特权请调用/profile/query_vip接口) ###
-  获取QQ账号VIP信息。
-
-#### 2.4.1.2输入参数说明 ####
-
-| 参数名称 | 类型|描述|
-| ------------- |:-------------:|:-----|
-| appid|int| 应用在平台的唯一id |
-| login|int|登录类型，默认填2 |
-| uin|int|用户标识,如使用openid帐号体系则默认填0 |
-| openid|string|用户在某个应用的唯一标识|
-| accessToken|string|`用户登录态（新增参数）`|
-| wxAppid|string|微信的appid，此时login需填写1，vip需填写64，仅限查询微信心悦特权使用|
-| vip|int|查询类型:<br\>会员:vip&0x01 !=0；<br/>蓝钻:vip&0x04 != 0；<br/>红钻:vip&0x08 != 0；<br/>超级会员:vip&0x10 != 0;<br/>游戏会员:vip&0x20 != 0；<br/>心悦:vip&0x40 != 0；<br/>黄钻::vip&0x80 != 0；<br/>以上可任意组合(逻辑与)，如需同时查询会员和蓝钻则(vip&0x01 !=0) && (vip&0x04 != 0) 为真,(备注：请求时请只填相关的标识位)|
-***（请注意输入参数的类型，参考1.5） ***
-
-#### 2.4.1.3输出参数说明 ####
-
-| 参数名称| 描述|
-| ------------- |:-----|
-| ret|返回码  0：正确，其它：失败 |
-| msg|ret非0，则表示“错误码，错误提示”，详细注释参见第5节|
-| list|信息列表vector<VIP> 类型（见下文），获取超级会员的时候，struct VIP中，只有isvip和flag参数有效.|
-	
-	struct VIP {
-	　　VIPFlag :flag; //什么类型VIP
-	　　int isvip; //是否VIP(判断用户VIP状态的唯一标识，0否，1是)
-	　　int year; //是否年费(0否，1是)
-	　　int level; //VIP等级
-	　　int luxury; //是否豪华版(0否，1是)
-	　　int ispay;//是否是游戏会员,仅当查询游戏会员的时候有效
-	　　int qqLevel;//QQ皇冠、太阳、月亮、星星的那个等级，只对VIP_NORMAL有效
-	};
-	enum VIPFlag
-	{
-	　　VIP_NORMAL(会员) = 1
-	　　VIP_BLUE（蓝钻） = 4,
-	　　VIP_RED （红钻）= 8,
-	　　VIP_SUPER (超级会员)= 16,
-	　　VIP_GAME(游戏会员)=32,
-	　　VIP_XINYUE = 64,  //心悦俱乐部特权会员，该标志位请求时只有isvip及level有效
-	　　VIP_YELLOW = 128, //黄钻会员，level字段无效，其它有效
-	};
-
-#### 2.4.1.4 接口调用说明 ####
-| 参数名称| 描述|
-| ------------- |:-----|
-| url|http://msdktest.qq.com/profile/load_vip/ |
-| URI|?timestamp=**&appid=**&sig=**&openid=**&encode=1|
-| 格式|JSON |
-| 请求方式|POST  |
-
-#### 2.4.1.5 请求示例 ####
-
-	POST /profile/load_vip/?timestamp=*&appid=**&sig=***&openid=**&encode=1 HTTP/1.0
-	Host:$domain
-	Content-Type: application/x-www-form-urlencoded
-	Content-Length: 198
-	{
-	    "appid": 100703379,
-	    "login": 2,
-	    "uin": 0,
-	    "openid": "A3284A812ECA15269F85AE1C2D94EB37",
-	    "vip": 13,
-		"accessToken":"A3284A812ECA15A3284A812ECA15269F85AE1C2D94EB37269F85AE1C2D94EB37"
-	}
-	//返回格式
-	{
-	    "ret": 0,
-	    "msg": "",
-	    "lists": [{
-	        "flag": 1,
-	        "year": 0,
-	        "level": 0,
-	        "luxury": 0,
-	　　	"ispay": 0,
-	        "isvip": 0,
-	        "qqLevel": 1
-	    },
-	    {
-	        "flag": 4,
-	        "year": 0,
-	        "level": 0,
-	        "luxury": 0,
-	　　	"ispay": 0,
-	        "isvip": 0,
-	        "qqLevel": 0
-	
-	    },
-	    {
-	        "flag": 8,
-	        "year": 0,
-	        "level": 0,
-	        "luxury": 0,
-	        "ispay": 0,
-	        "isvip": 0,
-	        "qqLevel": 0
-	    }]
-	}
-
 
 ### 2.4.2 /profile/query_vip ###
   获取QQ账号VIP信息(带登录态)。
@@ -1021,7 +986,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | appid|`string`| 应用在平台的唯一id，`特别注意，类型为string` |
 | openid|string|用户在某个应用的唯一标识|
 | accessToken|string|`用户登录态（新增参数）`|
-| vip|int|查询类型:<br/>会员:vip&0x01 !=0；<br/>QQ等级:vip&0x02 !=0；<br/>蓝钻:vip&0x04 != 0；<br/>红钻:vip&0x08 != 0；<br/>超级会员:vip&0x10 != 0;<br/>心悦:vip&0x40 != 0；<br/>黄钻::vip&0x80 != 0；<br/>以上可任意组合(逻辑与)，如需同时查询会员和蓝钻则(vip&0x01 !=0) && (vip&0x04 != 0) 为真,(备注：请求时请只填相关的标识位)|
+| vip|int|查询类型:<br/>会员:vip&0x01 !=0；<br/>QQ等级:vip&0x02 !=0；<br/>蓝钻:vip&0x04 != 0；<br/>红钻:vip&0x08 != 0；<br/>超级会员:vip&0x10 != 0;<br/>心悦:vip&0x40 != 0；<br/>黄钻::vip&0x80 != 0；<br/>动漫::vip&0x100 != 0；<br/>以上可任意组合(逻辑与)，如需同时查询会员和蓝钻则(vip&0x01 !=0) && (vip&0x04 != 0) 为真,(备注：请求时请只填相关的标识位)|
 ***（请注意输入参数的类型，参考1.5） ***
 
 #### 2.4.2.3输出参数说明 ####
@@ -1042,12 +1007,13 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	enum VIPFlag
 	{
 	　　VIP_NORMAL(会员) = 1,
-      VIP_QQ_LEVEL(QQ等级) = 2,  //QQ等级，只需要关注level参数，其它无效
+	　　VIP_QQ_LEVEL(QQ等级) = 2,  //QQ等级，只需要关注level参数，其它无效
 	　　VIP_BLUE（蓝钻） = 4,
 	　　VIP_RED （红钻）= 8, //红钻没有年费会员标识返回
-	　　VIP_SUPER (超级会员)= 16,
-	　　VIP_XINYUE = 64,  //心悦俱乐部特权会员，该标志位请求时只有isvip及level有效
-	　　VIP_YELLOW = 128,
+	　　VIP_SUPER (超级会员)= 16,  //QQ超级会员，只有isvip有效
+	　　VIP_XINYUE = 64,   //心悦俱乐部特权会员，该标志位请求时只有isvip及level有效
+	　　VIP_YELLOW = 128,  //黄钻会员，level字段无效
+	    VIP_ANIMIC = 256,  //动漫会员，只有isvip有效
 	};
 
 #### 2.4.2.4 接口调用说明 ####

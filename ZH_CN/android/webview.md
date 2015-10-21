@@ -413,7 +413,7 @@ Javascript封装层
         if (isiOS()) {
             msdkiOSHandler('OpenShare', jsonData, null)
         } else {
-            alert(jsonData)
+            prompt(jsonData)
         }
     }
     // ******END******
