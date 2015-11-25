@@ -377,8 +377,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
 | accessToken|string|用户在应用中的登录凭据 |
-| fopenids|vector<string>|待查询openid列表，每次最多可输入50个|
-| flags|string|VIP业务查询标识。目前支持查询QQ会员信息:qq_vip,QQ超级会员：qq_svip。后期会支持更多业务的用户VIP信息查询。如果要查询多种VIP业务，通过“,”分隔。如果不输入该值，默认为全部查询,见示例。|
+| fopenids|vector<string>|待查询openid列表，`每次最多可输入50个`|
+| flags|string|VIP业务查询标识。目前支持查询QQ会员信息:qq_vip,QQ超级会员：qq_svip。后期会支持更多业务的用户VIP信息查询。如果要查询多种VIP业务，通过“,”分隔。|
 | userip|string|调用方ip信息|
 | pf|string|玩家登录平台，默认openmobile，有openmobile_android/openmobile_ios/openmobile_wp等，该值来自客户端手Q登录返回|
 
@@ -1180,7 +1180,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | ------------- |:-------------:|:-----|
 | appid|string| 应用在平台的唯一id |
 | openid|string|用户在某个应用的唯一标识 |
-| accessToken|string|第三方调用凭证，通过获取凭证接口获得 |
+| accessToken|string|第三方调用凭证，通过获取凭证接口获得，`必须传递有效值，后台进行强校验` |
 | param|Vector<ReportParam>|ReportParam结构体见下文。`详细数据类型请参考2.4.4.6上报数据类型说明`<br>1、data:成就值<br>2、expires:超时时间，unix时间戳，单位s，表示哪个时间点数据过期，0时标识永不超时，不传递则默认为0<br>3、bcover:1表示覆盖上报，本次上报会覆盖以前的数据，不传递或者传递其它值表示增量上报，只会记录比上一次更高的数据<br>4、关于bcover，与排行榜有关的数据bcover=0，其他bcover=1。游戏中心排行榜与游戏排行榜保持一致。|
 	
 	struct ReportParam
@@ -1238,7 +1238,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 
 #### 2.4.5.6上报数据类型说明（有疑问请联系：joceyzhou&kyleli&samzou） ####
 
-| type(上报数据类型，int)| data(成就值，string)| expires(过期时间，string，如2015-05-30 23:59:59过期，则填写"1433001599")| bcover(是否覆盖上报，int)| 备注`(非常重要，请关注)`|
+| type(上报数据类型，int，若以前直接调用游戏中心接口，该type值不变)| data(成就值，string)| expires(过期时间，string，如2015-05-30 23:59:59过期，则填写"1433001599")| bcover(是否覆盖上报，int)| 备注`(非常重要，请关注)`|
 | ------------- |:-------------:|:-----|:-----|:-----|  
 |1  |等级                                          |  "0"|1|变化时上报                                                                |
 |2  |金钱                                          |  "0"|1|变化时上报                                                                |

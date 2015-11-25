@@ -131,7 +131,7 @@ Crash上报添加额外业务日志
 
 ![rqd](./rqd_extramsg.png)
 
-要完成此功能只需要在全局observer(即WGPlatformObserver)中添加回调函数OnCrashExtMessageNotify。java按如下方式调用：
+要完成此功能只需要在全局observer(即WGPlatformObserver)中添加回调函数OnCrashExtMessageNotify，crash额外上报字符串限制 10KB。java按如下方式调用：
 
     @Override
     public String OnCrashExtMessageNotify() {
@@ -151,5 +151,29 @@ cpp按如下方式调用：
     	std::string str = "test extra crash upload!";
     	LOGD("OnCrashExtMessageNotify test %s", str.c_str());
     	return str;
+    }
+
+## Crash上报添加额外二进制数据
+
+
+当程序Crash时，有时需要添加一些额外的二进制数据，随crash日志一起上报到http://rdm.wsd.com/ 平台，这样可以更好的定位造成crash的原因。最终可以在rdm平台上查看错误详情，其中额外业务日志保存在userExtraByteData中。bugly暂未开放查看userExtraByteData的功能，目前正在开发中。
+
+![rqd](./rqd_extraByteData.png)
+
+要完成此功能只需要在全局observer(即WGPlatformObserver)中添加回调函数OnCrashExtDataNotify。java按如下方式调用：
+
+    @Override
+	public byte[] OnCrashExtDataNotify() {
+		return "OnCrashExtDataNotify test crash java".getBytes();
+	}
+
+cpp按如下方式调用：
+
+    virtual unsigned char* OnCrashExtDataNotify() {
+    	// 此处游戏补充crash时上报的额外信息
+    	LOGD("OnCrashExtDataNotify %s", "");
+    	std::string str="OnCrashExtDataNotify CPP";
+    	unsigned char *extData = (unsigned char *)str.c_str();
+    	return extData;
     }
 

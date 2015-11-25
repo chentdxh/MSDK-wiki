@@ -102,7 +102,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 
 ##微信扫码登录
  - ###概述
-拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息。
+拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息。二维码显示界面只支持竖屏显示，游戏需在info.plist中配置支持竖屏UIInterfaceOrientationMaskPortrait，横屏的游戏可在游戏自身界面的Controller如UnityViewControllerBase或RootViewController - (NSUInteger)supportedInterfaceOrientations方法中返回只支持横屏，在UnityAppController或AppController - (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window方法中返回支持横竖屏。
 
 ```
 /**

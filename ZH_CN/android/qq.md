@@ -100,7 +100,7 @@ MSDK 手Q 相关模块
 	 *   此接口的调用结果通过OnRelationCallBack(RelationRet& relationRet) 回调返回数据给游戏,
 	 *   RelationRet对象的persons属性是一个Vector<PersonInfo>, 取第0个即是用户的个人信息.
 	 *   手Q授权的用户可以获取到的个人信息包含:
-	 *   nickname, openId, gender, pictureSmall（40*40）, pictureMiddle（40*40）, pictureLarge（100*100）, 其他字段为空.
+	 *   nickname, gender, pictureSmall（40*40）, pictureMiddle（40*40）, pictureLarge（100*100）, 其他字段为空.
 	 */
 	bool WGQueryQQMyInfo();
 
@@ -195,8 +195,8 @@ MSDK 手Q 相关模块
 	 *     eFlag_Succ: 分享成功
 	 *     eFlag_Error: 分享失败
 	 *   注意:
-	 *     分享图片需要放置到sdcard分区, 或其他外部程序有权限访问之处
-	 *     由于手Q客户端4.6以前的版本返回的回调是有问题的, 故不要依赖此回调做其他逻辑. (当前flag全都返回均为eFlag_Succ)
+	 *     如果分享的是本地图片，则需要放置到sdcard分区, 或其他外部程序有权限访问之处
+	 *     由于手Q客户端部分的版本返回的回调是有问题的, 故建议不要依赖此回调做其他逻辑。
 	 *     
 	 */ 
 	void WGSendToQQ(
@@ -274,9 +274,11 @@ MSDK 手Q 相关模块
 	 * @param musicDataUrl  音乐数据URL（例如http:// ***.mp3）
 	 * @param imgUrl 		分享消息缩略图URL
 	 * @return void
-	 *通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
-	 *eFlag_Succ: 分享成功
-	 *eFlag_Error: 分享失败
+	 * 通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
+	 * 	   eFlag_Succ: 分享成功
+	 * 	   eFlag_Error: 分享失败
+	 *   注意:
+	 *     由于手Q客户端部分的版本返回的回调是有问题的, 故建议不要依赖此回调做其他逻辑。
 	 */
 	void WGSendToQQWithMusic(
 		const eQQScene& scene,
@@ -431,7 +433,9 @@ MSDK 手Q 相关模块
 	 *   通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
 	 *     eFlag_Succ: 分享成功
 	 *     eFlag_Error: 分享失败
-	 * 注意: 由于手Q客户端4.6以前的版本返回的回调是有问题的, 故不要依赖此回调做其他逻辑. (当前flag全都返回均为eFlag_Succ)
+	 *   注意:
+	 *     分享图片需要放置到sdcard分区, 或其他外部程序有权限访问之处
+	 *     由于手Q客户端部分的版本返回的回调是有问题的, 故建议不要依赖此回调做其他逻辑。
 	 */
 	void WGSendToQQWithPhoto(const eQQScene& scene, unsigned char* imgFilePath);
 #### 接口调用：

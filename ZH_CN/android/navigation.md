@@ -117,6 +117,7 @@
   * [音乐消息分享](wechat.md#音乐消息分享)
   * [后端分享](wechat.md#后端分享)
   * [链接分享](wechat.md#链接分享)
+  * [分享到游戏中心](wechat.md#分享到游戏中心)
   * [Deeplink链接跳转](wechat.md#Deeplink链接跳转)
   - - - -
   * # 其他说明

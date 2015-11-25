@@ -24,6 +24,33 @@
   2.【MSDKMarketing】
     * 新增[内置浏览器Javascript分享接口](InnerBrowser.md#Javascript分享接口)功能。
     
+## 2.9.4
+- 【代码变更】
+  1.【MSDK】
+    * 支持iOS9编译，暂不支持bitcode。
+    * 修正iOS9编译手Q WebView授权页白屏问题。
+- 【组件更新】
+    * 【更新】更新openSDK2.9.4版本，修正iOS9编译手Q WebView授权页白屏、iOS8.0以下系统crash的问题。
+- 【接入注意事项】
+    * 1.使用Xcode7.0及以上版本iOS9.0及以上SDK编译。
+    * 2.在build settings中将Enable Bitcode设置为NO。
+    * 3.所有.dylib结尾的系统依赖库需更换为对应的.tdb结尾的依赖库。
+    * 4.info.plist需配置跳转scheme以及https声明，[点击此处](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html#!index.md#)查看详情。
+    
+## 2.9.3
+- 【代码变更】
+  1.【MSDK】
+    * 优化游客数据迁移算法，防止迁移失败。
+    * 修改与iOS私有API重名的变量及方法名，防止审核被拒。
+    * 修改票据解密算法，兼容票据未加密版本升级后解密问题。
+    
+## 2.9.2
+- 【代码变更】
+  1.【MSDK】
+    * 修改游客数据优先继承2.3.*版本的，经历过2.4.0~2.8.0版本的游戏无需关注该版本。
+    * 优化游客数据迁移算法，防止迁移失败。
+    * 修改与iOS私有API重名的变量及方法名，防止审核被拒。
+    
 ## 2.9.1
 - 【代码变更】
   1.【MSDK】
@@ -33,7 +60,7 @@
 ## 2.9.0
 - 【代码变更】
   1.【MSDK】
-    * 新增[微信扫码登录](WX.md#微信扫码登录)功能。
+    * 新增[微信扫码登录](WX.md#微信扫码登录)功能，二维码显示界面只支持竖屏显示，游戏需在info.plist中配置支持竖屏UIInterfaceOrientationMaskPortrait。
     * 新增游客模式数据上报功能。
     * 最低版本修正为支持到iOS6.0。
     

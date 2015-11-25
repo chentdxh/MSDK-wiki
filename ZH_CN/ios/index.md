@@ -1,21 +1,27 @@
 
 MSDK iOS 介绍
 =======
-声明：由于iOS9 SDK编译的包存在一些问题，各游戏暂时先不要使用iOS9 SDK打包编译发布外网版本，我们将敦促各平台尽快发布支持iOS9编译的SDK，待MSDK合入发布后第一时间通知到各游戏。需要使用iOS9编译测试的游戏需使用Xcode7.0及其以上版本编译，且需在plist中添加如下代码以确保可正常拉起手Q、微信授权和分享：
+MSDK2.9.4i版本已支持iOS9编译，暂不支持bitcode，接入需注意以下几点：
 
 ```
+1.使用Xcode7.0及以上版本iOS9.0及以上SDK编译。
+2.在build settings中将Enable Bitcode设置为NO。
+3.所有.dylib结尾的系统依赖库需更换为对应的.tdb结尾的依赖库。
+4.info.plist配置以下跳转scheme以及https声明：
 	<key>LSApplicationQueriesSchemes</key>
     <array>
-        <string>mqq</string>
-        <string>mqqapi</string>
-        <string>wtloginmqq2</string>
-        <string>mqqopensdkapiV3</string>
-        <string>mqqopensdkapiV2</string>
-        <string>mqqwpa</string>
-        <string>mqqOpensdkSSoLogin</string>
-        <string>mqzone</string>
-        <string>weixin</string>
-        <string>wechat</string>
+		<string>mqq</string>
+		<string>mqqapi</string>
+		<string>wtloginmqq2</string>
+		<string>mqqopensdkapiV3</string>
+		<string>mqqopensdkapiV2</string>
+		<string>mqqwpa</string>
+		<string>mqqOpensdkSSoLogin</string>
+		<string>mqqgamebindinggroup</string>
+		<string>mqqopensdkfriend</string>
+		<string>mqzone</string>
+		<string>weixin</string>
+		<string>wechat</string>
     </array>
     <key>NSAppTransportSecurity</key>
     <dict>

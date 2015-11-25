@@ -599,7 +599,7 @@ function googlemapsReady() {
         function n() {
             var b;
             b = window.location.hash.substring(window.location.hash.startsWith("#!") ? 2 : 1), b = decodeURIComponent(b);
-            if(b.indexOf('://') >= 0 || b.indexOf('http') >= 0){ window.location="http://wiki.dev.4g.qq.com/v2/site.html";}
+            if(b.indexOf("/") > 0 || b.indexOf("<") > 0 || b.indexOf(">") > 0 || b.indexOf("'") > 0 || b.indexOf("\"") > 0){ window.location="http://wiki.dev.4g.qq.com/v2/site.html";}
             var c = b.indexOf("#"); - 1 !== c ? (a.md.inPageAnchor = b.substring(c + 1), a.md.mainHref = b.substring(0, c)) : a.md.mainHref = b
         }
 

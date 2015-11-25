@@ -23,6 +23,7 @@ MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各�
         <activity
             android:name="com.tencent.msdk.webview.WebViewActivity"
             android:process=":msdk_inner_webview" 
+            android:hardwareAccelerated="true"
             android:configChanges="orientation|screenSize|keyboardHidden|navigation|fontScale|locale"
             android:screenOrientation="unspecified"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
@@ -64,6 +65,9 @@ MSDK提供了内置浏览器的支持, 此内置Webview从安全性, 性能各�
 
 如果需要内置浏览器始终保持竖屏，则将`android:screenOrientation="unspecified"`改成如下：
 `android:screenOrientation="portrait"`
+
+**注意：**
+WebViewActivity 需要添加 `android:hardwareAccelerated="true"` 配置开启硬件加速，否则部分机器可能在播放视频时有声音无画面。
 
 如果是升级到2.0.0a版本的，可删除2.0.0a以前的配置再添加新的配置。
 
@@ -419,7 +423,7 @@ Javascript封装层
     // ******END******
 ```
 
-开发者需要将上面的JS代码复制到需要调用 MSDK JS接口的网页，同时此网页需要用 MSDK 内置浏览器打开。Android，iOS平台都可通过调用 `msdkShare(jsonData)` 完成分享，无需指定平台；iOS 版本 MSDK 提供的额外接口可通过 `msdkiOSHandler` 调用，可参考 iOS 部分的文档和 [JSDemo 示例](http://wekf.qq.com/msdk/index.html)。
+开发者需要将上面的JS代码复制到需要调用 MSDK JS接口的网页，同时此网页需要用 MSDK 内置浏览器打开。Android，iOS平台都可通过调用 `msdkShare(jsonData)` 完成分享，无需指定平台；iOS 版本 MSDK 提供的额外接口可通过 `msdkiOSHandler` 调用，可参考 iOS 部分的文档和 [JSDemo 示例](http://wiki.dev.4g.qq.com/v2/msdkjs.html)。
 
 Javascript分享接口
 ---
