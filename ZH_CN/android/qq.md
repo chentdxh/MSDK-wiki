@@ -46,8 +46,10 @@ MSDK 手Q 相关模块
             baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
 
             //游戏必须使用自己的微信AppId联调
-            baseInfo.wxAppId = "wxcde873f99466f***"; 
-            baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
+    		baseInfo.wxAppId = "wxcde873f99466f***"; 
+
+			//游戏必须使用自己的msdkKey联调
+			baseInfo.msdkKey = "5d1467a4d2866771c3b289965db3****";
 
             //游戏必须使用自己的支付offerId联调
             baseInfo.offerId = "100703***";
@@ -98,7 +100,7 @@ MSDK 手Q 相关模块
 	 *   此接口的调用结果通过OnRelationCallBack(RelationRet& relationRet) 回调返回数据给游戏,
 	 *   RelationRet对象的persons属性是一个Vector<PersonInfo>, 取第0个即是用户的个人信息.
 	 *   手Q授权的用户可以获取到的个人信息包含:
-	 *   nickname, openId, gender, pictureSmall（40*40）, pictureMiddle（40*40）, pictureLarge（100*100）, 其他字段为空.
+	 *   nickname, gender, pictureSmall（40*40）, pictureMiddle（40*40）, pictureLarge（100*100）, 其他字段为空.
 	 */
 	bool WGQueryQQMyInfo();
 
@@ -155,9 +157,12 @@ MSDK 手Q 相关模块
 	}
 
 #### 注意事项
-1. 为了避免当获取个人信息（比如头像、名字）、 好友信息（比如头像、名字）失败时，导致游戏登入失败，请将查询个人信息、查询好友信息设置为非关键路径。
+1. 为了避免当获取个人信息（比如头像、名字）、 好友信息（比如头像、名字）失败时，导致游戏登入失败，请将查询个人信息、查询好友信息设置为`非关键路径`。
 1. 另建议游戏侧在获得个人信息和好友信息做缓存处理，避免每次登入都进行拉取刷新个人信息和好友信息，造成微访问量过大；并且每天进行1次访问，避免好友更新头像和名字时，不能及时在游戏内更新。
 
+分享展示效果
+---
+核心模块中的[`分享模块`](share.md)图文并茂的总结了QQ/微信分享的展示效果和点击效果，在接入分享功能前强烈建议先阅读[`分享模块`](share.md)文档。
 
 结构化消息分享
 ------
@@ -190,8 +195,8 @@ MSDK 手Q 相关模块
 	 *     eFlag_Succ: 分享成功
 	 *     eFlag_Error: 分享失败
 	 *   注意:
-	 *     分享图片需要放置到sdcard分区, 或其他外部程序有权限访问之处
-	 *     由于手Q客户端4.6以前的版本返回的回调是有问题的, 故不要依赖此回调做其他逻辑. (当前flag全都返回均为eFlag_Succ)
+	 *     如果分享的是本地图片，则需要放置到sdcard分区, 或其他外部程序有权限访问之处
+	 *     由于手Q客户端部分的版本返回的回调是有问题的, 故建议不要依赖此回调做其他逻辑。
 	 *     
 	 */ 
 	void WGSendToQQ(
@@ -269,9 +274,11 @@ MSDK 手Q 相关模块
 	 * @param musicDataUrl  音乐数据URL（例如http:// ***.mp3）
 	 * @param imgUrl 		分享消息缩略图URL
 	 * @return void
-	 *通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
-	 *eFlag_Succ: 分享成功
-	 *eFlag_Error: 分享失败
+	 * 通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
+	 * 	   eFlag_Succ: 分享成功
+	 * 	   eFlag_Error: 分享失败
+	 *   注意:
+	 *     由于手Q客户端部分的版本返回的回调是有问题的, 故建议不要依赖此回调做其他逻辑。
 	 */
 	void WGSendToQQWithMusic(
 		const eQQScene& scene,
@@ -426,7 +433,9 @@ MSDK 手Q 相关模块
 	 *   通过游戏设置的全局回调的OnShareNotify(ShareRet& shareRet)回调返回数据给游戏, shareRet.flag值表示返回状态, 可能值及说明如下:
 	 *     eFlag_Succ: 分享成功
 	 *     eFlag_Error: 分享失败
-	 * 注意: 由于手Q客户端4.6以前的版本返回的回调是有问题的, 故不要依赖此回调做其他逻辑. (当前flag全都返回均为eFlag_Succ)
+	 *   注意:
+	 *     分享图片需要放置到sdcard分区, 或其他外部程序有权限访问之处
+	 *     由于手Q客户端部分的版本返回的回调是有问题的, 故建议不要依赖此回调做其他逻辑。
 	 */
 	void WGSendToQQWithPhoto(const eQQScene& scene, unsigned char* imgFilePath);
 #### 接口调用：

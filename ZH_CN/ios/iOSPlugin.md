@@ -84,7 +84,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | MSDK_XGPUSH_URL  | String |  信鸽推送URL，可以不配置 |信鸽推送URL，不配置则使用默认值，正式上线前必须删除该项配置|推送|
 | MSDK_OfferId  | String |  各游戏不同 |支付所需的OfferId|支付|
 | NeedNotice  | Boolean |  是否启用公告功能 |Yes-启用 No（或不配置）-禁用|公告|
-| Noticetime  | Number |  公告自动拉取的时间间隔（秒） |默认15分钟|公告|  
+| NoticeTime  | Number |  公告自动拉取的时间间隔（秒） |默认15分钟|公告|  
 | NSLocationWhenInUseUsageDescription  | NSString |  用于iOS8下LBS定位功能 |值可为空|LBS| 
 | MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0-2.6.6版本，2.7.0版本开始内置浏览器分享开关由MSDK管理端下发，游戏可根据需要申请打开或关闭) |内置浏览器|
  

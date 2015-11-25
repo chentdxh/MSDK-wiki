@@ -138,6 +138,12 @@
   * [获取注册渠道](tool.md#获取注册渠道)  
   * [Url添加加密票据](tool.md#Url添加加密票据)  
   * [控制台日志](tool.md#控制台日志)
+  
+[游戏场景化模块]()
+
+  * [接入须知](gameStatus.md#接入须知（重要，接入必看）)
+  * [接口说明](gameStatus.md#接口说明)
+  * [测试验证](gameStatus.md#测试验证)
 
 [变更历史](version.md)
  

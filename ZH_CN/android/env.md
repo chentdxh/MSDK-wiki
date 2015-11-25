@@ -20,8 +20,8 @@ MSDK的C++接口由JNI实现，使用MSDK的C++接口的游戏在集成时，需
 
 备注：在最新的adt版本（adt-bundle-windows-x86-20140702）中没有集成ndk，游戏在Android选项中可能无法看到上述配置。解决方法如下：
 
-1. 下载eclipse关于ndk的插件[com.android.ide.eclipse.ndk_23.0.2.1259578.jar](https://github.com/bihe0832/Settings-Tools/tree/master/adt/plugins)
-2. 将下载好的`com.android.ide.eclipse.ndk_23.0.2.1259578.jar` 放入adt目录下的 `\eclipse\plugins`中，重启eclipse。
+1. 下载eclipse关于ndk的插件[com.android.ide.eclipse.ndk_23.0.2.1259578.jar](http://wiki.dev.4g.qq.com/v2/android/com.android.ide.eclipse.ndk_23.0.2.1259578.jar.zip)
+2. 将下载的zip解压，之后将`com.android.ide.eclipse.ndk_23.0.2.1259578.jar` 放入adt目录下的 `\eclipse\plugins`中，重启eclipse。
 
 #### 代码引入：
 

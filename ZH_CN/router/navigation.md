@@ -1,8 +1,8 @@
-# MSDK Router WIKI
+# MSDK Server WIKI
 
 [gimmick:theme (inverse: true)](cerulean)
 
-[MSDK后台介绍]()
+[MSDK Server介绍]()
 
   * # 
   * [概述](index.md#1.概述)
@@ -47,8 +47,8 @@
   * [FAQ](faq.md#FAQ)
 
   
-[MSDK后台错误码]()
+[MSDK Server错误码]()
 
   * # 
-  * [错误码](errorCode.md#1.MSDK后台错误码)
+  * [错误码](errorCode.md#1.MSDK Server错误码)
   

@@ -50,8 +50,10 @@ public void onCreate(Bundle savedInstanceState) {
 
     //游戏必须使用自己的微信AppId联调
     baseInfo.wxAppId = "wxcde873f99466f***"; 
-    baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4***";
 
+	//游戏必须使用自己的msdkKey联调
+	baseInfo.msdkKey = "5d1467a4d2866771c3b289965db3****";
+	
     //游戏必须使用自己的支付offerId联调
     baseInfo.offerId = "100703***";
 	...
@@ -223,7 +225,11 @@ protected void onNewIntent(Intent intent) {
 #### 注意事项：
 
 1. **由于平台规则，该接口调用后，并不能直接使用回调OnAddWXCardNotify中的CardRet的flag来判断插卡是否成功，只能通过解析CardRet中wx_card_list的内容，查看is_succ的值来确定回调是否成功。is_succ为0表示失败，1表示成功。**
-	
+
+分享展示效果
+---
+核心模块中的[`分享模块`](share.md)图文并茂的总结了QQ/微信分享的展示效果和点击效果，在接入分享功能前强烈建议先阅读[`分享模块`](share.md)文档。
+
 结构化消息分享
 ------
 
@@ -673,6 +679,81 @@ if ("cpp".equals(ModuleManager.LANG)) { // 使用C++调用MSDK, 游戏只需要�
 			mediaTagName, imgData, imgData.length, messageExt);
 }
 ```
+
+分享到游戏中心
+------
+登录后使用此接口可分享消息到微信游戏中心，在游戏中心的我的消息中查看。 这种消息主要包含两部分，消息体和附加按钮，消息体主要包含展示内容附加按钮主要定义了点击以后的跳转动作（拉起APP，拉起页面、拉起排行榜）。
+
+#### 接口声明
+
+```
+    /**
+     * 此接口会分享消息到微信游戏中心内的消息中心，这种消息主要包含两部分，消息体和附加按钮，消息体主要包含展示内容
+     * 附加按钮主要定义了点击以后的跳转动作（拉起APP，拉起页面、拉起排行榜），消息类型和按钮类型可以任意组合
+     * @param fopenid 好友的openid
+     * @param title 游戏消息中心分享标题
+     * @param content 游戏消息中心分享内容
+     * @param pInfo 消息体，这里可以传入四种消息类型，均为WXMessageTypeInfo的子类：
+     * 		TypeInfoImage: 图片消息（下面的几种属性全都要填值）
+     * 			std::string pictureUrl; // 图片缩略图
+     * 			int height; // 图片高度
+     * 			int width; // 图片宽度
+     * 		TypeInfoVideo: 视频消息（下面的几种属性全都要填值）
+     * 			std::string pictureUrl; // 视频缩略图
+     * 			int height; // 视频高度
+     * 			int width; // 视频宽度
+     * 			std::string mediaUrl; // 视频链接
+     * 		TypeInfoLink: 链接消息（下面的几种属性全都要填值）
+     * 			std::string pictureUrl; // 在消息中心的消息图标Url（图片消息中，此链接则为图片URL)
+     * 			std::string targetUrl; // 链接消息的目标URL，点击消息拉起此链接
+     * 		TypeInfoText: 文本消息
+     *
+     * @param pButton 按钮效果，这里可以传入三种按钮类型，均为WXMessageButton的子类：
+     * 		ButtonApp: 拉起应用（下面的几种属性全都要填值）
+     * 			std::string name; // 按钮名称
+     * 			std::string messageExt; // 附加自定义信息，通过按钮拉起应用时会带回游戏
+     * 		ButtonWebview: 拉起web页面（下面的几种属性全都要填值）
+     * 			std::string name; // 按钮名称
+     * 			std::string webViewUrl; // 点击按钮后要跳转的页面
+     * 		ButtonRankView: 拉起排行榜（下面的几种属性全都要填值）
+     * 			std::string name; // 按钮名称
+     * 			std::string title; // 排行榜名称
+     * 			std::string rankViewButtonName; // 排行榜中按钮的名称
+     * 			td::string messageExt; // 附加自定义信息，通过排行榜中按钮拉起应用时会带回游戏
+     * @param msdkExtInfo 游戏自定义透传字段，通过分享结果shareRet.extInfo返回给游戏
+     *  @return 参数异常或未登陆
+     */
+     bool WGSendMessageToWechatGameCenter(
+        unsigned char* fOpenid,
+	    unsigned char* title,
+	    unsigned char* content,
+	    WXMessageTypeInfo *pInfo,
+	    WXMessageButton *pButton,
+	    unsigned char* msdkExtInfo
+    );
+```
+
+#### 调用示例
+
+```
+	String title = "分享title";
+	String content = "分享content---test";
+	String msdkExtInfo = "分享到微信游戏中心的回调";
+    MsgLink msgBase = new MsgLink(
+        "http://download.wegame.qq.com/wepang/RedGame_Winner_140.png",
+        "http://www.qq.com");
+    BtnWeb btnBase = new BtnWeb("跳转网页", "http://www.qq.com");
+
+	if ("cpp".equals(ModuleManager.LANG)) {
+	    PlatformTest.WGSendMessageToWechatGameCenter();
+	} else if ("java".equals(ModuleManager.LANG)) {
+	    WGPlatform.WGSendMessageToWechatGameCenter(openid, title, content, msgBase, btnBase, msdkExtInfo);
+	}
+```
+
+#### 注意事项
+1. 点击 跳转排行榜 按钮会先跳转到此游戏详情页，用户可在此游戏详情页查看排行榜。且 ButtonRankView 中的 title, rankViewButtonName 无效，界面不会展示这两个参数。
+
 
 Deeplink链接跳转
 ------

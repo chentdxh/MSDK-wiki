@@ -15,30 +15,30 @@ MSDK(Android)的Unity发布包(zip)主要包含`MSDKUnityLibrary`、`MSDKUnitySa
 
 ### Step1:引入MSDK
 
-在Unity3D的IDE中打开游戏工程，双击`MSDK_Android_Unity_xxx.unityPackage`，选择需要的文件导入，如下图：
+在Unity3D的IDE中打开游戏工程，双击`MSDK_Android_Unity_xxx.unityPackage`（请确保完整路径下没有中文，否则可能导入出错），选择需要的文件导入，如下图：
 
 ![ImportPackage](./unity_ImportPackage.png)
 
 **注意：**
+
 1. 如果游戏工程中已有Android项目，则不导入`AndroidManifest.xml`，之后再将`AndroidManifest_Need.xml`中的内容合并到游戏**Plugins/Android**目录下的 AndroidManifest.xml 中。
-2. 如果游戏使用的Unity是5.0及以上，则需要去掉 libs 文件夹下的**MSDK_Android_R_xxx.jar**。
-2. 如果游戏并非用Unity导出Apk包，而是用Eclipse等类似环境出包，则需要去掉 libs 文件夹下的**MSDK_Android_R_xxx.jar**，assets中只保留`adconfig.ini, channel.ini, msdkconfig.ini`这几个文件。
+2. 如果游戏并非用Unity导出Apk包，而是用Eclipse等类似环境出包，则需要去掉assets中的部分资源文件只保留`adconfig.ini, channel.ini, msdkconfig.ini`这几个文件。
 
-### Step2:Crash上报配置
+### Step2:MSDK C#层初始化
 
-#### Bugly配置
+应在游戏刚开始时调用MSDK C#层初始化接口，如下：
 
-MSDK的jar包已经完成了Bugly的初始化，游戏需要在初始化时开启C#层的Crash上报，即加入如下代码：
-```   
-Bugly.EnableLog (true);
-// 设置C#堆栈日志捕获的级别，默认为Exception，可以选择为Assert、Error等
-Bugly.RegisterHandler (LogSeverity.Exception);
-// 如果你已经在Unity项目导出的Android或iOS工程中进行了SDK的初始化，则只需调用此方法完成C#堆栈捕获功能的开启
-Bugly.EnableExceptionHandler();
 ```
-**注意：**
-如果使用 Unity4.6.1 打包，会存在 native crash 无法上报的bug！需要使用非4.6.1的 Unity 版本(低于或高于此版本)打出Apk包。
+void Start () {
+    Debug.Log("Start()");
+    //TODO GAME 初始化MSDK的C#层
+    WGPlatform.Instance.Init ();
+    ...
+}
+```
 
+**注意：**
+如果使用 Unity4.6.1 打出APK，会存在 native crash 无法上报的bug！需要使用非4.6.1的 Unity 版本(低于或高于此版本)打出Apk包。
 
 ### Step3:修改BuildSettings及AndroidManifest
 
@@ -142,9 +142,11 @@ Bugly.EnableExceptionHandler();
 
 ### Step4:在Eclipse中引入并修改封装MSDK代码
 
+在`MSDKUnityLibrary/src`目录中，**com.example.wegame.wxapi**中包含微信登录需要的**WXEntryActivity.java**；**com.tencent.msdk.u3d**包下包含对安卓MSDK封装代码；**com.example.wegame**包下为供游戏参考的 MSDKUnity示例工程中安卓部分示例代码。
+
 #### 4.1拷贝封装的java源码
 
-将`MSDKUnityLibrary/src`中的文件`com/example/wegame/wxapi/WXEntryActivity.java`拷贝到游戏Android工程src目录下`用包名+wxapi`位置，`com/tencent/msdk/u3d/U3DActivity.java`拷贝到游戏Android工程src目录下并保持目录结构不变。此时游戏Android工程应类似如下
+在`MSDKUnityLibrary/src`目录中，将`com/example/wegame/wxapi/WXEntryActivity.java`拷贝到游戏Android工程src目录下`用包名+wxapi`位置；`com/tencent/msdk/u3d` 保持目录结构不变，拷贝到游戏Android工程src目录下。此时游戏Android工程应类似如下
 
 ![FilesStructure](./unity_FilesStructure2.png)
 
@@ -160,55 +162,53 @@ package com.example.wegame.wxapi;
 package 游戏包名.wxapi;
 ```
 
-打开U3DActivity.java，在onCreate里面填写游戏的qqAppId，wxAppId等初始化信息：
+参考`MSDKUnityLibrary/src/com/example/wegame/U3DActivity.java`新建个游戏安卓工程的主Activity，或直接拷贝到游戏包名目录下。
+
+打开类似U3DActivity的游戏主Activity，在onCreate里面填写游戏的qqAppId，wxAppId等初始化信息：
 
 ```
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ......
-    //TODO 初始化SDK START 
+    // TODO GAME 初始化MSDK
     /***********************************************************
-     *   GAME 接入必须要看， baseInfo值因游戏而异，填写请注意以下说明：  *
-     *  baseInfo值游戏填写错误将导致 QQ、微信的分享，登录失败 ，切记 ！！！        *
-     *  只接单一平台的游戏请勿随意填写其余平台的信息，否则会导致部分公告获取失败  *
+     *  TODO GAME 接入必须要看， baseInfo值因游戏而异，填写请注意以下说明:      
+     *  	baseInfo值游戏填写错误将导致 QQ、微信的分享，登录失败 ，切记 ！！！     
+     * 		只接单一平台的游戏请勿随意填写其余平台的信息，否则会导致公告获取失败  
+     *      offerId 为必填，一般为手QAppId
      ***********************************************************/
-    mGameObject = "Msdk";   // 此处填写游戏需要回调的脚本绑定的GameObject的名称
+
     MsdkBaseInfo baseInfo = new MsdkBaseInfo();
     baseInfo.qqAppId = "100703379";
     baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c734514e";
     baseInfo.wxAppId = "wxcde873f99466f74a";
-    baseInfo.wxAppKey = "bc0994f30c0a12a9908e353cf05d4dea";
-    //注意：offerId必须填写
+    baseInfo.msdkKey = "5d1467a4d2866771c3b289965db335f4";
+    //订阅型测试用offerId
     baseInfo.offerId = "100703379"; 
+    // TODO GAME 自2.7.1a开始游戏可在初始化msdk时动态设置版本号，灯塔和bugly的版本号由msdk统一设置
+    // 1、版本号组成 = versionName + versionCode
+    // 2、游戏如果不赋值给appVersionName（或者填为""）和appVersionCode(或者填为-1)，
+    // msdk默认读取AndroidManifest.xml中android:versionCode="51"及android:versionName="2.7.1"
+    // 3、游戏如果在此传入了appVersionName（非空）和appVersionCode（正整数）如下，则灯塔和bugly上获取的版本号为2.7.1.271
+    baseInfo.appVersionName = "2.8.1";
+    baseInfo.appVersionCode = 281;
     ......
 }
 ```
-**注意：**
-初始化代码处 **mGameObject** 应填写游戏需要回调的脚本绑定的 `GameObject` 的名称。如，示例工程中 MSDKDemo.cs 脚本调用了回调方法(OnLoginNotify等)，它绑定的 GameObject 名称为 "Msdk"，则设置为：
-> mGameObject = "Msdk";
 
-
-修改U3DActivity的import的`UnityPlayerNativeActivity`包名为游戏包名：
+初始化代码处，设置回调到U3D需要绑定的 **GameObject** 即C#层绑定回调代码的场景名称。如，示例工程中 MSDKDemo.cs 脚本调用了回调方法(OnLoginNotify等)，它绑定的 GameObject 名称为 "Msdk"，则设置为：
 
 ```
-import com.unity3d.player.UnityPlayerNativeActivity;
-或
-import com.example.wegame.UnityPlayerNativeActivity
->>>
-import 游戏包名.UnityPlayerNativeActivity;
-```
-
-其次，在下一个TODO标记处SetMsdkObserver方法里面的OnCrashExtMessageNotify处，游戏可以自定义信息用于Crash上报。`OnCrashExtMessageNotify`接口会在游戏发生Crash时上报额外的游戏自定义的信息到灯塔。
-
-```
-	@Override
-	public String OnCrashExtMessageNotify() {
-	   // TODO START 此处游戏补充crash时上报的额外信息,例如：
-	    Logger.d(String.format(Locale.CHINA,"OnCrashExtMessageNotify called"));
-	    Date nowTime = new Date();
-	    SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	    return "new Upload extra crashing message for rqd1.7.8 on " + time.format(nowTime);
-	}
+// TODO GAME 此处填写游戏需要回调的脚本绑定的GameObject的名称
+String ObserverGameObject = "Msdk";
+// 全局回调类
+WGPlatform.WGSetObserver(new UnityPlatformObserver(ObserverGameObject));   
+// 应用宝更新回调类
+WGPlatform.WGSetSaveUpdateObserver(new UnitySaveUpdateObserver(ObserverGameObject));
+// 广告的回调设置
+WGPlatform.WGSetADObserver(new UnityADObserver(ObserverGameObject));
+//QQ 加群加好友回调
+WGPlatform.WGSetGroupObserver(new UnityGroupObserver(ObserverGameObject));
 ```
 
 #### 4.3加入去重代码
@@ -261,11 +261,21 @@ protected void onDestroy ()
 
 ![ExportJar](./unity_ExportJar3.png)
 
+还需要将自动生成的R文件打成jar包，同样放入游戏Unity工程的**Plugins/Android/libs**下。如果不这样做可能会导致应用宝抢号时崩溃。
+单击游戏工程，再依次点击 **Project -> Build Project**。此时工程的**gen**目录下应生成了 `R.java` 文件。如下导出为jar包。
+
+![ExportJar](./unity_ExportRJar1.png)
+
+![ExportJar](./unity_ExportRJar2.png)
+
+
 将此处生成的jar包放入游戏Unity工程的**Plugins/Android/libs**下，在**Player Settings**中配置好keystore等相关项即可在**Build Settings**中导出Apk包。
 
 #### 5.2在Eclipse中导出Apk包
 
-如果游戏已按步骤1中的注意事项操作删除了多余项，则可以直接用此工程导出Apk包，否则需要在游戏Android工程中删除导入的多余的文件。
+如果游戏并非用Unity导出Apk包，而是用Eclipse等类似环境出包，则需要去掉assets中的部分资源文件只保留`adconfig.ini, channel.ini, msdkconfig.ini`这几个文件。
+
+删除了多余项后可直接用此工程在Eclipse中导出Apk包。
 
 ## 接口调用
 
@@ -273,7 +283,7 @@ protected void onDestroy ()
 
 ![Unity截图](./unity_plugins.png "Unity截图")
 
-其中，MSDK API都封装在WGPlatform类，其中对接口的详细的注释。在"MSDKUnitySample"中`MsdkDemo.cs`是对MSDK的C#接口的调用示例，游戏可参考此类时行C#接口调用。
+其中，MSDK API都封装在WGPlatform类，其中对接口的详细的注释，其中接口是wiki的上的接口是一致的，可参考wiki来调用。在"MSDKUnitySample"中`MsdkDemo.cs`是对MSDK的C#接口的调用示例，游戏可参考此类时行C#接口调用。
 
 
 ### 登录及回调
@@ -362,11 +372,10 @@ protected void onDestroy ()
 
 点击**MSDKUnitySample\Assets\msdk.unity**可打开MSDKUnitySample工程，需要作以下修改即可打包Sample的Apk包。
 
-1. MSDKUnitySample工程中只包含Assets资源，因此场景绑定有问题，需要手动将 **MsdkDemo.cs** 脚本绑定到 **msdk.unity** 中。
-2. 如果游戏使用的Unity是5.0及以上，则需要去掉 libs 文件夹下的**MSDK_Android_R_xxx.jar**。
-3. 在 Player Settings 面板的Android设置的 Other Settings 中修改包名、版本号，如图示：
+1. MSDKUnitySample工程中只包含Assets资源，如果场景绑定有问题，需要手动将 **MsdkDemo.cs** 脚本绑定到 **msdk.unity** 中。
+1. 在 Player Settings 面板的Android设置的 Other Settings 中修改包名、版本号，如图示：
     ![unity_identification](./unity_identification.png)
-4. 在 Player Settings 面板的Android设置的 Publishing Settings 中设置签名文件 keystore，选择 `MSDKUnitySample/Assets/Plugins/Android`目录下的 debug.keystore，Alias为 androiddebugkey，Password 都为 android。如下图示：
+1. 在 Player Settings 面板的Android设置的 Publishing Settings 中设置签名文件 keystore，选择 `MSDKUnitySample/Assets/Plugins/Android`目录下的 debug.keystore，Alias为 androiddebugkey，Password 都为 android。如下图示：
 	![unity_release](./unity_release.png)
 
 在"MSDKUnitySample"中`MsdkDemo.cs`是对MSDK的C#接口的调用示例，游戏可参考此类时行C#接口调用。

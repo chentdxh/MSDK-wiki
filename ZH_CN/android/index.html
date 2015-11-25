@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,7 +37,7 @@
 <!-- START extlib/js/highlight-7.3.pack.min.js -->
 <script type="text/javascript" src="../../js/highlight-7.3.pack.min.js">
 /* highlight.js Copyright (c) 2006, Ivan Sagalaev. Licensed under BSD 3-clause.
-   See https://github.com/isagalaev/highlight.js/blob/master/LICENSE 
+   See https://github.com/isagalaev/highlight.js/blob/master/LICENSE
    */
 </script>
 <!-- END extlib/js/highlight-7.3.pack.min.js -->
@@ -186,54 +187,30 @@
         font-size: smaller;
         padding: 1em;
     }
-
-    /** 跑马灯效果 **/
-    #wrapper {
-        width: 100%;
-        margin: -100px 0 0 0;
-        position: absolute;
-        left: 0;
-        height: 50px;
-        top: 100%;
-    }
-    #wrapper h3 {
-        font-size: 20px;
-        text-align: center;
-    }
-    #wrapper > div {
-        background-color: #eee;
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-        width: 100%;
-        height: 50px;
-        padding: 10px 0;
-        overflow: hidden;
-    }
-    #wrapper > div.content {
-        border-bottom: none;
-    }
-    #wrapper dl {
-        display: block;
-        margin: 0;
-    }
-    #wrapper dt, #wrapper dd {
-        display: block;
-        float: left;
-        margin: 0 10px;
-        padding: 5px 10px;
-    }
-    #wrapper dt {
-        background-color: #f66;
-        color: #fff;
-    }
-    #wrapper dd {
-        color: #333;
-        margin-right: 50px;
-    }
     .cgl { text-align: right; }
-    .cgli{border-right: 1px solid #D2D2D1; margin: 0 10px;}
-    .cglg { display: inline-block;border-bottom: 5px solid #ff0000;line-height: 25px; }
+   .cgli{border-right: 1px solid #D2D2D1; margin: 0 10px;}
+   .cglg { display: inline-block;border-bottom: 5px solid #ff0000;line-height: 25px; }
     </style>
+	<style type="text/css">
+#Body{ z-index:1; display:block;height:100%;}
+#Cover{ z-index:999; position:fixed;_position:relative;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#88000000',endColorstr='#88000000');background-color:rgba(0, 0, 0, 0.5);background:#000;opacity:0.5;filter:alpha(opacity=50);height:100%;left:0;top:0;display:block;width:100%;}
+#Pop{z-index:10000;position: absolute;_position: relative;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3Fffffff',endColorstr='#3Fffffff');background-color: rgba(255,255,255,0.3);font-family: 微软雅黑;
+padding:10px; left:30%; width:40%;top:30%;}
+.popContent {overflow: hidden;padding:33px;background: white;}
+.popMain *{position:relative;}
+.popContent dl {text-align:center; overflow: hidden;}
+.popContent dt {height: 28px;}
+.popContent dd {margin-left:0px; line-height:2em;}
+.f_20 {font-size: 20px;color:Black;}
+.f_16 {font-size: 16px;}
+.f_14 {font-size: 16px; color:#444;}
+.f_bold{ font-weight:bold;}
+.f_red{color: #9C2C2C;}
+.popContent b a, .popContent b a:visited {display: block;width: 98px;height: 23px;overflow: hidden;text-decoration: none;background-color:Black;color:White;padding:5px;text-align:center;}
+.button{width:118px;height:45px; background-color:#333; color:#eee; border:2px solid #ccc; font-size:18px;font-weight:bold; margin-left:18px; cursor:pointer;}
+.popMain li{font-size: 16px; margin-left:40px; line-height:1.75em;}
+    </style>
+
 <!-- START extlib/js/jquery.colorbox.min.js -->
 <script type="text/javascript" src="../../js/jquery.colorbox.min.js">
 </script>
@@ -242,63 +219,96 @@
 <script type="text/javascript" src="../../js/mywiki.js?2"></script>
 <script type="text/javascript" src="../js/jquery.carouFredSel-6.0.4-packed.js"></script>
 <script type="text/javascript" src="http://tajs.qq.com/stats?sId=46192948" charset="UTF-8"></script>
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
 
+ <script language="javascript" type="text/javascript">
+        function btnPop_onclick(result) {
+            var cover = "<div id='Cover' onclick='btnClose_onclick()'></div>";
+            $("body").append(cover);
+            var pop = "<div id='Pop'></div>";
+            $("body").append(pop);
+            $("#Pop").append("<div class=' popMain'>"
+				+ "<div class='popContent'>"
+				+ "<dl class='f_black'>"
+				+ "<dt class='f_20'>"+ result.title +"</dt></dl>"
+				+ result.desc
+				+ "<div style='margin-top:22px; text-align:center;'>"
+				+ "<input class='button' type='button' onclick=\"btnNeverClose_onclick('"+result.cookie+"')\" value='不再提醒' />"
+				+ "<input class='button' type='button' onclick='btnClose_onclick()' value='稍后再看'/>"
+				+ "</div></div></div>");
+        }
+
+        function btnClose_onclick() {
+            $("#Cover").remove();
+            $("#Pop").remove();
+        }
+
+		function btnNeverClose_onclick(cookie) {
+            $("#Cover").remove();
+            $("#Pop").remove();
+			setCookie(cookie,true)
+        }
+		function init(){
+			//后台请求，根据结果展示公告
+			$.get("http://wiki.dev.4g.qq.com/v2/notice.php",
+				 {rd: Math.random()},
+				 function (result) {
+					console.log(result);
+					if(typeof(result)!="undefined" && result!=null && typeof(result)!="undefined" && result.show!=null && result.show ==true){
+						var cookie = getCookie(result.cookie);
+						      console.log("show");
+						if(typeof(cookie)!="undefined" && cookie!=null && cookie =="true"){
+							console.log("true");
+						}else{
+							console.log("false");
+							btnPop_onclick(result);
+						}
+					}else{
+						delCookie(result.cookie);
+					}
+				},
+				'json'
+			);
+		}
+
+		function setCookie(name,value)
+		{
+			var Days = 7;
+			var exp = new Date();
+			exp.setTime(exp.getTime() + Days*24*60*60*1000);
+			document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+		}
+
+		function getCookie(name)
+		{
+			var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+
+			if(arr=document.cookie.match(reg))
+
+				return unescape(arr[2]);
+			else
+				return null;
+		}
+
+		function delCookie(name)
+		{
+			var exp = new Date();
+			exp.setTime(exp.getTime() - 1);
+			var cval=getCookie(name);
+			if(cval!=null)
+				document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+		}
+    </script>
 <!-- END dist/MDwiki.min.js -->
 </head>
 <body>
     <noscript>
         系统错误，请联系管理员！
     </noscript>
-	<!--跑马灯效果-->
-        <div id="wrapper" style="display:none;">
-            <div id="content">
-                <dl id="msdk-tips">
-                    <dt>提示</dt>
-                    <dd id="msdk-tips-content"></dd>
-                </dl>
-            </div>
-        </div>
-    <!--跑马灯效果-->
     <div id="md-all">
     </div>
-    <script type="text/javascript">
-    	msdk_tips_string = '';
-    	function jsonpCallback(data){
-    		if (data == undefined) {
-    			return;
-    		}
-    		$('#wrapper').show();
-    		msdk_tips_string = data.content;
-		    console.log(msdk_tips_string);
-		    $('#msdk-tips-content').html(msdk_tips_string);
-		    var _scroll = {
-	            delay: 100,easing: 'linear',items: 1,duration: 0.07,timeoutDuration: 0,pauseOnHover: 'immediate'
-	        };
-	        $('#msdk-tips').carouFredSel({
-	            width:  10000,
-	            circular: true,
-	            align: false,
-	            items: {
-	            	start: 0,
-	                width: "100%",
-	                height: 35,
-	                visible: 1
-	            },
-	            scroll: _scroll
-	        });
-    	}
-    	function readContent() {
-    		$.ajax({
-		        url : "http://wiki.dev.4g.qq.com/v2/ZH_CN/android/android-tips.json",  
-		        dataType : "jsonp",//数据类型为jsonp  
-		        jsonp: "jsonpCallback",//服务端用于接收callback调用的function名的参数  
-		        success: function(data){}
-		   	}); 
-    	}
-    	//跑马灯效果
-	    $(function() {
-	    	readContent();
-	    });
-	</script>
+	  <script language="javascript" type="text/javascript">
+		window.load=init();
+    </script>
 </body>
 </html>

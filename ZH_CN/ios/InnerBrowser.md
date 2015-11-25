@@ -393,7 +393,7 @@ var button2 = document.getElementById('buttons').appendChild(document.createElem
         if (isiOS()) {
             msdkiOSHandler('OpenShare', jsonData, null)
         } else {
-            alert(jsonData)
+            prompt(jsonData)
         }
     }
     // ******END******

@@ -57,7 +57,9 @@ openssl pkcs12 -in xxx_push.p12 -out xxx_push.pem -nodes
 将生成的xxx_push.pem文件上传至飞鹰系统即可。
 
 ##注册推送
- - 概述中签名文件配置正确才能成功注册推送。
+ - 概述
+
+签名文件配置正确才能成功注册推送。
 游戏需要didFinishLaunchingWithOptions方法中调用MSDK的WGRegisterAPNSPushNotification方法进行推送注册。
 代码示例：
 ```
@@ -159,4 +161,152 @@ openssl pkcs12 -in xxx_push.p12 -out xxx_push.pem -nodes
 {
 	[MSDKXG WGCleanBadgeNumber];
 }
+```
+
+##添加本地推送
+ - ###概述
+除了远程推送，游戏还可设置本地推送，接口及其说明如下：
+
+```
+	/**
+	* 添加本地推送，仅当游戏在后台时有效
+	* @param LocalMessage 推送消息结构体，可在MSDKFoundation/MSDKStructs.h中查看定义，其中该接口
+	*  必填参数为：
+	*  fireDate;		//本地推送触发的时间，格式为yyyy-MM-dd HH:mm:ss
+	*  alertBody;		//推送的内容
+	*  badge;          //角标的数字
+	*  可选参数为：
+	*  alertAction;		//替换弹框的按钮文字内容（默认为"启动"）
+	*  userInfo;       //自定义参数，可以用来标识推送和增加附加信息
+	*  无用参数为：
+	*  userInfoKey;		//本地推送在前台推送的标识Key
+	*  userInfoValue;  //本地推送在前台推送的标识Key对应的值
+	*/
+	long WGAddLocalNotification(LocalMessage &localMessage);
+```
+
+- ###示例代码
+调用代码如下:
+```
+    //若当前时间为2015-09-17 17:00:00，十秒钟后推送
+    LocalMessage message;
+    message.fireDate = "2015-09-17 17:00:10";
+    message.alertBody = "Local Notification";
+    message.badge = 1;
+    message.alertAction = "Start";
+    KVPair item;
+    item.key = "key";
+    item.value = "vlaue";
+    std::vector<KVPair> userInfo;
+    userInfo.push_back(item);
+    message.userInfo = userInfo;
+    WGPlatform::GetInstance()->WGAddLocalNotification(message);
+```
+注：该接口需游戏退到后台或进程被杀后才可收到本地推送。
+
+- ###处理本地推送点击事件
+用户点击本地推送拉起游戏，游戏若需要根据不同的推送采取不同的处理策略需在AppController(UnityAppController)实现如下代理方法:
+
+```
+	- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+	{
+	    // 处理推送消息
+	    NSLog(@"收到本地推送消息:%@ %@",notification.alertBody,notification.userInfo);
+	    LocalMessage message;
+	    message.alertBody = [notification.alertBody cStringUsingEncoding:NSUTF8StringEncoding];
+	    std::vector<KVPair> userInfo;
+	    for (NSString *key in notification.userInfo.allKeys)
+	    {
+	        NSString *value = notification.userInfo[key];
+	        KVPair item;
+	        item.key = [key cStringUsingEncoding:NSUTF8StringEncoding];
+	        item.value = [value cStringUsingEncoding:NSUTF8StringEncoding];
+	        userInfo.push_back(item);
+	    }
+	    message.userInfo = userInfo;
+	    //游戏可根据该message做出不同的策略。
+	}
+```
+
+##添加本地前台推送
+ - ###概述
+默认本地推送游戏在前台运行时不会进行弹窗，通过此接口可实现指定的推送弹窗，接口及其说明如下：
+
+```
+    /**
+     * 添加本地前台推送，游戏在前台有效
+     * @param LocalMessage 推送消息结构体，其中该接口
+     *  必填参数为：
+     *  alertBody;		//推送的内容
+     *  userInfoKey;	//本地推送在前台推送的标识Key
+     *  userInfoValue;  //本地推送在前台推送的标识Key对应的值
+     *  无用参数为：
+     *  fireDate;		//本地推送触发的时间，该接口无需设置，调用完该接口立马展示
+     *  badge;          //角标的数字
+     *  alertAction;	//替换弹框的按钮文字内容（默认为"启动"）
+     *  userInfo;       //自定义参数，可以用来标识推送和增加附加信息
+     */
+    long WGAddLocalNotificationAtFront(LocalMessage &localMessage);
+```
+
+- ###示例代码
+调用代码如下:
+
+```
+    LocalMessage message;    
+    message.alertBody = "Local Notification At Front";
+    message.userInfoKey = "FrontKey";
+    message.userInfoValue = "FrontValue";
+    WGPlatform::GetInstance()->WGAddLocalNotificationAtFront(message);
+```
+注：该接口无需设置推送时间，调用完接口立马展示且无法被撤销。
+
+##清除未生效本地推送
+ - ###概述
+对于还未生效的本地推送可以清除，接口及其说明如下：
+
+```
+    /**
+     * 删除本地前台推送
+     * @param LocalMessage 推送消息结构体，其中该接口
+     *  必填参数为：
+     *  userInfoKey;	//本地推送在前台推送的标识Key
+     *  userInfoValue;  //本地推送在前台推送的标识Key对应的值
+     *  无用参数为：
+     *  fireDate;		//本地推送触发的时间
+     *  alertBody;		//推送的内容
+     *  badge;          //角标的数字
+     *  alertAction;	//替换弹框的按钮文字内容（默认为"启动"）
+     *  userInfo;       //自定义参数，可以用来标识推送和增加附加信息
+     */
+    void WGClearLocalNotification(LocalMessage &localMessage);
+```
+
+- ###示例代码
+调用代码如下:
+
+```
+    LocalMessage message;
+    //注：此处的userInfoKey、userInfoValue需和添加推送时的保持一致，否则无法撤销
+    message.userInfoKey = "key";
+    message.userInfoValue = "value";
+    WGPlatform::GetInstance()->WGClearLocalNotification(message);
+```
+
+##清空所有本地推送
+ - ###概述
+清空所有本地推送，接口及其说明如下：
+
+```
+    /**
+     * 清空所有未生效的本地推送
+     */
+    void WGClearLocalNotifications();
+```
+
+- ###示例代码
+调用代码如下:
+
+```
+    WGPlatform::GetInstance()->WGClearLocalNotifications();
 ```

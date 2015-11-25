@@ -1,6 +1,37 @@
 
 MSDK iOS 介绍
 =======
+MSDK2.9.4i版本已支持iOS9编译，暂不支持bitcode，接入需注意以下几点：
+
+```
+1.使用Xcode7.0及以上版本iOS9.0及以上SDK编译。
+2.在build settings中将Enable Bitcode设置为NO。
+3.所有.dylib结尾的系统依赖库需更换为对应的.tdb结尾的依赖库。
+4.info.plist配置以下跳转scheme以及https声明：
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+		<string>mqq</string>
+		<string>mqqapi</string>
+		<string>wtloginmqq2</string>
+		<string>mqqopensdkapiV3</string>
+		<string>mqqopensdkapiV2</string>
+		<string>mqqwpa</string>
+		<string>mqqOpensdkSSoLogin</string>
+		<string>mqqgamebindinggroup</string>
+		<string>mqqopensdkfriend</string>
+		<string>mqzone</string>
+		<string>weixin</string>
+		<string>wechat</string>
+    </array>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+```
+[点击查看手Q声明](http://mp.weixin.qq.com/s?__biz=MzA5ODM5MTg2Mw==&mid=214044032&idx=1&sn=92bb118b8c59c42a007e88c4bac67d70&scene=23&srcid=0918M1sRoUMPy6aCdkl8D3Kt#rd)
+
+[点击查看微信声明](https://mp.weixin.qq.com/s?__biz=MjM5NDAxMDg4MA==&mid=209197031&idx=1&sn=665bf03f4e93f2034f8a4e64400427a4&scene=1&srcid=0916oWMFOUSOGhNNwIdRuPZ4&key=2877d24f51fa5384860ce26e432d879fdaa779ddd66375e90e3104597b5b265a7a807b8df7e9e4c3df16e2c6e76d7b9b&ascene=0&uin=MjQ2OTkwNTMyMA%3D%3D)
 
 ### [SDK下载](http://mcloud.ied.com/wiki/MSDK%E4%B8%8B%E8%BD%BD) [极速上手](iOSPlugin.md)
 
