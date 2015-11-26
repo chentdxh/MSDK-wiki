@@ -861,8 +861,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | qq_vip_end|QQ会员期限，标准时间戳|
 | qq_year_vip_start|QQ年费会员最后一次充值时间，标准时间戳|
 | qq_year_vip_end|QQ年费会员期限，标准时间戳|
-| qq_svip_start|QQ SVIP最后一次充值时间，预留字段，当前信息无效，标准时间戳|
-| qq_svip_end|QQ SVIP期限，预留字段，当前信息无效，标准时间戳|
+| qq_svip_start|QQ SVIP最后一次充值时间，标准时间戳|
+| qq_svip_end|QQ SVIP期限，标准时间戳|
 | is_qq_year_vip|标识是否QQ年费会员（0：不是； 1：是）|
 | is_svip|标识是否QQ超级会员（0：不是； 1：是）|
 
@@ -893,8 +893,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "msg": "success",
 	    "qq_svip_end": "0",
 	    "qq_svip_start": "0",
-	    "qq_vip_end": "0",
-	    "qq_vip_start": "0",
+	    "qq_vip_end": "1448817920",
+	    "qq_vip_start": "1443461120",
 	    "qq_year_vip_end": "0",
 	    "qq_year_vip_start": "0",
 	    "ret": 0,

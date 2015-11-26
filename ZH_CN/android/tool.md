@@ -1,7 +1,7 @@
 MSDK 基础工具类
 ======
 
-检查手Q/微信是否安装
+检查手Q、微信是否安装
 ------
 调用WGIsPlatformInstalled接口会返回检测的平台是否安装。接口详细说明如下:
 #### 接口声明：
@@ -19,7 +19,7 @@ MSDK 基础工具类
 	WGPlatform::GetInstance()->WGIsPlatformInstalled((ePlatform) platform);
 
 
-获取手Q/微信版本
+获取手Q、微信版本
 ------
 调用WGGetPlatformAPPVersion接口会返回当前安装的平台对应的版本。接口详细说明如下：
 #### 接口声明：
@@ -35,7 +35,7 @@ MSDK 基础工具类
 
 	WGPlatform::GetInstance()->WGGetPlatformAPPVersion((ePlatform) Platform);
 
-检查接口在用户安装手Q/微信上是否支持
+检查接口在用户安装手Q、微信上是否支持
 ------
 调用WGCheckApiSupport接口会返回一个指定类型的当前有效的公告数据的列表。接口详细说明如下：
 #### 接口声明：
