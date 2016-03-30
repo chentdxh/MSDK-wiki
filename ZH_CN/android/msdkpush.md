@@ -203,4 +203,31 @@ SO库拷贝注意事项
      WGPlatform::GetInstance()->WGClearLocalNotifications();
 
 
+自定义标签功能使用
+------
+预置标签
+	
+	目前信鸽提供三类预置标签：
+	地理位置（省一级）
+	应用版本号
+	流失用户（3天or7天）
+	预置标签会在SDK内部自动上报。
+设置标签
+
+	开发者可以针对不同的用户设置标签，然后在前台根据标签名群发通知。 一个应用最多有10000个tag， 每个token在一个应用下最多100个tag， tag中不准包含空格。
+	
+	函数原型:
+	WGPlatform::GetInstance()->WGSetPushTag(string tag)；
+	参数说明：
+	tag：待设置的标签名称，不能为null或空。
+
+删除标签
+
+	开发者删除用户标签数据。
+	函数原型:
+	WGPlatform::GetInstance()->WGDeletePushTag(string tag)；
+	参数说明：
+	tag：待设置的标签名称，不能为null或空。
+
+
 更多详情可以参考信鸽官方文档：http://developer.xg.qq.com/index.php/Android_SDK#.E6.9C.AC.E5.9C.B0.E9.80.9A.E7.9F.A5

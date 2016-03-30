@@ -46,7 +46,7 @@ MSDK 手Q 相关模块
             baseInfo.qqAppKey = "4578e54fb3a1bd18e0681bc1c7345***";
 
             //游戏必须使用自己的微信AppId联调
-    		baseInfo.wxAppId = "wxcde873f99466f***"; 
+    		baseInfo.wxAppId = "wxcde873f99466f***";
 
 			//游戏必须使用自己的msdkKey联调
 			baseInfo.msdkKey = "5d1467a4d2866771c3b289965db3****";
@@ -62,6 +62,9 @@ MSDK 手Q 相关模块
 
 	1. baseInfo值游戏填写错误将导致 QQ、微信的分享，登录失败 ，切记 ！！！
 
+## 接入登录
+[接入登录具体工作](login.md#概述)
+
 ## 快速登录
 
 快速登陆是指当玩家在手Q或者微信内点击分享消息直接拉起并进入游戏时，平台会透传登陆相关的票据信息从而直接完成登陆进入游戏。这种场景下，游戏在被拉起以后无需用户再次授权才能进入游戏。
@@ -74,7 +77,7 @@ MSDK 手Q 相关模块
 
 	勾选openID一项，如下图
 
-	![1](./diff-account-1.png) 
+	![1](./diff-account-1.png)
 
 2. 支持带openID、accessToken、PayToken
 
@@ -82,7 +85,7 @@ MSDK 手Q 相关模块
 
 	2. 填写游戏支持异帐号的版本对应的versionCode。填写以后此code及以上的版本可以带票据拉起游戏，之前版本只会带openID拉起游戏，不会影响游戏的正常逻辑。
 
-	![2](./diff-account-2.png) 
+	![2](./diff-account-2.png)
 
 3. 注意事项
 
@@ -126,7 +129,7 @@ MSDK 手Q 相关模块
 
 用户通过手Q授权游戏后, 需要拉起游戏内好友信息(例如好友高分排行). 要完成此功能需要用到的接口有: WGQueryQQGameFriendsInfo, 接口详细说明如下:
 #### 接口声明：
-	
+
 	/**
 	* 获取QQ好友信息, 回调在OnRelationNotify中,
 	* 其中RelationRet.persons为一个Vector, Vector中的内容即使好友信息, QQ好友信息里面province和city为空
@@ -137,7 +140,7 @@ MSDK 手Q 相关模块
 	* 好友信息包含: nickname, openId, gender, pictureSmall, pictureMiddle, pictureLarge
 	*/
 	bool WGQueryQQGameFriendsInfo();
-	
+
 #### 接口调用：
 
 接口调用示例：
@@ -171,7 +174,7 @@ MSDK 手Q 相关模块
 
 消息分享出去以后, 消息接收者点击消息可以拉起调用接口时候传入的URL, 通常此URL配置成游戏中心URL, 如此则可以在 手Q游戏中心 配置自动拉起, 实现点击消息唤起游戏的效果.
 
-如果用户手机上没有安装手Q或者安装的手Q版本低于4.0, 此接口唤起Web页面完成分享功能. 要完成此功能需要用到的接口有: WGSendToQQ, 接口详细说明如下: 
+如果用户手机上没有安装手Q或者安装的手Q版本低于4.0, 此接口唤起Web页面完成分享功能. 要完成此功能需要用到的接口有: WGSendToQQ, 接口详细说明如下:
 #### 使用场景：
 	邀请、炫耀
 #### 接口声明：
@@ -182,7 +185,7 @@ MSDK 手Q 相关模块
 	 * 		eQQScene.QQScene_Session: 分享到手Q会话
 	 * @param title 结构化消息的标题
 	 * @param desc 结构化消息的概要信息
-	 * @param url  内容的跳转url，填游戏对应游戏中心详情页，游戏被分享消息拉起时, MSDK会给游戏OnWakeup(WakeupRet& wr)回调, wr.extInfo中会以key-value的方式带回所有的自定义参数.
+	 * @param url  内容的跳转url，填游戏对应游戏中心详情页。在手Q中点击该条分享的消息会拉起游戏, 此时MSDK会给游戏OnWakeup(WakeupRet& wr)回调, 游戏在此url中的自定义参数(如 platformdata, gamedata等，详见此页面“游戏中心详情页”部分)会在WakeupRet.extInfo中以key-value的方式透传回来。
 	 * @param imgUrl 分享消息缩略图URL
 	 * @param imgUrlLen 分享消息缩略图URL长度
 	 * @return void
@@ -198,29 +201,29 @@ MSDK 手Q 相关模块
 	 *     如果分享的是本地图片，则需要放置到sdcard分区, 或其他外部程序有权限访问之处
 	 *     由于手Q客户端部分的版本返回的回调是有问题的, 故建议不要依赖此回调做其他逻辑。
 	 *     
-	 */ 
+	 */
 	void WGSendToQQ(
 		const eQQScene& scene,
-		unsigned char* title, 
+		unsigned char* title,
 		unsigned char* desc,
-		unsigned char* url, 
+		unsigned char* url,
 		unsigned char* imgUrl,
 		const int& imgUrlLen
 		);
-	
+
 #### 接口调用：
 
 接口调用示例：
 
-	int scene = 1; 
+	int scene = 1;
 	std::string title = "title";
 	std::string summary = "summary";
 	std::string targetUrl = "http://www.qq.com";
 	std::string imgUrl = "http://mat1.gtimg.com/erweimaNewsPic.png";
 	WGPlatform::GetInstance()-> WGSendToQQ(
-		1, 
+		1,
 		((unsigned char *) title.c_str()),
-		((unsigned char *)summary.c_str()), 
+		((unsigned char *)summary.c_str()),
 		((unsigned char *)targetUrl.c_str()),
 		((unsigned char *)imgUrl.c_str()),
 		imgUrl.length()
@@ -256,9 +259,9 @@ MSDK 手Q 相关模块
 ------
 要完成音乐分享需要唤起手Q, 需要用户参与才能完成整个分享过程。
 
-消息分享出去以后，消息接收者点击播放按钮可以直接播放音乐，退出会话任然可以继续播放。点击消息会跳转到指定页面。 
+消息分享出去以后，消息接收者点击播放按钮可以直接播放音乐，退出会话任然可以继续播放。点击消息会跳转到指定页面。
 
-如果用户手机上没有安装手Q或者安装的手Q版本低于4.0, 此接口唤起Web页面完成分享功能。要完成此功能需要用到的接口有: 
+如果用户手机上没有安装手Q或者安装的手Q版本低于4.0, 此接口唤起Web页面完成分享功能。要完成此功能需要用到的接口有:
 #### 使用场景：
 	邀请、炫耀
 #### 接口声明：
@@ -293,16 +296,16 @@ MSDK 手Q 相关模块
 
 接口调用示例：
 
-	int scene = 1; 
+	int scene = 1;
 	std::string title = "title";
 	std::string desc = "desc";
 	std::string musicUrl = "http://y.qq.com/i/song.html?songid=1135734&source=qq";
 	std::string musicDataUrl = "http://wekf.qq.com/cry.mp3";
 	std::string imgUrl = "http://imgcache.qq.com/music/photo/mid_album_300/g/l/002ma2S64Gjtgl.jpg";
 	WGPlatform::GetInstance()->WGSendToQQWithMusic(
-		1, 
+		1,
 		((unsigned char *) title.c_str()),
-		((unsigned char *)desc.c_str()), 
+		((unsigned char *)desc.c_str()),
 		((unsigned char *)musicUrl.c_str()),
 		((unsigned char *)musicDataUrl.c_str()),
 		((unsigned char *)imgUrl.c_str()),
@@ -346,7 +349,7 @@ MSDK 手Q 相关模块
 	 * @param fopenid 好友的openId
 	 * @param title 分享的标题
 	 * @param summary 分享的简介
-	 * @param targetUrl 内容的跳转url，填游戏对应游戏中心详情页，游戏被分享消息拉起时, MSDK会给游戏OnWakeup(WakeupRet& wr)回调, wr.extInfo中会以key-value的方式带回所有的自定义参数.
+	 * @param targetUrl 填游戏对应游戏中心详情页。在手Q中点击该条分享的消息会拉起游戏, 此时MSDK会给游戏OnWakeup(WakeupRet& wr)回调, 游戏在此url中的自定义参数(如 platformdata, gamedata等，详见此页面“游戏中心详情页”部分)会在WakeupRet.extInfo中以key-value的方式透传回来。
 	 * @param imageUrl 分享缩略图URL
 	 * @param previewText 可选, 预览文字
 	 * @param gameTag 可选, 此参数必须填入如下值的其中一个
@@ -354,15 +357,15 @@ MSDK 手Q 相关模块
 				 MSG_FRIEND_EXCEED       //超越炫耀
 				 MSG_HEART_SEND          //送心
 				 MSG_SHARE_FRIEND_PVP    //PVP对战
-	 */ 
+	 */
 		bool WGSendToQQGameFriend(
-			int act, 
+			int act,
 			unsigned char* fopenid,
-			unsigned char *title, 
+			unsigned char *title,
 			unsigned char *summary,
-			unsigned char *targetUrl, 
+			unsigned char *targetUrl,
 			unsigned char *imgUrl,
-			unsigned char* previewText, 
+			unsigned char* previewText,
 			unsigned char* gameTag
 		);
 
@@ -379,13 +382,13 @@ MSDK 手Q 相关模块
 	std::string previewText = "qq previewText";
 	std::string gameTag = "qq gameTag";
 	WGPlatform::GetInstance()->WGSendToQQGameFriend(
-		1, 
-		((unsigned char *) friendOpenId.c_str()), 
-		((unsigned char *)title.c_str()), 
-		((unsigned char *)summary.c_str()), 
-		((unsigned char *)targetUrl.c_str()), 
-		((unsigned char *)picUrl.c_str()), 
-		((unsigned char *)previewText.c_str()), 
+		1,
+		((unsigned char *) friendOpenId.c_str()),
+		((unsigned char *)title.c_str()),
+		((unsigned char *)summary.c_str()),
+		((unsigned char *)targetUrl.c_str()),
+		((unsigned char *)picUrl.c_str()),
+		((unsigned char *)previewText.c_str()),
 		((unsigned char *)game_tag.c_str())
 	);
 
@@ -414,7 +417,7 @@ MSDK 手Q 相关模块
 
 大图消息分享
 ------
-要完成此种消息分享需要唤起手Q, 需要用户参与才能完成整个分享过程,可以分享给游戏内和游戏外好友, 通常用来炫耀成绩或者其他需要详图的功能. 
+要完成此种消息分享需要唤起手Q, 需要用户参与才能完成整个分享过程,可以分享给游戏内和游戏外好友, 通常用来炫耀成绩或者其他需要详图的功能.
 
 消息分享出去以后, 消息接收者点击消息不能唤起游戏.
 
@@ -444,10 +447,10 @@ MSDK 手Q 相关模块
 	//图片支持png,jpg 必须放在 sdcard 中
 	std::string filePath = "/mnt/sdcard/test.png";
 	WGPlatform::GetInstance()->WGSendToQQWithPhoto(
-	1, 
+	1,
 	((unsigned char *)filePath.c_str())
 	);
-		
+
 回调接受事例：
 
 	virtual void OnShareNotify(ShareRet& shareRet) {
@@ -474,8 +477,114 @@ MSDK 手Q 相关模块
 2. 拉起手Q并默认弹出分享到空间的弹框要手Q4.5以上版本才能支持
 3. 大图消息不能通过web分享
 
+富图分享
+------
+此接口可发送丰富的图片到空间说说，可上传多张图片(<=9 张图片发表说说，>9 张为上传图片到相册)，并支持gif图片。此接口只支持本地图片，并需要手Q客户端版本大于等于5.9.5。
 
+#### 接口声明：
 
+	/**
+	 * 分享丰富的图片到空间
+	 * @param summary 分享的正文(无最低字数限制，最高1w字)
+	 * @param imgFilePaths 分享的图片的本地路径，可支持多张图片(<=9 张图片为发表说说，>9 张图片为上传图片到相册)，只支持本地图片
+	 * 注意: 此功能只在手Q5.9.5及其以上版本支持
+	 */
+	void WGSendToQQWithRichPhoto(unsigned char* summary, std::vector<std::string> &imgFilePaths);
+
+#### 接口调用：
+
+接口调用示例：
+
+	int i;
+	std::string cSummary = j2c(env, jSummary);
+	jclass jArrayList = env->GetObjectClass(jImgFilePaths);
+	jmethodID jArrayList_get = env->GetMethodID(jArrayList, "get", "(I)Ljava/lang/Object;");
+	jmethodID jArrayList_size = env->GetMethodID(jArrayList, "size", "()I");
+	jint len = env->CallIntMethod(jImgFilePaths, jArrayList_size);
+
+	std::vector<std::string> imgPaths;
+	for (i=0; i<len; i++) {
+		jstring jImgPath =(jstring) env->CallObjectMethod(jImgFilePaths, jArrayList_get, i);
+		const char * imgPath = env->GetStringUTFChars(jImgPath, JNI_FALSE);
+		imgPaths.insert(imgPaths.end(), imgPath);
+		env->ReleaseStringUTFChars(jImgPath, imgPath);
+	}
+
+	env->DeleteLocalRef(jArrayList);
+	WGPlatform::GetInstance()->WGSendToQQWithRichPhoto((unsigned char *) cSummary.c_str(),
+			imgPaths);
+
+回调接受事例：
+
+	virtual void OnShareNotify(ShareRet& shareRet) {
+    	LOGD("OnShareNotify: platform:%d flag:%d",
+            shareRet.platform, shareRet.flag);
+    	// 处理分享回调
+    	if (shareRet.platform == ePlatform_QQ) {
+        	switch (shareRet.flag) {
+        		case eFlag_Succ:
+            		// 分享成功
+            		break;
+        		case eFlag_Error:
+            		// 分享失败
+            		break;
+        		}
+    		} else if (shareRet.platform == ePlatform_Weixin) {
+        	...
+    	}
+	}
+
+#### 注意事项：
+1. 此接口只支持分享到空间。
+2. 手Q版本需要5.9.5及以上。
+
+视频分享
+------
+此接口可分享视频至空间，分享的视频需要是本地视频，且需要需要手Q客户端版本大于等于5.9.5。
+
+#### 接口声明：
+
+	/**
+	 * 分享视频到空间
+	 * @param summary 分享的正文(无最低字数限制，最高1w字)
+	 * @param videoPath 分享的视频路径，只支持本地地址
+	 * 注意: 此功能只在手Q5.9.5及其以上版本支持
+	 */
+	void WGSendToQQWithVideo(unsigned char* summary, unsigned char* videoPath);
+
+#### 接口调用：
+
+接口调用示例：
+
+	std::string cSummary = "我的游戏精彩片段";
+	std::string cVideoPath = "/sdcard/cry.mp4";
+
+	WGPlatform::GetInstance()->WGSendToQQWithVideo((unsigned char *) cSummary.c_str(),
+			(unsigned char *) cVideoPath.c_str());
+
+回调接受事例：
+
+	virtual void OnShareNotify(ShareRet& shareRet) {
+    	LOGD("OnShareNotify: platform:%d flag:%d",
+            shareRet.platform, shareRet.flag);
+    	// 处理分享回调
+    	if (shareRet.platform == ePlatform_QQ) {
+        	switch (shareRet.flag) {
+        		case eFlag_Succ:
+            		// 分享成功
+            		break;
+        		case eFlag_Error:
+            		// 分享失败
+            		break;
+        		}
+    		} else if (shareRet.platform == ePlatform_Weixin) {
+        	...
+    	}
+	}
+
+#### 注意事项：
+1. 此接口只支持分享到空间。
+2. 手Q版本需要5.9.5及以上。
 
 添加QQ好友
 ------
@@ -505,7 +614,7 @@ MSDK 手Q 相关模块
 	std::string cMessage = "add";
 	WGPlatform::GetInstance()->WGAddGameFriendToQQ(
 		(unsigned char *)cFopenid.c_str(),
-		(unsigned char *)cDesc.c_str(), 
+		(unsigned char *)cDesc.c_str(),
 		(unsigned char *)cMessage.c_str()
 	);
 
@@ -513,9 +622,9 @@ MSDK 手Q 相关模块
 手Q功能对应支持版本
 ------
 1. **概述**：
-	
+
 	手Q的功能与手Q版本相关，具体功能版本支持情况如下：
-	
+
 | 功能名称| 功能说明|Android 手Q支持情况|
 |: ------------- :|: ------------- :|: ------------- :|
 | 授权登陆| 拉起web授权 | 手Q 4.0及以上 |
@@ -539,8 +648,8 @@ MSDK 手Q 相关模块
 
 http://gamecenter.qq.com/gcjump
 
-字段规范	
-					
+字段规范
+
 | 字段| 是否必须 | 类型 | 说明 |
 |: ------- :|: ------- :|: ------- :|: ------- :|
 | appid | 必须 | Integer | 应用唯一标识ID |

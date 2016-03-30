@@ -100,6 +100,10 @@ protected void onNewIntent(Intent intent) {
 }
 ```
 
+## 接入登录
+[接入登录具体工作](login.md#概述)
+[调试时请注意签名是否正确](#第二步： 检查签名和包名)
+
 查询个人信息
 ------
 
@@ -824,7 +828,7 @@ Android微信登录不了检查步骤
 
 ### 第二步： 检查签名和包名
 
-下载[https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk](https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk)， 将此apk安装到手机上， 在输入框中输入游戏的签名，点击按钮读取游戏包的签名。
+下载[https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android2.apk](https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android2.apk)， 将此apk安装到手机上， 在输入框中输入游戏的签名，点击按钮读取游戏包的签名。
 
 ![检查签名](./wechat_GenSig.png "检查签名")
 

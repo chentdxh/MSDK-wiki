@@ -165,6 +165,12 @@ MSDK初始化是使用SDK所提供功能可以执行的前提。游戏在应用�
         	WGPlatform.handleCallback(intent);
     	}
 
+		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+			super.onActivityResult(requestCode, resultCode, data);
+			// 2.12及以上版本未调用此接口会造成QQ登录无回调
+			WGPlatform.onActivityResult(requestCode, resultCode, data);
+		}
+
 
 此外，MSDK2.5以下版本需要在MainActivty中加载RQD的动态库，示例代码如下：
 
@@ -237,39 +243,4 @@ MSDK通过`WGPlatformObserver`抽象类中的方法将授权、分享或查询�
 
 至此, MSDK包接入与初始化部分完成，游戏使用各模块的功能，还应阅读相应模块的接入配置与接口说明。
 
-## 单步调试程序
-由于 微信/手Q 登录时 微信/手Q 会对游戏的签名(keystore证书签名)做校验，如果不是平台存储的正式签名，游戏会无法拉起微信，QQ授权时会报 100044 错误。平台上储存的签名指纹是在open平台注册游戏时由游戏注册的同学上传的。
 
-而 Eclipse 或其他 IDE 调试的 Android 程序，只能是用默认证书(Debug.keystore)签名的APK，这就会造成在调试模式下无法使用 QQ/微信 登录，造成了调试程序的不便。
-下面介绍了一种解决 App 使用正式签名文件后，无法通过 Eclipse Run As 或 Debug As 调试 微信/手Q 登陆的问题。主要原理是通过修改证书的别名和密码，将正式的keystore证书修改为ADT认可的debug证书。
-
-### 1.复制一份正式证书
-假设游戏有正式证书，名为 game_release.keystore，复制该证书并命名为 game_debug.keystore（可随意取）。后面修改 game_debug.keystore 的alias（别名）和密码。
-`之后游戏正式发布的APK用game_release.keystore签名，调试时使用game_debug.keystore签名，切记 keystore 不用外泄。`
-
-### 2.修改keystore密码
-在 JDK的bin目录下运行如下命令
-
-	keytool -storepasswd -keystore game_debug.keystore
-
-其中，game_debug.keystore是复制出来的证书文件，执行后会提示输入证书的当前密码，和新密码以及重复新密码确认。这一步需要将密码改为android。
-
-### 3.修改keystore的alias：
-在 JDK的bin目录下运行如下命令
-
-	keytool -changealias -keystore game_debug.keystore -alias my_name -destalias androiddebugkey
-
-这一步中，my_name是证书中当前的alias，它的值是 keytool -list -v -keystore game_debug.keystore 命令运行后的“别名” 或者 “Alias name”，这个命令会先后提示输入keystore的密码和当前alias的密码，
-其中 keystore 的密码是上一步新修改的密码，当前alias的密码是签名文件之前的旧密码。
-
-### 4.修改alias的密码：
-在 JDK的bin目录下运行如下命令
-
-	keytool -keypasswd -keystore game_debug.keystore -alias androiddebugkey
-
-这一步执行后会提示输入keystore密码，alias密码，然后提示输入新的alias密码，同样，按规矩来，其中 keystore密码是上一步新修改的密码，alias密码是签名文件之前的旧密码， 新的alias密码要改为android。
-
-### 5.将处理后的正式签名设置为Eclipse的默认签名
-在Eclipse里的windows/preferences/Android/Build/里，将Custom debug keystore设置为game_debug.keystore 的路径
-
-![android_debug](./android_debug.png)

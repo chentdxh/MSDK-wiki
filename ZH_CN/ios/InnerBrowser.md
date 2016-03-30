@@ -41,6 +41,18 @@ plat->WGOpenUrl((unsigned char*)[url UTF8String], eMSDK_SCREENDIR_LANDSCAPE);
  - 手Q分享限制URL长度在512字节之内，因此超长链接需要转成短链。
 ---
 
+##配置导航栏可隐藏开关
+ - ###概述
+从MSDK2.14.0版本开始，各游戏可自行配置内置浏览器导航栏的滑动隐藏打开与关闭，横屏和竖屏可分开配置，默认均开启滑动隐藏，可在plist中配置如下Boolean的开关打开与关闭：
+
+```
+MSDK_Webview_Portrait_NavBar_Hideable //竖屏状态下可隐藏开关
+MSDK_Webview_Landscape_NavBar_Hideable //横屏状态下可隐藏开关
+```
+竖屏不可隐藏横屏可隐藏示例：
+![Alt text](./navBarHideAble.png)
+---
+
 ##加密传输登录态参数
   - ### 整体方案
 如果游戏登录，通过内置浏览器访问网页时会携带加密后的登录态参数。具体是这么做的：
@@ -295,13 +307,33 @@ log("not install :腾讯新闻");
 
 ##应用内打开App Store详情页
 （iOS6.0及以上）点击网页中的itunes链接（http://itunes.apple.com/cn/app/id439638720?mt=8），可以在应用内打开该应用的AppStore详情页。如图：
+
 ![Alt text](./InnerBrowser6.png)
 
 ---
 
 ##分享
 点击“分享”按钮可将当前页面分享到朋友圈、QZone、微信好友、QQ好友。如下图，请注意手Q分享的URL最大限制在512个字节，如果URL比较长，请使用短链。
+
 ![Alt text](./InnerBrowser7.png)
+
+---
+
+##Javascript接口概述
+2.7.0i及以后版本的内置浏览器增加了对Javascript接口的支持，目前iOS版MSDK相继提供了JS在Safiri中打开制定URL接口，打开相机、图库获取照片接口，JS分享接口以及关闭内置浏览器接口。
+
+**注意：**
+MSDK提供的js接口，只能在MSDK内置浏览器中调用，其他浏览调用无效。
+
+---
+
+##Javascript封装层
+
+```
+<script type="text/javascript" src="http://wiki.dev.4g.qq.com/v2/msdkJsAdapter.js"></script>
+```
+
+开发者需要将代码复制到需要调用MSDK JS接口的网页以加载MSDK的js封装代码，同时此网页需要用MSDK 内置浏览器打开。Android，iOS平台都可通过调用 `msdkShare(jsonData)` 完成分享，调用`msdkCloseWebview()`关闭浏览器；iOS版本MSDK提供的额外接口可通过 `msdkiOSHandler` 调用，可参考 iOS 部分的文档和 [JSDemo 示例](http://wiki.dev.4g.qq.com/v2/msdkjs.html)。
 
 ---
 
@@ -309,19 +341,17 @@ log("not install :腾讯新闻");
 从MSDK2.7.0版本开始，游戏可在内置浏览器中通过JS方式打开Safiri浏览器并打开指定URL，参数需传递固定接口名称`OpenURLInSafiri`和可变参数data（即要打开的url地址），示例代码如下：
 
 ```
-var button1 = document.getElementById('buttons').appendChild(document.createElement('button'))
-		button1.innerHTML = 'Open URL In Safiri'
-		button1.onclick = function(e) {
-			e.preventDefault()
-			var data = 'http://v.qq.com/iframe/player.html?vid=y0140id0vna&tiny=0&auto=0'
-			log('JS sending message', data)
-			
-			bridge.callHandler('OpenURLInSafiri', data, function(response) {
-            	log('JS got response', response);
-            });
-		}
+<p><input type="button" value="Open URL In Safiri" onclick="demoOpenInSafiri()" /></p>
+function demoOpenInSafiri() {
+	        var data = 'http://v.qq.com/iframe/player.html?vid=y0140id0vna&tiny=0&auto=0'
+	        log('JS sending message', data)
+	        msdkiOSHandler('OpenURLInSafiri', data, function(response) {
+	                log('JS got response', response);
+	            });
+	    }
 ```
-另：调用方式可参考[该网页](http://wiki.dev.4g.qq.com/tmp/page.html)页面源码。
+
+另：调用方式可参考[该网页](http://wiki.dev.4g.qq.com/v2/msdkjs.html)页面源码，使用时注意引入[封装层](InnerBrowser.md#Javascript封装层)。
 
 ---
 
@@ -329,79 +359,30 @@ var button1 = document.getElementById('buttons').appendChild(document.createElem
 从MSDK2.7.0版本开始，游戏可在内置浏览器中通过JS方式打开打开iOS图库、相机获取照片，参数需传递固定接口名称`OpenImagePickerController`，返回值为'{"message”:”xxx”,”base64String":“xxx”}'json格式串。其中message字段标识获取照片成功与否，值有'success'和'user cancel'。base64String字段为照片的Base64编码串，message为'success'时该字段有值，message为'user cancel'时该字段无值。示例代码如下：
 
 ```
-var button2 = document.getElementById('buttons').appendChild(document.createElement('button'))
-		button2.innerHTML = 'Open ImagePickerController'
-		button2.onclick = function(e) {
-			e.preventDefault()
-			var data = 'OpenImagePickerController'
-			log('JS sending message', data)
-			
-			bridge.callHandler('OpenImagePickerController', data, function(response) {
-                /*
-                 response为'{"message”:”xxx”,”base64String":“xxx”}'格式串。
-                 其中message字段标识获取照片成功与否，值有'success'和'user cancel'。
-                 base64String字段为照片的Base64编码串，message为'success'时该字段有值，message为'user cancel'时该字段无值。
-                 */
-                var obj = JSON.parse(response);
-            	log('JS got response', obj["message"]);
-            });
-		}
+<p><input type="button" value="Open ImagePickerController" onclick="demoOpenImagePicker()" /></p>
+function demoOpenImagePicker() {
+	        var data = 'OpenImagePickerController'
+	        log('JS sending message', data)
+
+	        msdkiOSHandler('OpenImagePickerController', data, function(response) {
+	            /*
+	             response为'{"message”:”xxx”,”base64String":“xxx”}'格式串。
+	             其中message字段标识获取照片成功与否，值有'success'和'user cancel'。
+	             base64String字段为照片的Base64编码串，message为'success'时该字段有值，message为'user cancel'时该字段无值。
+	             */
+	            var obj = JSON.parse(response);
+	            log('JS got response', obj["message"]);
+	        });
+	    }
 ```
 
-另：调用方式可参考[该网页](http://wiki.dev.4g.qq.com/tmp/page.html)页面源码。
+另：调用方式可参考[该网页](http://wiki.dev.4g.qq.com/v2/msdkjs.html)页面源码,使用时注意引入[封装层](InnerBrowser.md#Javascript封装层)。
 
 ---
 
-##Javascript分享接口
-- ###概述
-2.10.0i及以后版本的内置浏览器增加了对 Javascript 接口的支持。
+##JS分享接口
 
-- ###封装层
-
-```
-// msdk javascript封装代码，游戏需要将此 copy 自己的页面
-    // ******START******
-    var msdkiOSHandler
-
-    function connectWebViewJavascriptBridge(callback) {
-        if (window.WebViewJavascriptBridge) {
-            callback(WebViewJavascriptBridge)
-        } else {
-            document.addEventListener('WebViewJavascriptBridgeReady', function() {
-                callback(WebViewJavascriptBridge)
-            }, false)
-        }
-    }
-
-    connectWebViewJavascriptBridge(function(bridge) {
-        bridge.init(function(message, responseCallback) {
-            var data = {
-                'Javascript Responds': 'Wee!'
-            }
-            responseCallback(data)
-        })
-        msdkiOSHandler = bridge.callHandler
-    })
-
-    function isiOS() {
-        var agent = navigator.userAgent
-        return !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-    }
-
-    // 统一分享接口
-    function msdkShare(jsonData) {
-        if (isiOS()) {
-            msdkiOSHandler('OpenShare', jsonData, null)
-        } else {
-            prompt(jsonData)
-        }
-    }
-    // ******END******
-```
-开发者需要将上面的JS代码复制到需要调用 MSDK JS接口的网页，同时此网页需要用 MSDK 内置浏览器打开。Android，iOS平台都可通过调用 msdkShare(jsonData) 完成分享，无需指定平台。
-
-- ###分享接口
-JS层使用统一的分享接口，分享类别和参数通过 json 格式的字符串指定，分享回调统一回调到在初始化MSDK时注册的原生接口 OnShareNotify(ShareRet ret)。目前支持手Q/微信平台除后端分享的所有分享接口，具体如下：
+从MSDK2.10.0i版本开始，游戏可在MSDK内置浏览器中通过JS方式调用 `msdkShare(jsonData)` 接口完成分享，无需指定平台，分享类别和参数通过 json 格式的字符串指定，分享回调统一回调到在初始化MSDK时注册的原生接口 `OnShareNotify(ShareRet ret)`。目前支持手Q/微信平台除后端分享的所有分享接口，具体如下：
 
 | 分享类型 | 分享位置 | 是否支持JS接口 | 调用接口  |
 |: ----- :|: ----- :|: ----- :|: ----- :|
@@ -420,28 +401,52 @@ JS层使用统一的分享接口，分享类别和参数通过 json 格式的字
 ```
 var QQStructuredShare2zone='{"MsdkMethod":"WGSendToQQ","scene":"1","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
 ```
+
 参数 `MsdkMethod` 指定分享的类型，对应关系参照上表。后面几个参数的 key 参考对应分享的 C++ 接口声明的参数，json 的 value 统一使用字符串。分享参数的具体意义请点击表中对应的原生接口名查看。
 需要`注意`的是，JS接口分享的图片(除音乐分享外)默认为当面网页内容的截图(不可更改)，因此原生接口声明的参数中关于图片的参数(如 imgUrl，imgUrlLen，thumbImageData等)不需要填写在 **jsonData**中。手Q/微信 的音乐分享则必须提供一个网络图片的Url为 key:**imgUrl** 的 value，以用此图片完成分享。
 
 ```
 	/**
-     * @param jsonData json格式的分享参数
-     * 分享回调在平台层的 OnShareNotify
-     */
-    function msdkShare(jsonData)
+	* @param jsonData json格式的分享参数
+	* 分享回调在平台层的 OnShareNotify
+	*/
+	function msdkShare(jsonData)
 ```
 
 示例代码：
 
 ```
-// 分享数据, Android iOS 都通过接口 msdkShare 实现分享
-    var QQStructuredShare2zone='{"MsdkMethod":"WGSendToQQ","scene":"1","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
-    <p><input type="button" value="QQ结构化消息分享To空间" onclick="msdkShare(QQStructuredShare2zone)" /></p>
-    ......
+//分享数据, Android iOS 都通过接口 msdkShare 实现分享
+var QQStructuredShare2zone='{"MsdkMethod":"WGSendToQQ","scene":"1","title":"QQ JS 结构化分享","desc":"from js share","url":"http://www.baidu.com"}'
+<p><input type="button" value="QQ结构化消息分享To空间" onclick="msdkShare(QQStructuredShare2zone)" /></p>
+......
 ```
-具体Demo示例可参考[该网页](http://wekf.qq.com/msdk/index.html)源码
+
+具体Demo示例可参考[该网页](http://wiki.dev.4g.qq.com/v2/msdkjs.html)源码,使用时注意引入[封装层](InnerBrowser.md#Javascript封装层)。
+
+---
+
+##JS关闭内置浏览器
+从MSDK2.14.0版本开始，游戏可在内置浏览器中通过JS方式调用 `msdkCloseWebview()` 接口关闭内置浏览器。
+
+```
+/**
+ * 关闭MSDK内置浏览器
+ */
+function msdkCloseWebview()
+```
+
+调用示例：
+
+```
+<p><input type="button" value="关闭MSDK内置浏览器" onclick="msdkCloseWebview()" /></p>
+```
+
+具体Demo示例可参考[该网页](http://wiki.dev.4g.qq.com/v2/msdkjs.html)源码，使用时注意引入[封装层](InnerBrowser.md#Javascript封装层)。
+
+---
 
 ##常见问题
-部分游戏导入framework后会有找不到framework的情况，例如是无法打开内置浏览器，日志输出“no MSDKWebViewService exist”，此时需要在Other link flags增加“-ObjC “或 “-framework MSDKFoundation -framework MSDK -framework MSDKMarketing -framework MSDKXG”，导入相关framework。
+部分游戏导入framework后会有找不到framework的情况，例如是无法打开内置浏览器，日志输出“no MSDKWebViewService exist”，此时需要在Other link flags增加“-ObjC “和 “-framework MSDKFoundation -framework MSDK -framework MSDKMarketing -framework MSDKXG”，导入相关framework。
 
 ---

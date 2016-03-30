@@ -3,7 +3,7 @@
 
 ### Let's Get Started!
 
-> 请确保正在使用最新版本的 Xcode（5.0+），并且面向 iOS 5.1.1 或者更高版本。我们推荐 Xcode 5 和 iOS 6 或以上系统。
+> 请确保正在使用最新版本的 Xcode（5.0+），并且面向 iOS 6.0 或者更高版本。我们推荐 Xcode 5 和 iOS 6 或以上系统。
 
 注：已接入MSDK高版本的游戏请勿随意降级，MSDK版本目前只能自上向下兼容，降级或会导致无法预测的问题。因游戏侧私自降级引发的问题及后果由游戏自身承担。
 ---
@@ -11,7 +11,7 @@
 ---
 ##Step1:引入依赖库
 
- * 于`Target->Build Phases->Link Binary With Libraries`添加工程依赖的系统库，如下：
+* 于`Target->Build Phases->Link Binary With Libraries`添加工程依赖的系统库，如下：
 ```
 libz.dylib
 libstdc++.dylib
@@ -19,6 +19,7 @@ libz.1.1.3.dylib
 libsqlite3.dylib
 libxml2.dylib
 libstdc++.6.0.9.dylib
+libc++.dylib
 CoreTelephony.framework
 SystemConfiguration.framework
 UIKit.framework
@@ -35,6 +36,7 @@ CoreText.framework
 QuartzCore.framework
 AdSupport.framework【MSDK2.6.0i以后要求】
 ```
+【MSDK2.9.4i以后上述.dylib结尾库需更新为对应的.tdb结尾库】
 【MSDK2.6.0i以后要求提审时需要在iTC选择相应的项，详见[说明](http://km.oa.com/articles/show/234073)】
 ---	
 ##Step2:引入MSDK
@@ -54,7 +56,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
   2. MSDK:手Q和微信登录、分享功能；
   3. MSDKMarketing：提供交叉营销、内置浏览器功能。公告、内置浏览器所需的资源文件放置在WGPlatformResources.bundle文件中。
   4. MSDKXG：提供信鸽Push功能。
-  以上四个组件同时提供C99和C11语言标准，其中**_C11包为C11的版本。
+  以上四个组件同时提供C99和C11语言标准，其中*_C11包为C11的版本。
   ![linkBundle](./2.4.0_structure_of_framework.png)
     如果只想使用C++接口，只需要导入以下几个头文件即可：
 ```
@@ -67,7 +69,7 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 ---
 ##Step3:配置项
  
-  * 在.plist文件中，添加配置项，主要配置项如下。
+* 在.plist文件中，添加配置项，主要配置项如下。
 
 | Key      |    Type | Value  |备注|相关模块|
 | :-------- | --------:| :-- |:--|:---:|
@@ -80,15 +82,17 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 | MSDKKey  | String |  各游戏不同 |2.8.1及以上版本需配置，可在飞鹰系统查询|所有|
 | AutoRefreshToken  | Boolean |  各游戏不同 |是否启用自动刷新票据，Yes-启用 No（或不配置）-禁用|所有|
 | CHANNEL_DENGTA  | String |  1001 |iOS系统渠道号|统计|
-| MSDK_PUSH_SWITCH  | String |  ON |此为推送功能的开关，若不使用MSDK推送则不需要配置|推送|
+| MSDK_PUSH_SWITCH  | Boolean |  YES |此为推送功能的开关，若不使用MSDK推送则不需要配置|推送|
 | MSDK_XGPUSH_URL  | String |  信鸽推送URL，可以不配置 |信鸽推送URL，不配置则使用默认值，正式上线前必须删除该项配置|推送|
 | MSDK_OfferId  | String |  各游戏不同 |支付所需的OfferId|支付|
 | NeedNotice  | Boolean |  是否启用公告功能 |Yes-启用 No（或不配置）-禁用|公告|
 | NoticeTime  | Number |  公告自动拉取的时间间隔（秒） |默认15分钟|公告|  
 | NSLocationWhenInUseUsageDescription  | NSString |  用于iOS8下LBS定位功能 |值可为空|LBS| 
 | MSDK_WebView_Share_SWITCH  | Boolean | 是否启用内置浏览器分享 | Yes-启用 No（或不配置）-禁用(仅适用于2.5.0-2.6.6版本，2.7.0版本开始内置浏览器分享开关由MSDK管理端下发，游戏可根据需要申请打开或关闭) |内置浏览器|
+| MSDK_Webview_Portrait_NavBar_Hideable  | Boolean | 竖屏导航栏可隐藏开关 | Yes-打开 No-禁用，默认打开，MSDK2.14.0版本启用 |内置浏览器|
+| MSDK_Webview_Landscape_NavBar_Hideable  | Boolean | 横屏导航栏可隐藏开关 | Yes-打开 No-禁用，默认打开，MSDK2.14.0版本启用 |内置浏览器|
  
-  *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
+* 在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
   
 | Identifier|    URL Scheme | 示例  | 备注  |
 | :-------- | :--------| :--: | :--: |
@@ -100,12 +104,12 @@ AdSupport.framework【MSDK2.6.0i以后要求】
    > **注：MSDKLog需手动调用WGOpenMSDKLog(true)方法打开控制台log。另各游戏配置存在不一致，具体请咨询各游戏与MSDK接口人或RTX联系“连线MSDK”。**
   
 ---
- ##Step4:实现回调对象
+##Step4:实现回调对象
  
-  * 全局回调对象处理游戏授权、分享、查询或平台唤起等结果，此对象需要继承并实现`WGPlatformObserver`类中的所有方法。
-  * 示例：新建名为MyObserver的全局回调对象，粘贴代码如下：
-  * 2.3.4i以及之前的版本:
-  ```
+* 全局回调对象处理游戏授权、分享、查询或平台唤起等结果，此对象需要继承并实现`WGPlatformObserver`类中的所有方法。
+* 示例：新建名为MyObserver的全局回调对象，粘贴代码如下：
+* 2.3.4i以及之前的版本:
+```
 //MyObserver.h
 //若使用C99编译选项
 #import <WGPlatform/WGPlatform.h>
@@ -115,15 +119,15 @@ AdSupport.framework【MSDK2.6.0i以后要求】
 #import <WGPlatform_C11/WGPublicDefine.h>
 class MyObserver: public WGPlatformObserver,public APMidasInterfaceObserver
 {
-public:
-    void OnLoginNotify(LoginRet& loginRet);//登录回调
-    void OnShareNotify(ShareRet& shareRet);//分享回调
-    void OnWakeupNotify(WakeupRet& wakeupRet);//平台唤起回调
-    void OnRelationNotify(RelationRet& relationRet);//查询关系链相关回调
-    void OnLocationNotify(RelationRet &relationRet);//定位相关回调
-    void OnLocationGotNotify(LocationRet& locationRet);//定位相关回调
-    void OnFeedbackNotify(int flag,std::string desc);//反馈相关回调
-    std::string OnCrashExtMessageNotify();//crash时的处理
+	public:
+	    void OnLoginNotify(LoginRet& loginRet);//登录回调
+	    void OnShareNotify(ShareRet& shareRet);//分享回调
+	    void OnWakeupNotify(WakeupRet& wakeupRet);//平台唤起回调
+	    void OnRelationNotify(RelationRet& relationRet);//查询关系链相关回调
+	    void OnLocationNotify(RelationRet &relationRet);//定位相关回调
+	    void OnLocationGotNotify(LocationRet& locationRet);//定位相关回调
+	    void OnFeedbackNotify(int flag,std::string desc);//反馈相关回调
+	    std::string OnCrashExtMessageNotify();//crash时的处理
 }
 ```
 ```
@@ -139,26 +143,23 @@ void MyObserver::OnFeedbackNotify(int flag,std::string desc){}
 std::string MyObserver::OnCrashExtMessageNotify(){return "message";}
 ```
 
-  * 2.4.0i以及之后的版本:
+* 2.4.0i以及之后的版本:
 ```
 //MyObserver.h
-//若使用C99编译选项
 #import <MSDK/MSDK.h>
-//若使用C11编译选项
-#import <MSDK_C11/MSDK.h>
 class MyObserver: public WGPlatformObserver,public WGADObserver
 {
-public:
-void OnLoginNotify(LoginRet& loginRet);//登录回调
-void OnShareNotify(ShareRet& shareRet);//分享回调
-void OnWakeupNotify(WakeupRet& wakeupRet);//平台唤起回调
-void OnRelationNotify(RelationRet& relationRet);//查询关系链相关回调
-void OnLocationNotify(RelationRet &relationRet);//定位相关回调
-void OnLocationGotNotify(LocationRet& locationRet);//定位相关回调
-void OnFeedbackNotify(int flag,std::string desc);//反馈相关回调
-std::string OnCrashExtMessageNotify();//crash时的处理
-void OnADNotify(ADRet& adRet);//广告回调
-}
+	public:
+	void OnLoginNotify(LoginRet& loginRet);//登录回调
+	void OnShareNotify(ShareRet& shareRet);//分享回调
+	void OnWakeupNotify(WakeupRet& wakeupRet);//平台唤起回调
+	void OnRelationNotify(RelationRet& relationRet);//查询关系链相关回调
+	void OnLocationNotify(RelationRet &relationRet);//定位相关回调
+	void OnLocationGotNotify(LocationRet& locationRet);//定位相关回调
+	void OnFeedbackNotify(int flag,std::string desc);//反馈相关回调
+	std::string OnCrashExtMessageNotify();//crash时的处理
+	void OnADNotify(ADRet& adRet);//广告回调
+	}
 ```
 ```
 //MyObserver.mm
@@ -177,8 +178,8 @@ void MyObserver::OnADNotify(ADRet& adRet){}
 ---
 ## Step5:设置全局回调对象
 
- * 打开 `AppDelegate.mm` 文件，添加下列导入语句到头部：
-  * 2.3.4i以及之前的版本:
+* 打开 `AppDelegate.mm` 文件，添加下列导入语句到头部：
+* 2.3.4i以及之前的版本:
 ```
 //若使用C99编译选项
 #import <WGPlatform/WGPlatform.h>
@@ -190,70 +191,68 @@ void MyObserver::OnADNotify(ADRet& adRet){}
 #import <WGPlatform_C11/WGPublicDefine.h>
 #import "MyObserver.h"
 ```
-   * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
+* 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
 ```
 WGPlatform *plat = WGPlatform::GetInstance();
 MyObserver  *pObserver =plat->GetObserver();
 MyADObserver *adObserver =(MyADObserver *)plat->GetADObserver();
-if(!pObserver){
-        pObserver = new MyObserver(); 
-        plat -> WGSetObserver(pObserver);
+if(!pObserver)
+{
+    pObserver = new MyObserver(); 
+    plat -> WGSetObserver(pObserver);
 }
 ```
-   * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
+* 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 MyObserver* ob =(MyObserver *) plat->GetObserver();
-        if (!ob) {
-            ob = new MyObserver();
-            plat->WGSetObserver(ob);
-        }
+if (!ob) 
+{
+    ob = new MyObserver();
+    plat->WGSetObserver(ob);
+}
 return  [WGInterface  HandleOpenURL:url];
 ```
 
-  * 2.4.0i以及之后的版本:
+* 2.4.0i以及之后的版本:
 ```
-//若使用C99编译选项
 #import <MSDK/MSDK.h>
 #import "MyObserver.h"
-//若使用C11编译选项
-#import <MSDK_C11/MSDK.h>
-#import "MyObserver.h"
 ```
-  * 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
+* 粘贴如下代码至`application:didFinishLaunchingWithOptions:`
 
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 WGPlatformObserver *ob = plat->GetObserver();
 if (!ob)
 {
-        MyObserver* ob = MyObserver::GetInstance();
-        plat->WGSetObserver(ob);
+    MyObserver* ob = MyObserver::GetInstance();
+    plat->WGSetObserver(ob);
 }
 或
 WGPlatformObserver *ob = [MSDKService getObserver];
 if (!ob)
 {
-        MyObserver* ob = MyObserver::GetInstance();
-        [MSDKService setObserver:ob];
+    MyObserver* ob = MyObserver::GetInstance();
+    [MSDKService setObserver:ob];
 }
 ```
-  * 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
+* 粘贴如下代码至`application:openURL:sourceApplication:annotation:`
 ```
 WGPlatform* plat = WGPlatform::GetInstance();
 WGPlatformObserver *ob = plat->GetObserver();
 if (!ob)
 {
-        MyObserver* ob = MyObserver::GetInstance();
-        plat->WGSetObserver(ob);
+    MyObserver* ob = MyObserver::GetInstance();
+    plat->WGSetObserver(ob);
 }
 return  [WGInterface  HandleOpenURL:url];
 或
 WGPlatformObserver *ob = [MSDKService getObserver];
 if (!ob)
 {
-        MyObserver* ob = MyObserver::GetInstance();
-        [MSDKService setObserver:ob];
+    MyObserver* ob = MyObserver::GetInstance();
+    [MSDKService setObserver:ob];
 }
 return [MSDKService handleOpenUrl:url];
 ```

@@ -1,5 +1,68 @@
 变更历史
 ===
+## 2.14.0
+- 【代码变更】
+  1.【MSDK】
+    * 新增[Bugly自定义日志上报功能接口](rqd.md#Bugly自定义日志上报)。
+    * 修正登录时无网络或网络错误时本地票据被清空的问题。
+    * 修正微信加绑群返回码错误的问题。
+    * 修正切换账号Bugly上报Open ID错误的问题。
+    * 修正新注册游客数据上报无HID的问题。
+    * 授权登录接口强制回到主线程中调用。
+    * 关系链接口性别统一返回男、女。
+    
+  2.【MSDKMarketing】
+    * 新增[内置浏览器JS关闭接口](InnerBrowser.md#JS关闭内置浏览器)。
+    * 新增[内置浏览器导航栏可隐藏配置开关](InnerBrowser.md#配置导航栏可隐藏开关)。
+    * 新增内置浏览器User Agent增加MSDK标识。
+    
+## 2.13.0
+- 【代码变更】
+  1.【MSDK】
+    * 支持iOS9编译，支持bitcode。
+    * 新增打开浏览器接口支持mqqapi协议。
+    * 微信加绑群更能更新为拉起微信客户端方式。
+    * 修正首次启动后启动页杀进程，再次启动时偶现分享无权限的问题。
+  
+  2.【MSDKXG】
+    * 新增[信鸽标签推送功能](Push.md#标签推送)。
+    
+  3.【MSDKFoundation】
+    * App Log格式更新。
+- 【组件更新】
+    * 【更新】更新信鸽SDK2.4.5版本。
+    * 【更新】更新微信SDK1.6.2版本，修正打开bitcode Archive打包报错的问题。
+    * 【更新】更新MTA SDK1.4.6版本，修正打开bitcode Archive打包报错的问题。
+    
+## 2.12.0
+- 【代码变更】
+  1.【MSDK】
+    * 支持iOS9编译。
+    * 新增微信DeepLink功能。
+    * 本地票据针对设备加密功能。
+    * 扫码登录支持横屏界面展示。
+    * 修正后端分享给微信好友、后端分享给微信游戏中心、后端分享给手Q好友三个分享接口分享结果未携带msdkExtInfo字段的问题。
+    * 由于微信H5页面分享不再维护，MSDK过期相关微信H5分享接口。
+    
+  2.【MSDKMarketing】
+    * 修正内置浏览器偶现横竖屏展示半屏问题。
+- 【组件更新】
+    * 【更新】更新openSDK2.9.4版本。
+    * 【更新】更新微信SDK1.6.1版本。
+    * 【更新】更新信鸽SDK2.4.4版本。
+    * 【更新】更新灯塔SDK1.9.0版本。
+    * 【更新】更新MTA SDK1.4.6版本。
+    * 【更新】更新bugly SDK1.4.0版本。
+- 【接入注意事项】
+    * 1.使用Xcode7.0及以上版本iOS9.0及以上SDK编译。
+    * 3.所有.dylib结尾的系统依赖库需更换为对应的.tdb结尾的依赖库。
+    * 4.info.plist需配置跳转scheme以及https声明，[点击此处](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html#!index.md#)查看详情。
+    * 5.添加libc++.tdb系统依赖库，否则部分游戏可能会出现类似以下类型的报错：
+    	std::__1::__vector_base_common<true>::__throw_length_error() const
+    	std::__1::__basic_string_common<true>::__throw_length_error() const    
+    	std::__1::ios_base::getloc() const
+    	std::runtime_error::runtime_error(char const*)
+    
 ## 2.11.0
 - 【代码变更】
   1.【MSDK】
@@ -19,10 +82,49 @@
   1.【MSDK】
     * 新增[创建公会微信群](WX.md#创建公会微信群)、[加入公会微信群](WX.md#加入公会微信群)、[查询公会微信群信息](WX.md#查询公会微信群信息)、[分享结构化消息到公会微信群](WX.md#分享结构化消息到公会微信群)功能。
     * 新增[Url添加加密票据](tool.md#Url添加加密票据)接口。
-    * 登陆增加内网ip上报，用于qos加速。
     
   2.【MSDKMarketing】
     * 新增[内置浏览器Javascript分享接口](InnerBrowser.md#Javascript分享接口)功能。
+
+## 2.9.7
+- 【代码变更】
+  1.【MSDK】
+    * 修正切换账号Bugly上报Open ID错误的问题。
+    
+## 2.9.6
+- 【代码变更】
+  1.【MSDK】
+    * 支持iOS9编译，支持bitcode。
+    * 登陆增加内网ip上报，用于qos加速。
+
+- 【组件更新】
+    * 【更新】更新微信SDK1.6.2版本，修正打开bitcode Archive打包报错的问题。
+    * 【更新】更新MTA SDK1.4.9版本，修正打开bitcode Archive打包报错的问题。
+    
+## 2.9.5
+- 【代码变更】
+  1.【MSDK】
+    * 支持iOS9编译。
+    * 扫码登录支持横屏界面展示。
+    
+  2.【MSDKMarketing】
+    * 修正内置浏览器偶现横竖屏展示半屏问题。
+- 【组件更新】
+    * 【更新】更新openSDK2.9.4版本。
+    * 【更新】更新微信SDK1.6.1版本。
+    * 【更新】更新信鸽SDK2.4.4版本。
+    * 【更新】更新灯塔SDK1.9.0版本。
+    * 【更新】更新MTA SDK1.4.6版本。
+    * 【更新】更新bugly SDK1.4.0版本。
+- 【接入注意事项】
+    * 1.使用Xcode7.0及以上版本iOS9.0及以上SDK编译。
+    * 3.所有.dylib结尾的系统依赖库需更换为对应的.tdb结尾的依赖库。
+    * 4.info.plist需配置跳转scheme以及https声明，[点击此处](http://wiki.dev.4g.qq.com/v2/ZH_CN/ios/index.html#!index.md#)查看详情。
+    * 5.添加libc++.tdb系统依赖库，否则部分游戏可能会出现类似以下类型的报错：
+    	std::__1::__vector_base_common<true>::__throw_length_error() const
+    	std::__1::__basic_string_common<true>::__throw_length_error() const    
+    	std::__1::ios_base::getloc() const
+    	std::runtime_error::runtime_error(char const*)
     
 ## 2.9.4
 - 【代码变更】
@@ -159,7 +261,7 @@
 	* 修正2.6.0异账号情况下通过分享消息拉起游戏无异账号提醒的bug；
 - 【组件更新】
 	* 【更新】OpenSDK更新到2.8.2，修正非H5白名单游戏不能分享大图到Qzone的bug。
-	* 【更新】RQD更新为Bugly2.1.3。
+	* 【更新】RQD更新为Bugly1.2.2。
 
 ## 2.6.0
 - 【代码变更】
