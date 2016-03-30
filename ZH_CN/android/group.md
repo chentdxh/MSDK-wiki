@@ -43,6 +43,13 @@
 
 ## 手Q加群组件推荐使用方法
 
+### 特别说明
+
+1. 公会在绑定QQ群的过程中，游戏需要保存以下内容：
+
+	- 游戏绑定的是QQ群还是微信群
+	- 游戏工会ID、大区ID与QQ群的group_openid的对应关系。
+	
 ### 推荐流程
 
 下面的流程图给出了游戏调用QQ相关的加群组件的流程。
@@ -51,10 +58,7 @@
 
 ### 注意事项
 
-1. 公会在绑定QQ群的过程中，游戏需要保存以下内容：
 
-	- 游戏绑定的是QQ群还是微信群（后续MSDK将会支持绑定微信群）
-	- 游戏工会ID、大区ID与QQ群的group_openid的对应关系。
 
 - 游戏内绑定群的时候公会id和大区id必须是数字，如果使用字符可能会导致绑定失败，一般提示为“参数校验失败”。
 
@@ -84,11 +88,23 @@
 
 ## 加组件回调设置
 
+- **`重点关注`：游戏使用MSDK 2.13.0a以下版本，用C++层接口`调用查询手Q加群key的接口（WGQueryQQGroupKey）时可能会遇到回调给OnQueryGroupInfoNotify 的问题`。解决方案如下：**
+
+	将`com_tencent_msdk_api_WGGroupObserverForSO.cpp`第139行
+		
+		WGPlatform::GetInstance()->GetGroupObserver()->OnQueryGroupInfoNotify(cGroupRet);
+	改为
+
+		WGPlatform::GetInstance()->GetGroupObserver()->OnQueryGroupKeyNotify(cGroupRet);
+		
 - 从MGSDK2.10.0开始，MSDK将加群绑群的全局回调增加微信加群组件相关的内容。设置方法[点击查看](group.md#MSDK2.10.0以上版本加群回调)
 
 - 从MGSDK2.8.0开始，MSDK将加群绑群的全局回调调整为：`WGGroupObserver`，同时支持手Q加群组件和即将推出的微信加群组件。设置方法[点击查看](group.md#MSDK2.8.0以上版本加群回调)
 
 - 从MGSDK2.7.0开始，MSDK加群绑群增加了单独的全局回调：`WGQQGroupObserver`。通过该全局回调游戏可以在绑群、查询群信息、解绑群时收到对应的回调信息。设置方法[点击查看](group.md#MSDK2.8.0及以前版本加群回调)
+
+### MSDK2.14.1以上版本微信绑群加群回调
+- MSDK2.14.1a中集成的微信sdk提供可客户端建群，加群的接口，不需要游戏调用WGOpenUrl去打开返回的建群，加群链接
 
 ### MSDK2.10.0以上版本加群回调
 

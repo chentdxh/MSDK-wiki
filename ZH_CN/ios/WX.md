@@ -3,7 +3,7 @@
 
 ##微信接入配置
  
-  * 在工程设置的`Target->Info->Custom iOS Target Properties`中，添加配置项，主要配置项如下。
+* 在工程设置的`Target->Info->Custom iOS Target Properties`中，添加配置项，主要配置项如下。
   ![Alt text](./WX1.png)
 
 | Key      |    Type | Value  |备注|相关模块|
@@ -11,7 +11,7 @@
 | WXAppID  | String |  各游戏不同 |微信的AppID|所有|
 | WXAppKey  | String |  各游戏不同 |微信的AppKey|所有|
   
-  *	在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
+* 在工程设置的`Target->Info->URL Types`中设置URL Scheme，配置如下：
   ![Alt text](./WX2.png)
   
 | Identifier|    URL Scheme | 示例  | 备注  |
@@ -102,7 +102,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 
 ##微信扫码登录
  - ###概述
-拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息。二维码显示界面只支持竖屏显示，游戏需在info.plist中配置支持竖屏UIInterfaceOrientationMaskPortrait，横屏的游戏可在游戏自身界面的Controller如UnityViewControllerBase或RootViewController - (NSUInteger)supportedInterfaceOrientations方法中返回只支持横屏，在UnityAppController或AppController - (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window方法中返回支持横竖屏。
+拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息。
 
 ```
 /**
@@ -131,6 +131,10 @@ plat->WGSetObserver(ob);//设置回调对象
 plat->WGQrCodeLogin(ePlatform_Weixin);
 ```
 回调代码同WGLogin(ePlatform_Weixin);
+
+- ### 注意事项
+ - MSDK2.9.4i及以下版本二维码显示界面只支持竖屏显示，游戏需在info.plist中配置支持竖屏UIInterfaceOrientationMaskPortrait，且横屏的游戏可在游戏自身界面的Controller如UnityViewControllerBase或RootViewController - (NSUInteger)supportedInterfaceOrientations方法中返回只支持横屏，在UnityAppController或AppController - (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window方法中返回支持横竖屏。
+ - MSDK2.9.5i及其以上版本二维码显示界面支持横竖屏显示，游戏无需额外配置。
 
 ## 微信关系链接口
  - ###查询微信个人信息
@@ -650,7 +654,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
 
 ---
 
-## 创建公会微信群
+##创建公会微信群
 - ###概述
 游戏公会/联盟内，公会会长可在游戏内创建公会所属的微信聊天群。调用接口：WGCreateWXGroup。绑定信息通过回调OnCreateWXGroupNotify告知游戏。自MSDK2.10.0i开始提供此功能。
 
@@ -667,7 +671,7 @@ MSDKAuthService *authService = [[MSDKAuthService alloc] init];
                          unsigned char* chatRoomName
                          );
 ```
->描述:　游戏内创建公会微信群，调用结果会通过WGGroupObserver的OnCreateWXGroupNotify回调给游戏，一般会返回一个建群的链接，游戏用内置浏览器打开该链接即可实现加建群。
+>描述:　游戏内创建公会微信群，调用结果会通过WGGroupObserver的OnCreateWXGroupNotify回调给游戏，MSDK2.13.0及其以上版本会直接拉起微信客户端进行创建并回调创建成功或失败，MSDK2.13.0以下版本则会返回一个建群的链接，游戏用内置浏览器打开该链接即可实现加建群。
 
 - 示例代码
 调用代码示例：
@@ -682,17 +686,55 @@ WGPlatform::GetInstance()->WGCreateWXGroup(
         (unsigned char *)displayName.c_str(),
         (unsigned char *)chatRoomName.c_str());
 ```
-回调代码示例：
+2.13.0及其以上版本回调代码示例：
+```
+void MyObserver::OnCreateWXGroupNotify(GroupRet& groupRet)
+{
+    if (groupRet.flag == eFlag_Succ)
+    {
+        NSLog(@"创建微信群成功");
+    }
+    else
+    {
+        switch (groupRet.errorCode)
+        {
+            case eFlag_Error:
+                // 系统错误
+                NSLog(@"系统错误，请重试");
+                break;
+            case eFlag_WX_Group_HasNoAuthority:
+                // 该游戏没有建群权限
+                NSLog(@"系统错误，游戏没有建群权限，请重试");
+                break;
+            case eFlag_WX_Group_ParameterError:
+                //参数检查错误
+                NSLog(@"系统错误，参数检查错误，请检查参数后重试");
+                break;
+            case eFlag_WX_Group_HadExist:
+                //群ID已存在
+                NSLog(@"系统错误，微信群已存在，请检查后重试");
+                break;
+            case eFlag_WX_Group_AmountBeyond:
+                //建群数量超过上限
+                NSLog(@"系统错误，建群数量超过上限，请检查后重试");
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+2.13.0以下版本回调代码示例：
 ```
 void MyObserver::OnCreateWXGroupNotify(GroupRet& groupRet)
 {
     if (groupRet.flag == 0 && groupRet.wxGroupInfo.chatRoomURL.length() > 0)
     {
+    	//使用内置浏览器打开链接创建
         WGPlatform::GetInstance()->WGOpenUrl((unsigned char*)groupRet.wxGroupInfo.chatRoomURL.c_str());
     }
     else
     {
-        NSLog(@"flag:%d errorCode:%d desc:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding]);
         switch (groupRet.errorCode)
         {
             case -10000:
@@ -725,14 +767,14 @@ void MyObserver::OnCreateWXGroupNotify(GroupRet& groupRet)
     }
 }
 ```
-###注意事项
+###MSDK2.13.0以下版本注意事项
 - 1.调用建群接口并不会直接创建微信工会群，该接口会在回调中返回创建微信公会群的URL。
 - 2.游戏在收到回调后取到回调中的URL，然后用浏览器打开改URL，然后由用户触发建群的动作。如果用户并没有点击建群按钮，公会微信群并不能创建成功。
 - 3.游戏可以使用MSDK的内置浏览器或者系统浏览器来打开建群的URL。
 
 ---
 
-## 加入公会微信群
+##加入公会微信群
 - ###概述
 游戏公会/联盟内，当公会会长创建了公会的微信群以后，其余成员可在游戏内直接加入公会对应的微信聊天群。调用接口：WGJoinWXGroup。绑定信息通过回调OnJoinWXGroupNotify告知游戏。自MSDK2.10.0i开始提供此功能。
 
@@ -747,7 +789,7 @@ void MyObserver::OnCreateWXGroupNotify(GroupRet& groupRet)
                        unsigned char* displayName
                        );
 ```
->描述:　游戏内加入公会微信群，调用结果会通过WGGroupObserver的OnJoinWXGroupNotify回调给游戏，游戏用内置浏览器打开该链接即可实现加建群。
+>描述:　游戏内加入公会微信群，调用结果会通过WGGroupObserver的OnJoinWXGroupNotify回调给游戏，MSDK2.13.0及其以上版本会直接拉起微信客户端进行加群并回调加群成功或失败，MSDK2.13.0以下版本则会返回一个加群的链接，游戏用内置浏览器打开该链接即可实现加群。
 
 - 示例代码
 调用代码示例：
@@ -760,17 +802,47 @@ WGPlatform::GetInstance()->WGJoinWXGroup(
     (unsigned char *)unionID.c_str(),
     (unsigned char *)displayName.c_str());
 ```
-回调代码示例：
+2.13.0及其以上版本回调代码示例回调代码示例：
+```
+void MyObserver::OnJoinWXGroupNotify(GroupRet& groupRet)
+{
+    if (groupRet.flag == 0)
+    {
+        NSLog(@"加入微信群成功");
+    }
+    else
+    {
+        switch (groupRet.errorCode)
+        {
+            case eFlag_Error:
+                // 系统错误
+                NSLog(@"系统错误，请重试");
+                break;
+            case eFlag_WX_Group_ParameterError:
+                //参数检查错误
+                NSLog(@"系统错误，参数检查错误，请检查参数后重试");
+                break;
+            case eFlag_WX_Group_IDNotExist:
+                //群ID不存在
+                NSLog(@"系统错误，群ID不存在，请检查后重试");
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+2.13.0以下版本回调代码示例：
 ```
 void MyObserver::OnJoinWXGroupNotify(GroupRet& groupRet)
 {
     if (groupRet.flag == 0 && groupRet.wxGroupInfo.chatRoomURL.length() > 0)
     {
+    	//使用内置浏览器打开链接加群
         WGPlatform::GetInstance()->WGOpenUrl((unsigned char*)groupRet.wxGroupInfo.chatRoomURL.c_str());
     }
     else
     {
-        NSLog(@"flag:%d errorCode:%d desc:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding]);
         switch (groupRet.errorCode)
         {
             case -10000:
@@ -803,14 +875,14 @@ void MyObserver::OnJoinWXGroupNotify(GroupRet& groupRet)
     }
 }
 ```
-###注意事项
+###MSDK2.13.0以下版本注意事项
 - 1.调用加群接口并不会直接加入微信工会群，该接口会在回调中返回加入微信公会群的URL。
 - 2.游戏在收到回调后取到回调中的URL，然后用浏览器打开改URL，然后由用户触发加群的动作。如果用户并没有点击加群按钮，用户无法加入对应的微信聊天群。
 - 3.游戏可以使用MSDK的内置浏览器或者系统浏览器来打开加群的URL。
 
 ---
 
-## 查询公会微信群信息
+##查询公会微信群信息
 - ###概述
 当玩家打开公会界面的时候，或者创建群以后，需要查询微信群的信息，调用接口WGQueryWXGroupInfo可以查询到当前工会微信群的基本信息。查询结果会通过回调OnQueryGroupInfoNotify告知游戏。自MSDK2.10.0i开始提供此功能。
 
@@ -838,17 +910,46 @@ WGPlatform::GetInstance()->WGQueryWXGroupInfo(
             (unsigned char *)unionID.c_str(),
             (unsigned char *)openidLists.c_str());
 ```
-回调代码示例：
+2.13.0及其以上版本回调代码示例回调代码示例：
 ```
 void MyObserver::OnQueryGroupInfoNotify(GroupRet& groupRet)
 {
     if (groupRet.flag == 0)
     {
-        NSLog(@"flag:%d errorCode:%d desc:%@ openIdLists:%@ memberCount:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding], [NSString stringWithCString:groupRet.wxGroupInfo.openIdList.c_str() encoding:NSUTF8StringEncoding], [NSString stringWithCString:groupRet.wxGroupInfo.memberNum.c_str() encoding:NSUTF8StringEncoding]);
+        NSLog(@"查询群成员成功");
     }
     else
     {
-        NSLog(@"flag:%d errorCode:%d desc:%@",groupRet.flag, groupRet.errorCode, [NSString stringWithCString:groupRet.desc.c_str() encoding:NSUTF8StringEncoding]);
+        switch (groupRet.errorCode)
+        {
+            case eFlag_Error:
+                // 系统错误
+                NSLog(@"系统错误，请重试");
+                break;
+            case eFlag_WX_Group_ParameterError:
+                //参数检查错误
+                NSLog(@"系统错误，参数检查错误，请检查参数后重试");
+                break;
+            case eFlag_WX_Group_IDNotExist:
+                //群ID不存在
+                NSLog(@"系统错误，群ID不存在，请检查后重试");
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+2.13.0以下版本回调代码示例：
+```
+void MyObserver::OnQueryGroupInfoNotify(GroupRet& groupRet)
+{
+    if (groupRet.flag == 0)
+    {
+        NSLog(@"查询群成员成功");
+    }
+    else
+    {
         switch (groupRet.errorCode)
         {
             case -10000:
@@ -888,7 +989,7 @@ void MyObserver::OnQueryGroupInfoNotify(GroupRet& groupRet)
 
 ---
 
-## 分享结构化消息到公会微信群
+##分享结构化消息到公会微信群
 - ###概述
 游戏公会/联盟内，用户可以直接分享结构化消息到微信公会群。游戏可以基于该接口做一些拉活的方案。调用接口为WGSendToWXGroup，结果会通过分享通用的OnShareNotify回调给游戏。自MSDK2.10.0i开始提供此功能。
 

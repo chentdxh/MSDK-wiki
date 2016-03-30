@@ -173,6 +173,7 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 #### 概述：
 
 **拉起登录二维码显示界面，玩家可以通过另外一个已经登录对应社交帐号的手机扫描二维码，根据提示授权后，游戏即可获得登录票据信息**
+**在未安装微信情况下，可用已在其它设备上的微信帐号扫码登录游戏 （可以使用WGIsPlatformInstalled 判断微信是否安装）**
 
 #### 效果展示：
 
@@ -195,6 +196,21 @@ WGGetLoginRecord只是用来获取本地票据的接口，如果从未登录需�
 #### 注意事项：
 
 - **目前只支持微信扫码登录**
+- **需要在AndroidManifest文件中声明WXQrCodeActivity**
+
+        <activity
+        android:name="com.tencent.msdk.weixin.qrcode.WXQrCodeActivity"
+        android:excludeFromRecents="true"
+        android:exported="true"
+        android:label="WXQrCodeActivity"
+        android:launchMode="singleTop"
+        android:taskAffinity="com.example.wegame.diff" 
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        android:theme="@android:style/Theme.Light.NoTitleBar"
+        android:screenOrientation="portrait">
+        </activity>
+- **关于扫码登录权限：非精品的游戏统一由游戏邮件向微信申请，精品的游戏由协同统一接入处理
+- **拉取到的二维码图片有效期5分钟，过期扫码无法登录成功
 
 ##处理自动登录WGLoginWithLocalInfo
 
@@ -480,7 +496,7 @@ QQ平台：
 ##MSDK2.7.0a及以后的票据自动刷新流程
 **概述**
 
-MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流程，对票据进行定时刷新，请务必将msdkconfig.ini中WXTOKEN_REFRESH按如下设置`WXTOKEN_REFRESH=true`或者不设置（即默认是开启的），具体可咨询msdk连线。游戏只需要关注'WGLogin' 'WGGetLoginRecord'即可完成登录和票据处理：
+MSDK2.7.0a以后，在支持之前版本登录流程的基础上，优化新流程，对票据进行定时刷新，请务必将msdkconfig.ini中WXTOKEN_REFRESH按如下设置`WXTOKEN_REFRESH=true`或者不设置（即默认是开启的），具体可咨询msdk连线。游戏只需要关注'WGLogin'即可完成登录和票据处理：
 
 * 游戏需要登录票据时的调用逻辑：
   

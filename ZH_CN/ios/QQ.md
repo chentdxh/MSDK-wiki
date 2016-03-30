@@ -68,37 +68,37 @@ plat->WGLogin(ePlatform_QQ);//调用手Q客户端或web授权
 ```
 void MyObserver::OnLoginNotify(LoginRet& loginRet)
 {
-if(eFlag_Succ == loginRet.flag)
-{
-    …//login success
-    std::string openId = loginRet.open_id;
-    std::string payToken;
-    std::string accessToken;
-    if(ePlatform_QQ == loginRet.Platform)
-    {
-        for(int i=0;i< loginRet.token.size();i++)
-        {
-            TokenRet* pToken = & loginRet.token[i];
-            if(eToken_QQ_Pay == pToken->type)
-            {
-                paytoken = pToken->value;
-            }
-            else if (eToken_QQ_Access == pToken->type)
-{
-     accessToken = pToken->value;
-}
-        }
-    }
-else if (ePlatform_Weixin == loginRet.platform)
-{
-        ….
-}
-} 
-else
-{
-    …//login fail
-     NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
-}
+	if(eFlag_Succ == loginRet.flag)
+	{
+	    …//login success
+	    std::string openId = loginRet.open_id;
+	    std::string payToken;
+	    std::string accessToken;
+	    if(ePlatform_QQ == loginRet.Platform)
+	    {
+	        for(int i=0;i< loginRet.token.size();i++)
+	        {
+	            TokenRet* pToken = & loginRet.token[i];
+	            if(eToken_QQ_Pay == pToken->type)
+	            {
+	                paytoken = pToken->value;
+	            }
+	            else if (eToken_QQ_Access == pToken->type)
+				{
+				     accessToken = pToken->value;
+				}
+	        }
+	    }
+		else if (ePlatform_Weixin == loginRet.platform)
+		{
+		        ….
+		}
+	} 
+	else
+	{
+	    …//login fail
+	     NSLog(@"flag=%d,desc=%s",loginRet.flag,loginRet.desc.c_str()); 
+	}
 }
 ```
 - 2.4.0i及以后版本还可使用delegate方式，代码如下：
@@ -211,7 +211,6 @@ void MyObserver::OnWakeupNotify (WakeupRet& wakeupRet)
 	 	default:
 	    break;
 	}
-	
     if(eFlag_Succ == wakeupRet.flag ||
 eFlag_NeedLogin == wakeupRet.flag ||
 eFlag_UrlLogin == wakeupRet.flag ||
@@ -225,7 +224,6 @@ eFlag_AccountRefresh == wakeupRet.flag)
  		[viewController setLogInfo:@"唤醒失败"];
    	}
 } 
-
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
 {
    	BOOL switchFlag = NO;
@@ -241,8 +239,7 @@ eFlag_AccountRefresh == wakeupRet.flag)
 	 	}
 	     break;
 	 	default:
-	     break;
-            
+	     break;    
     }
     WGPlatform* plat = WGPlatform::GetInstance();
     plat->WGSwitchUser(switchFlag);
@@ -396,13 +393,13 @@ NSString* 	url=@"XXXXX"
 NSString *path = "188.jpg"
 NSData* data = [NSData dataWithContentsOfFile:path];
 plat->WGSendToQQ(
-                     1,
-                     (unsigned char*)[gameid UTF8String],
-                     (unsigned char*)[question UTF8String],
-                     (unsigned char*) [url UTF8String],
-                     (unsigned char*)[data bytes],
-                     [data length]
-                     ); 
+                 1,
+                 (unsigned char*)[gameid UTF8String],
+                 (unsigned char*)[question UTF8String],
+                 (unsigned char*) [url UTF8String],
+                 (unsigned char*)[data bytes],
+                 [data length]
+                 ); 
 ```
 
 - 回调代码示例：
@@ -411,12 +408,12 @@ plat->WGSendToQQ(
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
-{
-    NSLog(@"分享成功");
+	{
+    	NSLog(@"分享成功");
     }
     else if(eFlag_QQ_UserCancel == shareRet.flag)
-{
-    NSLog(@"用户取消分享");
+	{
+    	NSLog(@"用户取消分享");
     }
     else if(eFlag_QQ_NetworkErr == shareRet.flag)
     {
@@ -507,12 +504,12 @@ plat->WGSendToQQGameFriend(
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
-{
+	{
         NSLog(@"分享成功");
     }
     else 
-{
-   NSLog(@"error message = %s",shareRet.desc.c_str()); 
+	{
+   		NSLog(@"error message = %s",shareRet.desc.c_str()); 
     }
 }
 ```
@@ -578,20 +575,20 @@ plat->WGSendToQQWithPhoto(1,(unsigned char*)[data bytes], [data length]);
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
-{
-        NSLog(@"分享成功");
-}
-else if(eFlag_QQ_NotInstall == shareRet.flag)
-{
-        NSLog(@"手Q未安装");
-    }
-    else if(eFlag_QQ_UserCancel == shareRet.flag)
-{
+	{
+	    NSLog(@"分享成功");
+	}
+	else if(eFlag_QQ_NotInstall == shareRet.flag)
+	{
+	    NSLog(@"手Q未安装");
+	}
+	else if(eFlag_QQ_UserCancel == shareRet.flag)
+	{
         NSLog(@"用户取消分享");
     }
     else if(eFlag_QQ_NetworkErr == shareRet.flag)
     {
-            NSLog(@"网络错误");[代码缩进统一]
+        NSLog(@"网络错误");
     }
 }
 ```
@@ -699,7 +696,6 @@ plat->WGAddGameFriendToQQ((unsigned char*)"D2DEFFFBE310779E88CD067C9D3329E5", (u
     NSString *AppID = @"100703379";
     NSString *appKey = @"4578e54fb3a1bd18e0681bc1c734514e";
     NSString *orgSigStr = [NSString stringWithFormat:@"%ld",(unsigned long)[[NSString stringWithFormat:@"%@_%@_%@_%@_%@",openId,AppID,appKey,uinionId,zoneId]hash]];
-    
     plat->WGBindQQGroup((unsigned char*)"1", (unsigned char*)"1", (unsigned char*)"test", (unsigned char*)[orgSigStr UTF8String]);
 ```
 - 回调代码示例：
@@ -708,21 +704,21 @@ plat->WGAddGameFriendToQQ((unsigned char*)"D2DEFFFBE310779E88CD067C9D3329E5", (u
 void MyObserver::OnShareNotify(ShareRet& shareRet)
 {
     if (eFlag_Succ == shareRet.flag)
-{
-        NSLog(@"分享成功");
-}
-else if(eFlag_QQ_NotInstall == shareRet.flag)
-{
-        NSLog(@"手Q未安装");
-    }
-    else if(eFlag_QQ_UserCancel == shareRet.flag)
-{
-        NSLog(@"用户取消分享");
-    }
-    else if(eFlag_QQ_NetworkErr == shareRet.flag)
-    {
-            NSLog(@"网络错误");
-    }
+	{
+	    NSLog(@"分享成功");
+	}
+	else if(eFlag_QQ_NotInstall == shareRet.flag)
+	{
+	    NSLog(@"手Q未安装");
+	}
+	else if(eFlag_QQ_UserCancel == shareRet.flag)
+	{
+	    NSLog(@"用户取消分享");
+	}
+	else if(eFlag_QQ_NetworkErr == shareRet.flag)
+	{
+	    NSLog(@"网络错误");
+	}
 }
 ```
 
@@ -759,10 +755,11 @@ appDisplayName:@"MSDKSampleTest"];
 ```
 
 ###注意事项
+ - 游戏内加群功能请咨询OpenSdkHelper_IOS(终端技术支持)。
  - 手Q5.1及以上版本
- - 一个工会只能绑定一个群，如果需要解绑，请查看QQ API 文档（如下）。如有其它问题可rtx联系OpenAPIHelper(OpenAPI技术支持)。
+ - 一个工会只能绑定一个群，如果需要解绑，请查看QQ API 文档（如下）。如有其它问题可rtx联系OpenSdkHelper_IOS(终端技术支持)。
 http://wiki.open.qq.com/wiki/v3/qqgroup/unbind_qqgroup
- - 使用游戏内绑定好友和群的接口，需要接入的App id已经在手Q后台审核通过并上线
+ - 使用游戏内绑定好友和群的接口，需要接入的App id已经在手Q后台审核通过并上线。
  ---
  
  ## 常见问题

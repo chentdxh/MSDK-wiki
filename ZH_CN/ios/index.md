@@ -1,11 +1,11 @@
 
 MSDK iOS 介绍
 =======
-MSDK2.9.4i版本已支持iOS9编译，暂不支持bitcode，接入需注意以下几点：
+MSDK2.9.4i版本已支持iOS9编译，暂不支持bitcode，2.9.6i、2.13.0i及其以上版本支持iOS9编译以及bitcode，游戏接入需注意以下几点：
 
 ```
 1.使用Xcode7.0及以上版本iOS9.0及以上SDK编译。
-2.在build settings中将Enable Bitcode设置为NO。
+2.在build settings中将Enable Bitcode设置为NO(MSDK2.9.6i、2.13.0i及其以上版本无需关注该项)。
 3.所有.dylib结尾的系统依赖库需更换为对应的.tdb结尾的依赖库。
 4.info.plist配置以下跳转scheme以及https声明：
 	<key>LSApplicationQueriesSchemes</key>

@@ -6,9 +6,10 @@
 ##概述
 
  - 在info.plist中配置推送开关，如下图：
+ 
 ![Alt text](./Push1.png)
-已经接入信鸽推送的游戏在更新MSDK2.3.0时，若想关闭MSDK的信鸽推送，则不配置此开关，或者设置为OFF。其他游戏若接入MSDK的信鸽推送，则必须配置此开关为ON。
-在MSDK2.4.0i以上版本，该值已经改为Boolean型，请留意修改Info.plist。
+
+ - 在MSDK2.4.0i以下版本，该值为String类型的ON和OFF，使用老版本的业务请留意修改Info.plist。
 
  - MSDK ios 推送依赖苹果APNS实现，需要在developer.apple.com中开通应用的推送功能。并制作推送证书和签名文件(.mobileprovision)。
  - 推送ssl证书：MSDK需要使用此证书向应用发送推送消息，所以需要将此证书及密码交由MSDK。在dev.ied.com配置此证书
@@ -19,11 +20,7 @@
 ##制作上传pem证书
  - 制作证书
 
-按照信鸽官网步骤制作pem证书，[制作步骤](http://developer.xg.qq.com/index.php/IOS_%E8%AF%81%E4%B9%A6%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97)。
-
-若制作步骤打开无内容可[点击此处](http://developer.xg.qq.com/index.php/Main_Page)，在打开的页面中点击左侧导航栏中iOS SDK->iOS证书设置指南即可，如下图所示：
-
-![Alt text](./Push2.png)
+按照信鸽官网步骤制作pem证书，[制作步骤](http://developer.qq.com/wiki/xg/iOS%E6%8E%A5%E5%85%A5/iOS%20%E8%AF%81%E4%B9%A6%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97/iOS%20%E8%AF%81%E4%B9%A6%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97.html)。
 
  - 上传证书
 ### Step1:
@@ -309,4 +306,44 @@ openssl pkcs12 -in xxx_push.p12 -out xxx_push.pem -nodes
 
 ```
     WGPlatform::GetInstance()->WGClearLocalNotifications();
+```
+
+##标签推送
+ - ###概述
+游戏可以针对用户设置标签，如性别、年龄、学历、爱好等，推送时可根据不同的标签有针对的进行推送。接口及其说明如下：
+
+```
+    /**
+     * 可以针对不同的用户设置标签，如性别、年龄、学历、爱好等
+     * @param tag 用户标签
+     * @return none
+     */
+    void WGSetPushTag(unsigned char* tag);
+```
+
+- ###示例代码
+调用代码如下:
+
+```
+    WGPlatform::GetInstance()->WGSetPushTag((unsigned char*)"Student");
+```
+
+##删除标签
+ - ###概述
+删除所设置的用户标签，推送时此用户将无法接收到此标签下的推送消息，接口及其说明如下：
+
+```
+    /**
+     * 删除设置的标签
+     * @param tag 用户标签
+     * @return none
+     */
+    void WGDeletePushTag(unsigned char* tag);
+```
+
+- ###示例代码
+调用代码如下:
+
+```
+    WGPlatform::GetInstance()->WGDeletePushTag((unsigned char*)"Student");
 ```

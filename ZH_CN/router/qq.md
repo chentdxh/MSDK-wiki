@@ -87,7 +87,7 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 |title|string|分享标题,长度不能超过45字节|
 |fopenids|vector<jsonObject>或者json字符串(兼容)|Json数组，数据格式为 [{"openid":"","type":0}]，openid为好友openid，type固定传0 .只支持分享给一个好友|
 |previewText|string|不需要填写|
-|game_tag|string|非必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>|
+|game_tag|string|必填。game_tag	用于平台对分享类型的统计，比如送心分享、超越分享，该值由游戏制定并同步给手Q平台，目前的值有：<br>MSG_INVITE                //邀请<br>MSG_FRIEND_EXCEED       //超越炫耀<br>MSG_HEART_SEND          //送心<br>MSG_SHARE_FRIEND_PVP    //PVP对战</td>|
 ***请注意输入参数的类型，参考1.5***
 #### 2.2.1.3输出参数说明 
 
@@ -861,8 +861,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 | qq_vip_end|QQ会员期限，标准时间戳|
 | qq_year_vip_start|QQ年费会员最后一次充值时间，标准时间戳|
 | qq_year_vip_end|QQ年费会员期限，标准时间戳|
-| qq_svip_start|QQ SVIP最后一次充值时间，预留字段，当前信息无效，标准时间戳|
-| qq_svip_end|QQ SVIP期限，预留字段，当前信息无效，标准时间戳|
+| qq_svip_start|QQ SVIP最后一次充值时间，标准时间戳|
+| qq_svip_end|QQ SVIP期限，标准时间戳|
 | is_qq_year_vip|标识是否QQ年费会员（0：不是； 1：是）|
 | is_svip|标识是否QQ超级会员（0：不是； 1：是）|
 
@@ -893,8 +893,8 @@ url中带上msdkExtInfo=xxx（请求序列号），可以在后回内容中，�
 	    "msg": "success",
 	    "qq_svip_end": "0",
 	    "qq_svip_start": "0",
-	    "qq_vip_end": "0",
-	    "qq_vip_start": "0",
+	    "qq_vip_end": "1448817920",
+	    "qq_vip_start": "1443461120",
 	    "qq_year_vip_end": "0",
 	    "qq_year_vip_start": "0",
 	    "ret": 0,
